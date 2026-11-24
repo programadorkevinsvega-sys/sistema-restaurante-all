@@ -4,6 +4,8 @@
 
 Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni debilitan decisiones.
 
+> **Propuesta pendiente:** el [Diseño de crates y dependencias](../architecture/crate-architecture.md), asociado a [ADR-0009](../adr/0009-crate-boundaries-and-dependencies.md), concreta la estructura prevista de paquetes y dependencias. ADR-0009 permanece Proposed; sus detalles no se consideran norma aceptada hasta aprobación explícita.
+
 ## 1. Módulos y contratos
 
 ### Ubicación y composición
@@ -26,7 +28,6 @@ Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni
   no migraciones ni lógica de dominio.
 - La distribución concreta de dominios entre los cuatro backends debe
   respetar `requisitos.md`; no duplicar ni asignar módulos por inferencia.
-
 
 - Depender de contratos públicos; no importar implementaciones internas ajenas.
 - DTO no exponen entidades ni modelos SQL.
