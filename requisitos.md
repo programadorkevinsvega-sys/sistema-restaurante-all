@@ -5022,7 +5022,7 @@ Restaurant OS utilizara un monolito modular implementado en Rust.
 - Admin BFF sera un binario/proceso independiente que expone HTTP/OpenAPI a los frontends administrativos.
 - Public BFF sera un binario/proceso independiente que expone HTTP/OpenAPI a los frontends públicos.
 - Public Backend sera un binario/proceso independiente.
-- Cada uno de los cuatro backends/procesos tendrá sus propios módulos y punto de composición.
+- Admin Platform Backend y Public Backend tendrán sus módulos propietarios y puntos de composición. Admin BFF y Public BFF tendrán puntos de composición propios, sin módulos propietarios de negocio.
 - Los modulos no deben estar acoplados a clases o tablas privadas de otros modulos.
 - Los modulos deben exponer contratos publicos, puertos y fachadas.
 - La arquitectura debe facilitar extraer modulos sin reescribir sus reglas de negocio.
