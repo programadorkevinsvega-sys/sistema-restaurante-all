@@ -1,8 +1,9 @@
 # ADR-0014: Baja de tenants y conservación de datos de clientes
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Propuesto: 2026-11-24
-- Aprobación: pendiente de aprobación explícita del propietario del producto.
+- Aprobado: 2026-11-24
+- Aprobación: decisión aprobada explícitamente por el propietario del producto.
 - Complementa: ADR-0001, ADR-0003, ADR-0008 y ADR-0013.
 - Ámbito: eliminación de un tenant SaaS y tratamiento de los datos de clientes asociados a ese tenant.
 
@@ -16,7 +17,7 @@ Un borrado en cascada desde el tenant podría eliminar accidentalmente perfiles,
 
 ADR-0001 establece ownership exclusivo por módulo: cada módulo conserva su schema, rol, migraciones e historial SQLx. ADR-0003 establece trabajo durable, lotes acotados, checkpoints, idempotencia, recuperación y backpressure. La baja debe respetar esas decisiones.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. La baja del tenant no elimina los datos de sus clientes
 
@@ -69,7 +70,7 @@ El diseño de implementación deberá contemplar:
 - Auditoría de la solicitud, actor autorizado, alcance, decisiones de conservación, resultados y excepciones.
 - Verificación final de que los datos propios del tenant fueron tratados y de que los datos de clientes y documentos sujetos a conservación permanecen íntegros.
 
-La coordinación multi-módulo debe respetar el ownership y los mecanismos durables aceptados en el repositorio. La aplicación concreta de Sagas se sujetará al estado de ADR-0013 y a su aceptación formal; este ADR no declara aceptado ADR-0013.
+La coordinación multi-módulo debe respetar el ownership y los mecanismos durables aceptados en el repositorio. La aplicación concreta de Sagas se sujetará al estado y alcance de ADR-0013; este ADR no modifica ni amplía esa decisión.
 
 ### 6. Acceso y seguridad después de la baja
 
@@ -108,7 +109,6 @@ Esos aspectos requieren análisis y decisiones específicas, sin contradecir la 
 
 ## Consecuencias
 
-Si se acepta:
 
 - La baja de un tenant y la eliminación de un cliente serán procesos distintos.
 - Los perfiles e historiales de clientes finales no desaparecerán como efecto colateral de la baja del tenant.
@@ -128,4 +128,4 @@ Si se acepta:
 
 ## Estado de implementación
 
-**Propuesta documental; pendiente de aprobación explícita.** No se han creado tablas, schemas, contratos ejecutables, workers ni código. No se han modificado archivos SQL o migraciones ni se han ejecutado operaciones de base de datos.
+**Decisión aceptada; implementación pendiente.** No se han creado tablas, schemas, contratos ejecutables, workers ni código. No se han modificado archivos SQL o migraciones ni se han ejecutado operaciones de base de datos.
