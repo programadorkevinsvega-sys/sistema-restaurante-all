@@ -44,7 +44,7 @@ backend/
 **Aplicación en este repositorio:** cada módulo se implementa físicamente una sola vez en `backend/<backend-propietario>/modules/<modulo>/`. Los cuatro backends tienen sus propios conjuntos de módulos. `crates/` contiene únicamente bibliotecas técnicas neutrales, contratos versionados y adaptadores; no aloja módulos propietarios de negocio. La distribución de dominios entre los cuatro procesos debe respetar la matriz de responsabilidades de `requisitos.md` y las decisiones aprobadas; no se debe inferir ni duplicar. La ruta `backend/<backend>/modules/<modulo>/migrations/` es también la ubicación canónica de las migraciones nuevas del módulo, conforme al ADR-0001. La carpeta raíz `migrations/` se conserva como ubicación histórica.
 
 
-### 2.3 Carpetas del repositorio
+### 2.2 Carpetas del repositorio
 
 La estructura completa y la responsabilidad de cada carpeta están definidas en [requisitos.md](../../requisitos.md). Las reglas no negociables son:
 
@@ -56,7 +56,7 @@ La estructura completa y la responsabilidad de cada carpeta están definidas en 
 - `docs/`, `rules/` y `migrations/` conservan sus responsabilidades documentales y el legado histórico respectivamente.
 - Ningún módulo se duplica entre backends ni se mueve a `crates/shared/` por conveniencia.
 
-### 2.2 Reglas
+### 2.3 Reglas
 
 - Cada módulo DEBE ser un paquete/crate propio, con contratos públicos explícitos (en `contracts/` o en un crate `*-contracts` cuando el diseño lo requiera).
 - Un módulo SOLO puede depender de: (a) `*-contracts` de otros módulos, (b) bibliotecas técnicas neutrales aprobadas (logging, config, tiempo, errores base), (c) sus propias capas.
