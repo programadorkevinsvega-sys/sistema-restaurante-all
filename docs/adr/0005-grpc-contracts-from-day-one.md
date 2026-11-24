@@ -6,7 +6,7 @@
 - Aceptado: 2026-11-24
 - Aprobación: propietario del producto, confirmada explícitamente en la conversación de arquitectura.
 
-> **Nota de vigencia:** ADR-0007 sustituye parcialmente este ADR en lo relativo a la topología de procesos, los nombres de los procesos y el despliegue inicial de dos servicios. La decisión de definir Protobuf versionado desde el inicio y utilizar gRPC en las fronteras entre procesos permanece vigente.
+> **Nota de vigencia:** ADR-0007 sustituye parcialmente este ADR en lo relativo a la topología de procesos, los nombres de los procesos y el despliegue inicial de dos servicios. La decisión de definir Protobuf versionado desde el inicio y utilizar gRPC en las fronteras entre procesos permanece vigente. Los apartados siguientes conservan el registro histórico de la topología original `api-server`/BFF; sus referencias a dos procesos no describen la arquitectura vigente.
 
 ## Contexto
 
