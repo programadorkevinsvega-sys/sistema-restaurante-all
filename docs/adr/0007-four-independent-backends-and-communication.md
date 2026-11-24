@@ -15,7 +15,7 @@ También es necesario distinguir dos fronteras diferentes: la comunicación entr
 
 ## Decisión
 
-Restaurant OS se compone de cuatro backends/procesos totalmente independientes. Cada uno se compila y ejecuta como un binario separado y contiene sus propios módulos:
+Restaurant OS se compone de cuatro backends/procesos totalmente independientes. Cada uno se compila y ejecuta como un binario separado. La propiedad de módulos se determina por ADR-0008: Admin Platform Backend aloja PLATFORM, Public Backend aloja los demás módulos de negocio y los BFF no poseen dominios ni persistencia de negocio.
 
 1. **Admin Platform Backend**.
 2. **Admin BFF**.
