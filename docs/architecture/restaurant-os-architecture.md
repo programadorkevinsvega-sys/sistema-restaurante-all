@@ -17,11 +17,12 @@ Una contradicción no se resuelve por interpretación del agente. Se propone un 
 
 ## 3. Estilo arquitectónico
 
-- Monolito modular Rust inicialmente, preparado para separar módulos por razón medible.
-- PostgreSQL compartido inicialmente, con ownership y permisos por módulo.
+- Cuatro procesos/binarios independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend. Cada proceso organiza sus propios módulos como monolito modular.
+- Cada módulo está preparado para separarse como microservicio por una razón medible, sin cambiar sus reglas de negocio ni sus contratos.
+- PostgreSQL compartido inicialmente, con ownership, schema, rol, migraciones e historial SQLx exclusivos por módulo.
 - Stateless y multi-réplica desde el inicio.
-- No crear microservicios, brokers o infraestructura por moda.
-- La composición se realiza en un punto controlado.
+- La mensajería aprobada es gRPC para solicitudes/respuestas entre procesos, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda.
+- La composición de los módulos se realiza en un punto controlado dentro de cada backend.
 - La ubicación física del crate no cambia la propiedad lógica del dominio.
 
 ## 4. Dominios
@@ -45,16 +46,19 @@ Restaurant vertical: KITCHEN y PRODUCTION. Consume contratos de Core y no recrea
 - OpenAPI genera tipos/clientes HTTP para frontends y BFF; Protobuf genera stubs/tipos gRPC para backends y BFF.
 - El código generado no se edita a mano. CI regenera y falla si hay diferencias con el generado versionado.
 - Frontends independientes consumen contratos; no alojan reglas autoritativas. La autorización efectiva es backend.
-- `api-server` aloja los módulos backend y expone gRPC. El BFF es un proceso independiente que consume gRPC y expone HTTP/OpenAPI a los frontends.
-- Docker Compose define dos servicios de aplicación objetivo: `api-server` y `bff`. Esta topología no implica microservicios por módulo ni afirma que el despliegue ya esté implementado.
-- gRPC entre `api-server` y BFF es obligatorio desde el inicio. Solo se difiere el transporte gRPC para módulos internos que comparten el proceso `api-server`.
+- Restaurant OS se compone de cuatro procesos/binarios independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend. Cada uno contiene sus propios módulos y tiene una responsabilidad de backend diferenciada.
+- Admin BFF y Public BFF son procesos separados de sus respectivos backends; no existe un único BFF compartido ni un único `api-server` que aloje todos los módulos.
+- Los cuatro procesos se comunican mediante gRPC y mensajería NATS según el tipo de interacción: gRPC para solicitud/respuesta, NATS Core para señales efímeras y NATS JetStream para eventos durables.
+- Docker Compose debe representar cuatro servicios de aplicación independientes. Esta topología es el objetivo arquitectónico y no afirma que el despliegue ya esté implementado.
+- La separación de procesos no convierte automáticamente los módulos internos de cada backend en microservicios.
 
 ## 7. Comunicación y ejecución asíncrona
 
-- Consulta/comando local mediante contrato/puerto entre módulos dentro de `api-server`; gRPC entre `api-server` y BFF desde el inicio y entre servicios separados.
-- Hechos ya ocurridos mediante eventos durables versionados.
-- Outbox atómico con el cambio de negocio.
-- Sin broker, dispatcher con FOR UPDATE SKIP LOCKED; con broker, confirmaciones durables y grupos de consumidores.
+- Dentro de cada backend, los módulos que comparten proceso se comunican mediante sus contratos públicos y puertos/traits locales para consultas y comandos síncronos; los hechos ya ocurridos se expresan como eventos.
+- Entre los cuatro procesos independientes, las solicitudes/respuestas cruzan gRPC; las señales efímeras usan NATS Core y los eventos durables usan NATS JetStream según corresponda.
+- Los eventos durables se registran en Outbox dentro de la transacción del módulo propietario.
+- Mientras el dispatcher no publique al broker durable, `FOR UPDATE SKIP LOCKED` reclama filas del Outbox para su procesamiento sin duplicar el trabajo entre workers; no es un protocolo de comunicación entre módulos.
+- Con NATS JetStream, el dispatcher publica y los consumidores procesan con confirmaciones durables y grupos de consumidores.
 - Inbox/deduplicación e idempotencia en la misma transacción local que los efectos persistentes.
 - Efectos externos con claves idempotentes, Outbox adicional o reconciliación/compensación.
 - Jobs periódicos con advisory lock PostgreSQL, lease exclusivo recuperable o elección de líder.
