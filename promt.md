@@ -65,8 +65,7 @@ inventario fisico y `KITCHEN` las comandas y preparacion de pedidos de clientes.
 - El vertical referencia productos de CATALOG, pedidos de SALES, recursos
   fisicos de ORGANIZATION y stock/movimientos de INVENTORY mediante contratos;
   no vuelve a crear ni escribir las entidades propietarias.
-- El codigo se ubica segun estas reglas; las migraciones SQL permanecen en
-  `migrations/` y se ordenan segun dependencias, no segun la ruta del crate.
+- El codigo se ubica segun estas reglas. Las migraciones historicas permanecen en su ubicacion actual; las nuevas migraciones se organizan en directorios por modulo dentro de `migrations/<modulo>/`, con rol e historial SQLx independientes por modulo.
 
 **Instrucciones importantes:**
 
@@ -74,7 +73,7 @@ inventario fisico y `KITCHEN` las comandas y preparacion de pedidos de clientes.
 - Cada funcionalidad debe pertenecer a un único módulo principal.
 - Antes de implementar un lote, identifica su dominio propietario y su ruta
   `crates/core/` o `crates/verticals/restaurant/` usando `requisitos.md`.
-- Los módulos deben estar relacionados mediante claves foráneas y relaciones bien definidas.
+- Las claves foráneas y relaciones SQL solo se permiten dentro del límite de propiedad del mismo módulo. No crear FKs, joins, vistas ni consultas directas entre schemas propietarios distintos; las referencias entre módulos usan IDs estables y contratos públicos.
 - Todo debe contemplar múltiples sucursales.
 - Las existencias, ventas, compras y movimientos deben quedar identificados por sucursal.
 - Diseña una estructura escalable y preparada para futuras funcionalidades.
@@ -101,4 +100,4 @@ Idempotencia	Los comandos importantes no deben ejecutarse dos veces accidentalme
 Seguridad multiempresa	Toda operación debe respetar el contexto y los permisos de empresa y sucursal.
 Pruebas	Cada módulo debe poder probarse con implementaciones simuladas de sus dependencias.
 
-Un matiz fundamental: independencia no significa que ventas pueda confirmar una venta sin inventario cuando necesita comprobar existencias. Significa que ventas puede desarrollarse, probarse y mantener sus propias operaciones sin conocer la implementación de inventario. Si un servicio externo no está disponible, cada proceso deberá tener una política explícita de recuperación o rechazo.
+Un matiz fundamental: independencia no significa que ventas pueda confirmar una venta sin inventario cuando necesita comprobar existencias. Significa que ventas puede desarrollarse, probarse y mantener sus propias operaciones sin conocer la implementación de inventario. Si un servicio externo no está disponible, cada proceso deberá tener una política explícita de recuperación o rechazo.\n\n## Arquitectura normativa\n\nAntes de cualquier cambio, leer [Estándar general](docs/architecture/engineering-standard.md), [Arquitectura de Restaurant OS](docs/architecture/restaurant-os-architecture.md), [Reglas de implementación](docs/engineering/implementation-rules.md) y [ADRs aceptados](docs/adr/README.md). La jerarquía y precedencia de esos documentos es obligatoria.\n

@@ -1,4 +1,4 @@
-# Reglas de eventos Outbox e Inbox
+> **Estado: superseded.** Este documento se conserva como referencia histórica. La fuente normativa vigente es [Reglas vigentes de Outbox, Inbox e idempotencia](../docs/engineering/implementation-rules.md#4-stateless-outboxinbox-e-idempotencia). No añadir reglas nuevas aquí ni resolver contradicciones desde este archivo; actualizar la fuente vigente y registrar ADR cuando corresponda.\n\n# Reglas de eventos Outbox e Inbox
 
 ## Alcance
 

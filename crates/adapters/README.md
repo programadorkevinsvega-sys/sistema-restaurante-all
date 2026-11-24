@@ -1,27 +1,11 @@
 # Adapters
 
-Esta carpeta contiene adaptadores Rust que conectan los puertos de aplicación
-con transportes, brokers u otras tecnologías. Un adaptador traduce entre un
-contrato y su implementación técnica; no decide las reglas del dominio.
+Esta carpeta contiene adaptadores técnicos que conectan puertos de aplicación con transportes, brokers y otras tecnologías. Un adaptador traduce entre contrato e implementación; no decide reglas del dominio.
 
-## Contenido
+- grpc/: clientes y servidores gRPC. Son obligatorios desde el inicio en las fronteras backend ↔ BFF y se usan entre servicios separados. No son obligatorios para llamadas entre módulos internos que comparten proceso.
+- messaging/: integración con brokers y transporte de eventos.
+- local/: adaptadores en proceso o sustitutos de prueba cuando correspondan.
 
-- [`grpc/`](./grpc/): clientes y servidores gRPC para módulos extraídos como
-  servicios. En el monolito modular, la comunicación interna debe preferir
-  contratos locales; gRPC no es obligatorio entre módulos.
-- [`messaging/`](./messaging/): integración con brokers y transporte de
-  mensajes, incluyendo publicación o consumo de eventos.
-- [`local/`](./local/): integraciones en el mismo proceso o implementaciones
-  sustitutas para pruebas, cuando sean necesarias.
+Los módulos internos usan puertos/traits y contratos públicos; nunca implementaciones internas ajenas. La comunicación local no elimina el contrato Protobuf versionado equivalente.
 
-## Límites
-
-- Las reglas y los casos de uso pertenecen a los módulos de dominio.
-- La persistencia específica de un dominio permanece junto a ese dominio; no
-  centralizar todos los repositorios en esta carpeta.
-- Los adaptadores implementan puertos definidos por la aplicación y traducen
-  errores y datos explícitamente.
-- No guardar aquí secretos, configuración de despliegue ni migraciones SQL.
-
-Si `local/` se usa para configuración del entorno local y no para adaptadores
-en proceso, esa configuración corresponde a [`infrastructure/docker/`](../../infrastructure/docker/).
+No guardar aquí secretos, migraciones ni configuración de despliegue. Ver [Arquitectura](../../docs/architecture/restaurant-os-architecture.md) y [Reglas de implementación](../../docs/engineering/implementation-rules.md).

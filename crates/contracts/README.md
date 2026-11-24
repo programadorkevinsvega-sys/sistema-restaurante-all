@@ -1,25 +1,13 @@
 # Contracts
 
-Esta carpeta contiene los contratos versionados que cruzan los límites de
-módulos o servicios. Su objetivo es permitir que productores y consumidores
-intercambien datos sin compartir implementaciones internas.
+Esta carpeta contiene contratos versionados que cruzan límites de módulos o servicios.
 
-## Contenido
+- events/: esquemas de eventos versionados.
+- proto/: contratos Protobuf versionados para APIs gRPC.
+- OpenAPI es la fuente de verdad para las superficies HTTP y se mantiene en [openapi/](./openapi/README.md).
 
-- [`events/`](./events/): esquemas de eventos publicados entre módulos,
-  procesos o servicios.
-- [`proto/`](./proto/): definiciones Protocol Buffers para las APIs gRPC.
+Protobuf existe desde el inicio aunque una llamada interna se ejecute localmente. Los contratos gRPC entre backends y BFF son obligatorios desde el inicio; solo se difiere gRPC para llamadas entre módulos internos del mismo proceso.
 
-Los contratos deben tener nombres y versiones explícitos, documentar su
-compatibilidad y evitar exponer detalles internos de persistencia.
+Los tipos y stubs derivados se generan desde sus contratos fuente y no se editan a mano. CI debe regenerar y fallar si hay diferencias. Ver [Arquitectura](../../docs/architecture/restaurant-os-architecture.md), [Reglas de implementación](../../docs/engineering/implementation-rules.md) y [ADRs](../../docs/adr/README.md).
 
-## No incluir
-
-- Reglas de negocio, casos de uso o entidades de dominio.
-- Implementaciones de clientes gRPC, brokers o adaptadores.
-- Modelos de tablas o consultas SQL.
-- Tipos duplicados que puedan generarse desde estos contratos.
-
-Las interfaces internas de una capacidad deben permanecer junto al módulo que
-las define. Esta carpeta se reserva para formatos y APIs que realmente cruzan
-un límite.
+No incluir reglas de negocio, adaptadores, SQL ni tipos duplicados manualmente.

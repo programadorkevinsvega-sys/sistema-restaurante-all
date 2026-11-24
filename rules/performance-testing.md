@@ -1,3 +1,5 @@
+> **Estado: superseded.** Este documento se conserva como referencia histórica. La fuente normativa vigente es [Reglas de implementación: pruebas y calidad](../docs/engineering/implementation-rules.md#6-pruebas-y-calidad). No añadir reglas nuevas aquí; actualizar la fuente vigente y registrar ADR cuando corresponda.
+
 # Reglas de pruebas de rendimiento
 
 ## Alcance y estado

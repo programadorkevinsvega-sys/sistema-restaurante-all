@@ -1,4 +1,4 @@
-# Reglas de PostgreSQL
+> **Estado: superseded.** Este documento se conserva como referencia histórica. La fuente normativa vigente es [Reglas vigentes de PostgreSQL y migraciones](../docs/engineering/implementation-rules.md#2-postgresql-roles-y-migraciones-sqlx). No añadir reglas nuevas aquí ni resolver contradicciones desde este archivo; actualizar la fuente vigente y registrar ADR cuando corresponda.\n\n# Reglas de PostgreSQL
 
 ## Contexto del proyecto
 
