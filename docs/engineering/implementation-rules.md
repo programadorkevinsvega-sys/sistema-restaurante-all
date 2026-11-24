@@ -26,8 +26,7 @@ Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni
   validaciones, autorización o reglas del backend.
 - `infrastructure/` contiene configuración de servicios e infraestructura,
   no migraciones ni lógica de dominio.
-- La distribución concreta de dominios entre los cuatro backends debe
-  respetar `requisitos.md`; no duplicar ni asignar módulos por inferencia.
+- La distribución concreta de dominios entre los cuatro backends está aprobada en ADR-0008 y debe respetar `requisitos.md`; no duplicar ni reasignar módulos por inferencia.
 
 - Depender de contratos públicos; no importar implementaciones internas ajenas.
 - DTO no exponen entidades ni modelos SQL.
@@ -62,7 +61,7 @@ SQLx usa por defecto `_sqlx_migrations`. Cada módulo debe configurar su propia 
 
 FKs, joins y consultas directas solo dentro del límite de propiedad del mismo módulo. No FKs, joins, vistas ni consultas directas entre schemas propietarios distintos. Referencias cross-module mediante IDs y contratos; proyecciones derivadas bajo propiedad del consumidor.
 
-## 2.1 Política propuesta de identificadores
+## 2.1 Política aceptada de identificadores
 
 La política global UUIDv7 y la versión objetivo PostgreSQL están aceptadas en [ADR-0012](../adr/0012-uuid-v7-global-identifiers-and-postgresql.md), con detalle en [Estrategia técnica de identificadores](../architecture/identifier-strategy.md). La aceptación define el estándar, pero no significa que generación, contratos, columnas, defaults, índices o datos estén modificados. La convergencia de identificadores existentes requiere un plan separado por módulo y autorización expresa. No modificar archivos SQL ni ejecutar migraciones sin autorización expresa.
 
@@ -70,7 +69,7 @@ La política global UUIDv7 y la versión objetivo PostgreSQL están aceptadas en
 
 IDENTITY en Public Backend es el único propietario de credenciales locales, hashing, verificación, MFA, sesiones y recuperación. Los BFF no calculan hashes ni consultan directamente las tablas de IDENTITY; Admin Platform Backend consume sus contratos cuando corresponda y no duplica credenciales.
 
-La especificación detallada propuesta está en [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md) y [ADR-0011](../adr/0011-password-hashing-and-authentication-security.md). ADR-0011 permanece Proposed hasta aprobación explícita; sus parámetros y controles no deben presentarse como política aceptada antes de esa aprobación.
+La especificación técnica aprobada está en [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md) y desarrolla [ADR-0011 Accepted](../adr/0011-password-hashing-and-authentication-security.md). Sus parámetros y controles son decisiones aprobadas; su presencia documental no demuestra que los flujos estén implementados.
 
 La implementación futura deberá usar Argon2id con salt aleatorio único, PHC y límites de concurrencia/memoria; no almacenar contraseñas en claro ni usar hashes rápidos. Las credenciales nunca se registran en logs, trazas o eventos. Cualquier cambio en SQL o migraciones se tramita en una tarea separada y con autorización expresa. La presencia del diseño SQL de IDENTITY no demuestra que los flujos estén implementados.
 
@@ -88,7 +87,7 @@ La implementación futura deberá usar Argon2id con salt aleatorio único, PHC y
 
 ### Estado de proceso
 
-No guardar sesiones, estado de usuario, colas durables ni estado de negocio solo en memoria local. Los pools PostgreSQL deben ser acotados y reutilizables por identidad runtime de módulo; no se comparte un pool/rol global entre módulos. Dentro de cada instancia, las operaciones del módulo reutilizan su pool. La concurrencia se limita por workload. Configurar readiness/liveness, graceful shutdown, timeouts y backpressure. La estrategia detallada está propuesta en [ADR-0010](../adr/0010-postgresql-connection-pooling-and-resource-management.md) y no se considera aceptada hasta su aprobación.
+No guardar sesiones, estado de usuario, colas durables ni estado de negocio solo en memoria local. Los pools PostgreSQL deben ser acotados y reutilizables por identidad runtime de módulo; no se comparte un pool/rol global entre módulos. Dentro de cada instancia, las operaciones del módulo reutilizan su pool. La concurrencia se limita por workload. Configurar readiness/liveness, graceful shutdown, timeouts y backpressure. La estrategia detallada está establecida en [ADR-0010 Accepted](../adr/0010-postgresql-connection-pooling-and-resource-management.md). La decisión está aprobada; los pools y su configuración todavía no están implementados.
 
 ### Outbox
 
@@ -102,7 +101,7 @@ Cada consumidor deduplica por consumidor y event_id (incluyendo tenant si el mod
 
 ### Consistencia distribuida y procesos multi-módulo
 
-La coordinación de procesos de negocio durables entre varios módulos está propuesta en [ADR-0013](../adr/0013-distributed-transactions-and-saga-consistency.md) y [Estrategia técnica de consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md). ADR-0013 permanece Proposed: no tratar su patrón Saga como regla aceptada hasta su aprobación. Los principios ya aceptados de transacciones locales, Outbox/Inbox, idempotencia y propiedad de datos de ADR-0001, ADR-0003 y ADR-0007 siguen vigentes.
+La coordinación de procesos de negocio durables entre varios módulos está aprobada en [ADR-0013 Accepted](../adr/0013-distributed-transactions-and-saga-consistency.md) y desarrollada en [Estrategia técnica de consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md). El patrón Saga, su ownership y sus reglas de consistencia son decisiones vigentes; la implementación de cada flujo sigue sujeta a su diseño técnico y a la autorización aplicable.
 
 ### Jobs periódicos
 
