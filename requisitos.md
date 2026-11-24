@@ -2198,13 +2198,16 @@ de modulo. KITCHEN y PRODUCTION conservan su identidad y propiedad de dominio,
 pero su implementacion pertenece al Restaurant vertical porque sus reglas son
 gastronomicas. No deben duplicarse como crates bajo `crates/core/`.
 
-### Topología de procesos y BFF
+### Topología de los cuatro backends
 
-- `api-server` es un proceso independiente que aloja el monolito modular de backend y expone gRPC.
-- `bff` es otro proceso independiente: consume `api-server` por gRPC y expone HTTP/OpenAPI a los frontends independientes.
-- El despliegue objetivo usa dos servicios de aplicación en Docker Compose: `api-server` y `bff`.
-- La separación del BFF no convierte cada dominio en microservicio. Los módulos dentro de `api-server` siguen comunicándose mediante puertos/contratos locales.
-- Es una topología objetivo; su implementación debe verificarse en manifiestos y no se presume activa.
+Restaurant OS se compone de cuatro procesos/binarios independientes, cada uno con sus propios módulos:
+
+1. Admin Platform Backend.
+2. Admin BFF.
+3. Public BFF.
+4. Public Backend.
+
+Los BFF son procesos separados de sus respectivos backends; no existe un único `api-server` que aloje todos los módulos ni un único BFF compartido. Cada proceso conserva sus propios módulos y responsabilidades. Entre procesos se utiliza gRPC para solicitudes/respuestas, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso usan los contratos públicos y puertos/traits locales descritos en el estándar modular; los hechos durables se gestionan mediante Outbox/Inbox. Docker Compose debe representar cuatro servicios independientes. Es una topología objetivo, no evidencia de que ya esté implementada.
 
 `AI` es una capacidad transversal, no un dominio propietario ni un módulo con schema propio en esta etapa. Se accede mediante un puerto/capacidad y utiliza herramientas autorizadas de los módulos. Cada módulo conserva los datos que necesita para su propio proceso; no se asigna a AI la propiedad de conversaciones, configuración o consumo. Esta regla está registrada en [ADR-0006](docs/adr/0006-ai-cross-cutting-capability-no-owned-schema.md). Si una necesidad futura exige persistencia centralizada o un módulo AI, deberá aprobarse mediante un ADR nuevo. La librería `tenancy`, si se conserva como soporte compartido, no es un dominio propietario: PLATFORM mantiene la propiedad del ciclo de vida de tenants.
 
@@ -4964,12 +4967,12 @@ La facturacion debe ser un componente independiente del POS.
 | Backend | Rust + Axum |
 | Monorepo Rust | Cargo workspace |
 | Persistencia Rust | PostgreSQL + SQLx |
-| API hacia frontends | HTTP + OpenAPI expuesta por el BFF |
-| Comunicación backend ↔ BFF | gRPC + Tonic + Protobuf versionado desde el inicio; llamadas entre módulos del mismo proceso mediante puertos locales |
+| API hacia frontends | HTTP + OpenAPI expuesta por Admin BFF y Public BFF |
+| Comunicación entre procesos | gRPC + Tonic + Protobuf versionado para solicitudes/respuestas; NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Los módulos dentro de un mismo backend usan puertos/traits locales |
 | Tiempo real | WebSockets |
 | Base de datos | PostgreSQL |
 | Caché | Redis |
-| Colas | RabbitMQ o NATS JetStream |
+| Mensajería | NATS Core (señales efímeras) y NATS JetStream (eventos durables) |
 | Archivos | Almacenamiento compatible con S3 |
 | Analítica inicial | PostgreSQL |
 | Analítica a escala | ClickHouse cuando el volumen lo justifique |
@@ -4982,12 +4985,12 @@ No es necesario implementar todas las tecnologias desde el primer dia.
 
 ### Criterios de seleccion
 
-- Rust permite compilar un monolito modular como un único ejecutable.
-- Cargo workspace permite separar módulos en crates y enlazarlos en apps/api-server.
+- Rust permite compilar cada backend como un binario independiente que contiene sus módulos.
+- Cargo workspace permite separar módulos en crates y enlazarlos en el binario del backend propietario.
 - SQLx permite persistencia tipada y transacciones controladas sobre PostgreSQL.
 - Hexagonal + DDD mantienen reglas de negocio independientes de transporte y persistencia.
-- Axum sirve la API HTTP del BFF; `api-server` expone los servicios gRPC mediante Tonic.
-- Tonic proporciona gRPC y HTTP/2 en la frontera `api-server` ↔ BFF desde el inicio y permite futuras extracciones de servicios.
+- Axum sirve las superficies HTTP de Admin BFF y Public BFF; Admin Platform Backend y Public Backend exponen sus contratos de backend.
+- Tonic proporciona gRPC y HTTP/2 en las fronteras entre los cuatro procesos desde el inicio y permite futuras extracciones de módulos.
 - PostgreSQL ofrece transacciones y relaciones sólidas.
 - Redis puede utilizarse para caché, sesiones y coordinación.
 - WebSockets permiten actualizar pedidos y pantallas de cocina.
@@ -5004,8 +5007,11 @@ Restaurant OS utilizara un monolito modular implementado en Rust.
 
 - El repositorio sera un Cargo workspace.
 - Los modulos se implementaran como crates de biblioteca.
-- El backend modular sera un crate ejecutable `apps/api-server`, que aloja los módulos y expone gRPC.
-- El BFF sera otro crate ejecutable independiente `apps/bff`, que expone HTTP/OpenAPI a los frontends.
+- Admin Platform Backend sera un binario/proceso independiente.
+- Admin BFF sera un binario/proceso independiente que expone HTTP/OpenAPI a los frontends administrativos.
+- Public BFF sera un binario/proceso independiente que expone HTTP/OpenAPI a los frontends públicos.
+- Public Backend sera un binario/proceso independiente.
+- Cada uno de los cuatro backends/procesos tendrá sus propios módulos y punto de composición.
 - Los modulos no deben estar acoplados a clases o tablas privadas de otros modulos.
 - Los modulos deben exponer contratos publicos, puertos y fachadas.
 - La arquitectura debe facilitar extraer modulos sin reescribir sus reglas de negocio.
@@ -5017,8 +5023,10 @@ restaurant-os/
 ├── Cargo.toml
 ├── apps/
 │   ├── admin-web/
-│   ├── api-server/
-│   ├── bff/ # proceso independiente: HTTP/OpenAPI para los frontends
+│   ├── admin-platform-backend/ # binario independiente con sus módulos
+│   ├── admin-bff/ # binario independiente: HTTP/OpenAPI administrativo
+│   ├── public-bff/ # binario independiente: HTTP/OpenAPI público
+│   └── public-backend/ # binario independiente con sus módulos
 │   ├── customer-portal/
 │   ├── kitchen-display/
 │   └── pos/
@@ -5091,7 +5099,7 @@ anticipado sin una responsabilidad implementable.
 
 `AI` es una capacidad transversal accesible mediante un puerto, no un dominio propietario ni un módulo con schema propio en esta etapa. Cada módulo conserva los datos de su proceso en su schema. PLATFORM conserva el ciclo de vida de tenants; `tenancy/` aporta solo contexto y utilidades compartidas.
 
-El mismo modulo debe poder compilarse como crate independiente y como parte del binario principal.
+El mismo módulo debe poder compilarse como crate independiente y como parte del binario de su backend propietario.
 
 ### Estructura interna de un modulo
 
@@ -5149,8 +5157,9 @@ Las interfaces asincronas dinamicas deben utilizar async-trait.
 Mecanismos iniciales:
 
 - Contratos locales para operaciones inmediatas dentro del mismo proceso.
-- gRPC con Tonic y Protocol Buffers entre `api-server` y BFF desde el inicio, y para otros servicios cuando se extraigan.
-- Eventos asincronos para hechos publicados por otros modulos.
+- gRPC con Tonic y Protocol Buffers para solicitudes/respuestas entre los cuatro procesos independientes desde el inicio.
+- NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda.
+- Eventos asíncronos para hechos publicados por otros módulos; Outbox/Inbox mantiene la entrega durable e idempotente.
 
 gRPC no debe utilizarse para absolutamente toda comunicacion.
 
@@ -5322,18 +5331,19 @@ Independencia no significa que una venta pueda confirmarse sin comprobar inventa
 | Organizacion | Cargo Workspace |
 | Arquitectura | Hexagonal + DDD |
 | Persistencia | PostgreSQL + SQLx |
-| Comunicación backend ↔ BFF | gRPC + Tonic + Protobuf desde el inicio; gRPC entre módulos internos solo cuando crucen procesos |
+| Comunicación entre procesos | gRPC + Tonic + Protobuf para solicitudes/respuestas; NATS Core para señales efímeras y NATS JetStream para eventos durables |
 | Eventos | Outbox + broker |
 | Caché | Redis |
 | Frontend | React + TypeScript |
-| Despliegue objetivo inicial | Dos procesos/servicios de aplicación: `api-server` (módulos backend, gRPC) y `bff` (HTTP/OpenAPI), coordinados con Docker Compose |
+| Despliegue objetivo inicial | Cuatro procesos/servicios independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend, coordinados con Docker Compose |
 
-El backend conserva un monolito modular dentro de `api-server`; el BFF es un proceso independiente desde el inicio. No se deben convertir los módulos internos en microservicios ni usar gRPC entre módulos que comparten el proceso `api-server`.
+Cada uno de los cuatro procesos contiene sus propios módulos organizados como monolito modular. Los módulos que comparten backend/proceso usan contratos y puertos locales; no se convierten automáticamente en microservicios. Los cuatro procesos se comunican mediante gRPC y NATS Core/JetStream según el tipo de interacción.
 
-- Construir el backend como monolito modular.
-- Desplegar `api-server` y `bff` como dos servicios de aplicación.
-- Usar Tonic/gRPC y Protobuf versionado entre `api-server` y BFF desde el inicio.
-- Mantener puertos locales entre módulos internos del mismo proceso.
+- Construir los cuatro backends como binarios/procesos independientes.
+- Desplegar Admin Platform Backend, Admin BFF, Public BFF y Public Backend como cuatro servicios de aplicación.
+- Usar Tonic/gRPC y Protobuf versionado en las fronteras entre procesos desde el inicio.
+- Usar NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda.
+- Mantener puertos/traits locales entre módulos que comparten el mismo backend/proceso.
 - No declarar esta topología implementada hasta verificar los manifiestos de despliegue.
 
 ## Capacidad transversal del AI Manager
