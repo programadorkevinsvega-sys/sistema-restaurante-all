@@ -18,7 +18,7 @@ UUIDv7 tiene una implicación de privacidad: la marca temporal permite estimar c
 
 A fecha de aceptación de esta decisión, PostgreSQL 19.0 es la versión estable más reciente, publicada el 19 de noviembre de 2026. PostgreSQL incorpora generación nativa UUIDv7 mediante `uuidv7()` desde PostgreSQL 18; la versión 19 documenta esta función y el tipo `uuid`.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Política global de identificadores técnicos
 
