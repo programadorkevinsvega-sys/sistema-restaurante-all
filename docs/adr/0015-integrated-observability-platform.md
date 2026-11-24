@@ -1,7 +1,9 @@
 # ADR-0015: Observabilidad integral de aplicaciones e infraestructura
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Propuesto: 2026-11-24
+- Aceptado: 2026-11-24
+- Aprobación: propietario del producto
 - Ámbito: los cuatro procesos, módulos, workers, infraestructura y servicios de datos/mensajería.
 - Complementa: ADR-0003, ADR-0004, ADR-0007, ADR-0010 y ADR-0013.
 - Especificación técnica: [Estrategia técnica de observabilidad](../architecture/observability-strategy.md).
@@ -14,7 +16,7 @@ Los logs aislados no muestran tendencias; las métricas agregadas no explican qu
 
 ADR-0004 ya establece W3C Trace Context. ADR-0013 define correlación de Sagas, comandos, eventos y workers. Este ADR no reemplaza esas decisiones: concreta la plataforma y las obligaciones de instrumentación.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Plataforma de observabilidad
 
@@ -135,4 +137,4 @@ La plataforma es infraestructura transversal bajo infrastructure/; no es un mód
 
 ## Estado de implementación
 
-Esta propuesta no implica que OpenTelemetry, Prometheus, Grafana, Loki, Tempo, Alertmanager, exporters, dashboards, alertas o instrumentación estén instalados o desplegados. No crea crates, dependencias, servicios, contenedores, configuraciones ni cambios de infraestructura. Su aceptación requerirá aprobación explícita del propietario del producto y su implementación se realizará en una fase posterior.
+La decisión está aceptada, pero no implica que OpenTelemetry, Prometheus, Grafana, Loki, Tempo, Alertmanager, exporters, dashboards, alertas o instrumentación estén instalados o desplegados. No crea crates, dependencias, servicios, contenedores, configuraciones ni cambios de infraestructura. La implementación se realizará en una fase posterior.
