@@ -65,8 +65,7 @@ inventario fisico y `KITCHEN` las comandas y preparacion de pedidos de clientes.
 - El vertical referencia productos de CATALOG, pedidos de SALES, recursos
   fisicos de ORGANIZATION y stock/movimientos de INVENTORY mediante contratos;
   no vuelve a crear ni escribir las entidades propietarias.
-- El codigo se ubica segun estas reglas; las migraciones SQL permanecen en
-  `migrations/` y se ordenan segun dependencias, no segun la ruta del crate.
+- El codigo se ubica segun estas reglas. Las migraciones historicas permanecen en su ubicacion actual; las nuevas migraciones se organizan en directorios por modulo dentro de `migrations/<modulo>/`, con rol e historial SQLx independientes por modulo.
 
 **Instrucciones importantes:**
 
