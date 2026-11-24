@@ -19,7 +19,7 @@ Definir Protobuf desde el inicio y usar gRPC en toda llamada no son la misma dec
 5. gRPC entre `api-server` y BFF es obligatorio desde el inicio.
 6. Módulos internos en el mismo proceso pueden usar traits/puertos locales y DTO propios, respetando el contrato público.
 7. Al separar otro módulo como servicio, el adaptador gRPC implementa el mismo puerto y usa el Protobuf existente.
-5. La llamada local no autoriza imports de implementaciones internas, exposición de entidades ni acceso a tablas ajenas.
+8. La llamada local no autoriza imports de implementaciones internas, exposición de entidades ni acceso a tablas ajenas.
 
 ## Consecuencias
 
