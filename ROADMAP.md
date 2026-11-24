@@ -91,7 +91,7 @@ Restaurant OS sera una plataforma multiempresa con clientes externos.
 - Recetas y subrecetas versionadas por PRODUCTION; precios y disponibilidad por
   sucursal en CATALOG.
 - Rendimientos y fichas tecnicas bajo propiedad de PRODUCTION.
-- Combos, promociones y menus por horario.
+- Combos, promociones y agrupaciones comerciales genericas en CATALOG; menus gastronomicos por horario en Restaurant vertical.
 - Precios e impuestos por sucursal.
 - Recetas centrales con excepciones locales controladas por PRODUCTION.
 - Consumo de INVENTORY segun la receta efectiva versionada.
@@ -373,7 +373,7 @@ flujos de servicio propios del restaurante pertenecen a
 - Catalogo central por marca y empresa.
 - Variantes, presentaciones y modificadores.
 - Combos y promociones.
-- Menus por horario y sucursal.
+- Menus gastronomicos por horario y sucursal, propiedad de Restaurant vertical y compuestos con productos de CATALOG.
 - Impuestos por producto.
 - Catalogo centralizado con configuraciones por sucursal.
 - Categorias, productos, fotos, descripciones y variantes.
