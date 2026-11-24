@@ -229,4 +229,4 @@ Las fases describen una secuencia propuesta. No declaran que los pools, métrica
 
 ## 8. Estado de implementación
 
-Este ADR está **Accepted**. No modifica ni acepta por sí mismo decisiones anteriores. Su contenido es una propuesta documental: no crea pools, configura SQLx, cambia credenciales, modifica infraestructura, crea tablas o migraciones, ni ejecuta SQL o migraciones.
+Este ADR está **Accepted**. No modifica ni acepta por sí mismo decisiones anteriores. La aceptación es una decisión documental: no crea pools, configura SQLx, cambia credenciales, modifica infraestructura, crea tablas o migraciones, ni ejecuta SQL o migraciones.
