@@ -21,7 +21,9 @@ Proteger `main` para que los cambios entren mediante Pull Request y las revision
 
 ## CODEOWNERS
 
-- Mantener un archivo `CODEOWNERS` en una ubicación reconocida por GitHub (`.github/CODEOWNERS`, `CODEOWNERS` en la raíz o `docs/CODEOWNERS`).
+El repositorio ya contiene un archivo `CODEOWNERS` en la raíz que asigna `docs/architecture/` a `@programadorkevinsvega-sys`. Mantener esa asignación o actualizarla con responsables reales cuando cambie la propiedad documental.
+
+- Mantener el archivo `CODEOWNERS` en una ubicación reconocida por GitHub (`.github/CODEOWNERS`, `CODEOWNERS` en la raíz o `docs/CODEOWNERS`).
 - Declarar responsables reales y rutas que deban revisar.
 - Verificar que los responsables tengan permisos suficientes para revisar.
 - La obligatoriedad se obtiene al activar **Require review from Code Owners** en Rulesets/branch protection; la mera existencia del archivo no basta.
