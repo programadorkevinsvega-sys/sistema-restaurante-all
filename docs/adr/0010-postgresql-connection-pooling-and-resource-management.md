@@ -1,8 +1,9 @@
 # ADR-0010: PostgreSQL Connection Pooling y gestión de recursos
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Propuesto: 2026-11-24
-- Aceptado: pendiente de aprobación explícita del propietario del producto.
+- Aprobado: 2026-11-24
+- Aprobación: decisión aprobada explícitamente por el propietario del producto.
 - Complementa: ADR-0001, ADR-0003, ADR-0004, ADR-0007, ADR-0008 y ADR-0009.
 - Fuente de referencia: estrategia ENSAMBRIA de Connection Pooling y Gestión de Conexiones PostgreSQL, adaptada a la arquitectura vigente de Restaurant OS.
 
@@ -19,7 +20,7 @@ Por tanto, «un pool por backend» no puede interpretarse como un único pool co
 
 El pooling debe equilibrar reutilización, aislamiento de permisos, concurrencia, latencia y el límite global de conexiones de PostgreSQL. La cantidad de conexiones crece con los pools, los módulos, las réplicas y los procesos operativos; dimensionar cada pool de forma aislada no es suficiente.
 
-## 2. Decisión propuesta
+## 2. Decisión
 
 ### 2.1 Propiedad e identidad de cada pool
 
@@ -181,7 +182,7 @@ Una prueba con mocks no sustituye la validación de semántica PostgreSQL, roles
 
 ## 4. Consecuencias
 
-Si se acepta:
+Como decisión aceptada:
 - La topología de cuatro procesos y el ownership de módulos permanecen sin cambios.
 - Cada identidad runtime de módulo conserva un pool SQLx acotado y reutilizable dentro de cada instancia propietaria.
 - Public Backend debe presupuestar la suma de los pools de sus 19 módulos por réplica.
@@ -228,4 +229,4 @@ Las fases describen una secuencia propuesta. No declaran que los pools, métrica
 
 ## 8. Estado de implementación
 
-Este ADR está **Proposed** y pendiente de aprobación explícita. No modifica ni acepta por sí mismo decisiones anteriores. Su contenido es una propuesta documental: no crea pools, configura SQLx, cambia credenciales, modifica infraestructura, crea tablas o migraciones, ni ejecuta SQL o migraciones.
+Este ADR está **Accepted**. No modifica ni acepta por sí mismo decisiones anteriores. Su contenido es una propuesta documental: no crea pools, configura SQLx, cambia credenciales, modifica infraestructura, crea tablas o migraciones, ni ejecuta SQL o migraciones.
