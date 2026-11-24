@@ -67,7 +67,7 @@ La estructura completa y la responsabilidad de cada carpeta están definidas en 
 - Visibilidad por defecto: privado. Solo se publica explícitamente lo que está en `contracts`.
 - La composición (ensamblar módulos en el binario) vive en un único lugar (`composition`/`main`), nunca dentro de los módulos.
 
-**Concreción de crates:** la estructura detallada de crates de implementación, crates públicos de contratos, crates de transporte y composición por proceso está desarrollada como propuesta en [Diseño de crates y dependencias](./crate-architecture.md), asociada a ADR-0009. Mientras ADR-0009 permanezca Proposed, sus decisiones específicas de layout no sustituyen las reglas generales aceptadas ni autorizan crear manifests o código.
+**Concreción de crates:** la estructura detallada de crates de implementación, crates públicos de contratos, crates de transporte y composición por proceso está definida en [Diseño de crates y dependencias](./crate-architecture.md) y aceptada mediante ADR-0009. Sus decisiones específicas de layout complementan este estándar y rigen la implementación.
 
 **Debe fallar:**
 ```rust
