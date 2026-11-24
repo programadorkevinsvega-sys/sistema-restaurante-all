@@ -22,6 +22,10 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0014: Baja de tenants y conservación de datos de clientes](./0014-tenant-deletion-and-customer-data-preservation.md)
 - [ADR-0015: Observabilidad integral de aplicaciones e infraestructura](./0015-integrated-observability-platform.md)
 
+## Decisiones propuestas
+
+- [ADR-0016: Redis Cluster, TLS y caché distribuida de consultas](./0016-redis-cluster-tls-and-query-caching.md)
+
 El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). La estrategia técnica de UUIDv7 y PostgreSQL está en [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](../architecture/identifier-strategy.md). La estrategia técnica de consistencia distribuida está en [Estrategia técnica de consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md). La estrategia técnica de observabilidad está en [Estrategia técnica de observabilidad integral](../architecture/observability-strategy.md).
 
 Los ADR aceptados son decisiones arquitectónicas aprobadas; los ADR propuestos requieren aprobación explícita. La aceptación de un ADR no significa que sus componentes, controles, infraestructura, migraciones o código estén implementados.
