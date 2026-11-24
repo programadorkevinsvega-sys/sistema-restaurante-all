@@ -34,16 +34,19 @@ Lee todos estos documentos antes de cualquier implementación:
 3. [Estándar general de ingeniería](docs/architecture/engineering-standard.md).
 4. [Arquitectura de Restaurant OS](docs/architecture/restaurant-os-architecture.md).
 5. [Reglas de implementación](docs/engineering/implementation-rules.md).
-6. [Índice de arquitectura](docs/architecture/README.md).
-7. [Índice de ADRs](docs/adr/README.md).
-8. [Diseño de crates y dependencias](docs/architecture/crate-architecture.md).
-9. [Requisitos generales](requisitos.md).
-10. [Roadmap](ROADMAP.md).
-11. [Prompt funcional y lotes históricos](promt.md).
-12. [Migraciones por módulo](migrations/README.md).
-13. [Gobernanza y protección de main](docs/engineering/github-protection-setup.md).
+6. [Estándar de calidad, seguridad y mantenimiento documental](docs/engineering/documentation-quality-and-security-standard.md).
+7. [Índice de arquitectura](docs/architecture/README.md).
+8. [Índice de ADRs](docs/adr/README.md).
+9. [Diseño de crates y dependencias](docs/architecture/crate-architecture.md).
+10. [Requisitos generales](requisitos.md).
+11. [Roadmap](ROADMAP.md).
+12. [Prompt funcional y lotes históricos](promt.md).
+13. [Migraciones por módulo](migrations/README.md).
+14. [Gobernanza y protección de main](docs/engineering/github-protection-setup.md).
 
 Si un documento enlaza otro documento normativo relevante, sigue el enlace y léelo también.
+
+Antes de crear o modificar README, documentación técnica, ejemplos, enlaces o configuración documentada, aplica el estándar documental de la sección 2.1. Inspecciona el código/manifests/scripts que respalden las afirmaciones; no inventes comandos, variables, versiones ni estados. Verifica enlaces y rutas, revisa exposición de secretos y distingue implementación real de planificación. Los controles CI documentales solo se reportan activos si existen y se han ejecutado.
 
 ### 2.2 ADRs — siempre
 
