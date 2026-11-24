@@ -22,7 +22,7 @@ Restaurant OS se compone de cuatro backends/procesos totalmente independientes. 
 3. **Public BFF**.
 4. **Public Backend**.
 
-No existe un único `api-server` que aloje los módulos de los cuatro procesos ni un único BFF compartido. Cada proceso conserva sus propios módulos, punto de composición y responsabilidades. Esta decisión no reasigna ni elimina la responsabilidad funcional de ningún módulo.
+No existe un único `api-server` que aloje los módulos de los cuatro procesos ni un único BFF compartido. Admin Platform Backend y Public Backend alojan los módulos de negocio que les asigna ADR-0008; los BFF mantienen sus propios puntos de composición y responsabilidades de transporte, sin ownership de dominios. Esta decisión no reasigna ni elimina la responsabilidad funcional de ningún módulo.
 
 ### Comunicación dentro de cada backend
 
