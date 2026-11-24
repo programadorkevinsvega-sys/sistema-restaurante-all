@@ -111,6 +111,7 @@ Todo job que pueda correr en varias réplicas usa advisory lock PostgreSQL, leas
 ## 5. OpenTelemetry y W3C Trace Context
 
 Propagar W3C Trace Context mediante traceparent y tracestate cuando aplique:
+
 - HTTP: headers W3C.
 - gRPC: metadata.
 - Eventos: traceparent y tracestate opcional en envelope versionado.
