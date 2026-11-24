@@ -1,0 +1,83 @@
+name: Documentation and Security
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: documentation-security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  documentation-security:
+    name: Markdown and secret validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository and history
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+
+      - name: Resolve comparison range
+        id: range
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_HEAD: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            base="$PR_BASE"
+            head="$PR_HEAD"
+          else
+            base="$PUSH_BEFORE"
+            head="$PUSH_HEAD"
+            if [[ -z "$base" || "$base" =~ ^0+$ ]]; then
+              base="$(git rev-list --max-parents=0 "$head" | tail -n 1)"
+            fi
+          fi
+          git cat-file -e "${base}^{commit}"
+          git cat-file -e "${head}^{commit}"
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "head=$head" >> "$GITHUB_OUTPUT"
+
+      - name: Validate changed Markdown style
+        shell: bash
+        env:
+          BASE_REF: ${{ steps.range.outputs.base }}
+          HEAD_REF: ${{ steps.range.outputs.head }}
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "$BASE_REF...$HEAD_REF" -- '*.md' '*.mdx')
+          if (( ${#files[@]} == 0 )); then
+            echo "No changed Markdown files; skipping markdownlint."
+            exit 0
+          fi
+          npx --yes markdownlint-cli2@0.17.2 --config .markdownlint-cli2.jsonc "${files[@]}"
+
+      - name: Validate changed Markdown local links and anchors
+        env:
+          BASE_REF: ${{ steps.range.outputs.base }}
+          HEAD_REF: ${{ steps.range.outputs.head }}
+        run: |
+          python scripts/docs/check_markdown_links.py --base-ref "$BASE_REF" --head-ref "$HEAD_REF"
+
+      - name: Scan changed commits for secrets
+        env:
+          BASE_REF: ${{ steps.range.outputs.base }}
+          HEAD_REF: ${{ steps.range.outputs.head }}
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/repo" \
+            zricethezav/gitleaks:v8.24.2 \
+            git --log-opts="$BASE_REF..$HEAD_REF" --redact --exit-code 1 /repo
