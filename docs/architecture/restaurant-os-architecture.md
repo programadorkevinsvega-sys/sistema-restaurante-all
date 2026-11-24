@@ -25,11 +25,45 @@ Una contradicción no se resuelve por interpretación del agente. Se propone un 
 - La composición de los módulos se realiza en un punto controlado dentro de cada backend.
 - La ubicación física del crate no cambia la propiedad lógica del dominio.
 
-## 4. Dominios
+## 4. Dominios y propiedad
 
-Core: PLATFORM, IDENTITY, ORGANIZATION, CATALOG, SALES, PAYMENTS, CASH, INVENTORY, PROCUREMENT, BILLING, FINANCE, WORKFORCE, CUSTOMERS, INTEGRATIONS, AUTOMATION, ANALYTICS, AUDIT y REPORTING. tenancy es soporte, no dominio propietario.
+Los dominios canónicos conservan sus responsabilidades descritas en
+[requisitos.md](../../requisitos.md). Su implementación física vive una sola
+vez bajo `backend/<backend-propietario>/modules/<modulo>/`; cada backend tiene
+su propio conjunto de módulos. La asignación concreta de cada dominio a uno de
+los cuatro procesos se documenta de acuerdo con las decisiones aprobadas y no
+se deduce de esta lista.
 
-Restaurant vertical: KITCHEN y PRODUCTION. Consume contratos de Core y no recrea ni escribe entidades propietarias de Core.
+- PLATFORM: ciclo de vida SaaS, tenants, planes, suscripciones y límites.
+- IDENTITY: usuarios, membresías, autenticación, RBAC, ABAC y sesiones.
+- ORGANIZATION: empresas legales, grupos, marcas, sucursales y recursos físicos.
+- CATALOG: productos, variantes, precios y agrupaciones comerciales genéricas.
+- SALES: pedidos, cuentas y ciclo comercial genérico.
+- PAYMENTS: métodos, cobros, autorizaciones, capturas, reembolsos y liquidaciones.
+- CASH: cajas, turnos, arqueos y movimientos físicos de efectivo.
+- KITCHEN: estaciones operativas, comandas, KDS y preparación gastronómica.
+- INVENTORY: existencias, lotes físicos, bodegas, movimientos y transferencias.
+- PROCUREMENT: proveedores, cotizaciones, compras y recepciones.
+- PRODUCTION: recetas versionadas, BOM, rendimientos, órdenes y lotes gastronómicos.
+- BILLING: facturación fiscal, documentos electrónicos y numeración.
+- FINANCE: tesorería, cuentas por cobrar/pagar y contabilidad.
+- WORKFORCE: empleados, turnos, asistencia y compensaciones.
+- CUSTOMERS: CRM, fidelización, consentimiento y segmentación.
+- INTEGRATIONS: API, webhooks, conectores, credenciales y hardware.
+- AUTOMATION: flujos, disparadores, campañas, condiciones y acciones.
+- ANALYTICS: KPI, tendencias, datos semánticos y dashboards.
+- AUDIT: auditoría transversal e historial de acciones.
+- REPORTING: plantillas, generación, exportación y distribución de informes.
+
+AI es una capacidad transversal sin schema propio aprobado en esta etapa
+(ADR-0006). No se debe crear un módulo propietario AI ni tablas centrales sin
+un ADR nuevo.
+
+La estructura física no crea una carpeta Core ni una carpeta Restaurant
+vertical compartida. Las reglas gastronómicas siguen siendo propiedad de
+KITCHEN, PRODUCTION y las capacidades propias de servicio de restaurante.
+CATALOG sigue siendo propietario de los productos base y las agrupaciones
+comerciales genéricas; no se convierte en propietario de todos los menús.
 
 ## 5. Persistencia y ownership
 
