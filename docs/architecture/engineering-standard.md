@@ -41,6 +41,8 @@ backend/
                 └── composition/           # cableado e inyección de dependencias
 ```
 
+**Aplicación en este repositorio:** el árbol anterior describe la estructura interna lógica de un módulo, no establece una nueva raíz física para los crates de Restaurant OS. La ubicación de implementación aprobada para este repositorio se mantiene en `crates/core/<modulo>/` para dominios reutilizables y `crates/verticals/restaurant/` para capacidades propias del vertical, según la matriz de `requisitos.md`. No mover ni duplicar módulos a `backend/<backend>/modules/`. Esa ruta se utiliza exclusivamente como ubicación canónica futura de las migraciones por módulo, conforme al ADR-0001.
+
 ### 2.2 Reglas
 
 - Cada módulo DEBE ser un paquete/crate propio, con un crate `*-contracts` separado.
