@@ -40,8 +40,8 @@ FKs, joins y consultas directas solo dentro del límite de propiedad del mismo m
 
 ## 3. OpenAPI, Protobuf y generación
 
-- OpenAPI es fuente HTTP y genera tipos/clientes HTTP para frontend/BFF.
-- Protobuf es fuente gRPC y genera stubs/tipos para Rust y clientes BFF.
+- OpenAPI es fuente HTTP y genera tipos/clientes HTTP para los frontends y los dos BFF independientes (Admin BFF y Public BFF).
+- Protobuf es fuente gRPC y genera stubs/tipos para Rust en los cuatro procesos; se utiliza en las fronteras entre procesos.
 - Mantener contratos fuente versionados; no duplicar tipos derivados manualmente.
 - Fijar versiones de generadores y comandos reproducibles al incorporar tooling.
 - CI genera desde cero y falla si git diff --exit-code detecta diferencias en artefactos versionados.
