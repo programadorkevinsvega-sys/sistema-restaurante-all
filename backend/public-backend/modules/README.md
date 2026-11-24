@@ -1,5 +1,5 @@
-# Módulos
+# Módulos de Public Backend
 
-Cada subdirectorio de este nivel representa un módulo/crate con responsabilidad y propiedad de datos propias. Su estructura interna sigue domain, application, infrastructure y contracts. Cada módulo mantiene schema, rol, directorio de migraciones e historial SQLx exclusivos. No crear tablas compartidas, FKs, joins ni consultas directas entre módulos.
+Este directorio contiene los módulos de negocio canónicos de Public Backend: `identity/`, `organization/`, `catalog/`, `sales/`, `payments/`, `cash/`, `kitchen/`, `inventory/`, `procurement/`, `production/`, `billing/`, `finance/`, `workforce/`, `customers/`, `integrations/`, `automation/`, `analytics/`, `audit/` y `reporting/`.
 
-Los módulos concretos se incorporan según la asignación de dominios aprobada; este directorio no asigna dominios por inferencia.
+Cada módulo conserva su responsabilidad, schema, rol, migraciones e historial SQLx exclusivos. No crear tablas compartidas, FKs, joins ni consultas directas entre módulos. PLATFORM pertenece exclusivamente a Admin Platform Backend.
