@@ -17,6 +17,6 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 
 ## Decisiones propuestas
 
-- [ADR-0009: Límites de crates y dirección de dependencias](./0009-crate-boundaries-and-dependencies.md) — pendiente de aprobación explícita.
+- [ADR-0009: Límites de crates y dirección de dependencias](./0009-crate-boundaries-and-dependencies.md) — aceptado el 2026-11-24.
 
-El diseño técnico detallado asociado está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). Mientras ADR-0009 permanezca Proposed, no debe tratarse como una decisión Accepted ni como autorización para crear manifests o código.
+El diseño técnico detallado asociado está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). ADR-0009 está Accepted y establece los límites arquitectónicos para la implementación. La aceptación no significa que los manifests o el código ya existan.
