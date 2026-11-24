@@ -1,8 +1,9 @@
 # ADR-0013: Consistencia distribuida y transacciones de negocio entre módulos
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Propuesto: 2026-11-24
-- Aprobación: pendiente del propietario del producto.
+- Aprobado: 2026-11-24
+- Aprobación: decisión aprobada explícitamente por el propietario del producto.
 - Complementa: ADR-0001, ADR-0002, ADR-0003, ADR-0004, ADR-0007, ADR-0008 y ADR-0009.
 - Ámbito: procesos de negocio que coordinan dos o más módulos, dentro o entre los cuatro procesos.
 
@@ -14,7 +15,7 @@ Una operación puede requerir efectos coordinados en varios módulos. Por ejempl
 
 ADR-0003 ya establece Outbox/Inbox, entrega at-least-once, idempotencia, efectos externos y compensación. ADR-0007 establece gRPC para solicitudes/respuestas entre procesos, NATS Core para señales efímeras y NATS JetStream para mensajes/eventos durables. Hace falta concretar cómo se coordinan procesos multi-paso, cómo se representa su progreso y cómo se recuperan fallos parciales.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Atomicidad local y consistencia entre módulos
 
@@ -128,4 +129,4 @@ El orden concreto, las reglas para reservar o descontar inventario, cuándo soli
 
 ## Estado de implementación
 
-**Propuesta documental; pendiente de aprobación.** No se han creado tablas, schemas, crates, contratos ejecutables, eventos, workers ni código de Saga. No se han modificado archivos SQL o migraciones ni se han ejecutado operaciones de base de datos.
+**Decisión aceptada; implementación pendiente.** No se han creado tablas, schemas, crates, contratos ejecutables, eventos, workers ni código de Saga. No se han modificado archivos SQL o migraciones ni se han ejecutado operaciones de base de datos.
