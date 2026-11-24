@@ -19,5 +19,6 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 ## Decisiones propuestas
 
 - [ADR-0010: PostgreSQL Connection Pooling y gestión de recursos](./0010-postgresql-connection-pooling-and-resource-management.md) — Proposed, pendiente de aprobación.
+- [ADR-0011: Protección de contraseñas y controles de autenticación](./0011-password-hashing-and-authentication-security.md) — Proposed, pendiente de aprobación.
 
-El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). ADR-0009 está Accepted y establece los límites arquitectónicos para la implementación; su aceptación no significa que los manifests o el código ya existan. ADR-0010 no es una regla aceptada hasta recibir aprobación explícita.
+El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). ADR-0009 está Accepted y establece los límites arquitectónicos para la implementación; su aceptación no significa que los manifests o el código ya existan. ADR-0010 y ADR-0011 no son reglas aceptadas hasta recibir aprobación explícita.

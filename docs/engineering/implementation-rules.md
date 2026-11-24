@@ -62,6 +62,14 @@ SQLx usa por defecto `_sqlx_migrations`. Cada módulo debe configurar su propia 
 
 FKs, joins y consultas directas solo dentro del límite de propiedad del mismo módulo. No FKs, joins, vistas ni consultas directas entre schemas propietarios distintos. Referencias cross-module mediante IDs y contratos; proyecciones derivadas bajo propiedad del consumidor.
 
+## 2.1 Seguridad de credenciales y autenticación
+
+IDENTITY en Public Backend es el único propietario de credenciales locales, hashing, verificación, MFA, sesiones y recuperación. Los BFF no calculan hashes ni consultan directamente las tablas de IDENTITY; Admin Platform Backend consume sus contratos cuando corresponda y no duplica credenciales.
+
+La especificación detallada propuesta está en [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md) y [ADR-0011](../adr/0011-password-hashing-and-authentication-security.md). ADR-0011 permanece Proposed hasta aprobación explícita; sus parámetros y controles no deben presentarse como política aceptada antes de esa aprobación.
+
+La implementación futura deberá usar Argon2id con salt aleatorio único, PHC y límites de concurrencia/memoria; no almacenar contraseñas en claro ni usar hashes rápidos. Las credenciales nunca se registran en logs, trazas o eventos. Cualquier cambio en SQL o migraciones se tramita en una tarea separada y con autorización expresa. La presencia del diseño SQL de IDENTITY no demuestra que los flujos estén implementados.
+
 ## 3. OpenAPI, Protobuf y generación
 
 - OpenAPI es fuente HTTP y genera tipos/clientes HTTP para los frontends y los dos BFF independientes (Admin BFF y Public BFF).

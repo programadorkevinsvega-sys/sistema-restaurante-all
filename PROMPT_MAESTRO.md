@@ -43,6 +43,7 @@ Lee todos estos documentos antes de cualquier implementación:
 12. [Prompt funcional y lotes históricos](promt.md).
 13. [Migraciones por módulo](migrations/README.md).
 14. [Gobernanza y protección de main](docs/engineering/github-protection-setup.md).
+15. [Seguridad de contraseñas y autenticación](docs/security/password-and-authentication.md), cuando la tarea afecte IDENTITY, credenciales, autenticación, MFA, sesiones o recuperación.
 
 Si un documento enlaza otro documento normativo relevante, sigue el enlace y léelo también.
 
@@ -62,7 +63,7 @@ Lee el índice y el contenido de todos los ADR aceptados aplicables. Como mínim
 - [ADR-0008 — Propiedad de módulos entre procesos](docs/adr/0008-module-ownership-across-four-processes.md).
 - [ADR-0009 — Límites de crates y dependencias](docs/adr/0009-crate-boundaries-and-dependencies.md).
 
-Comprueba el estado actual de cada ADR en su archivo y en el índice. Un ADR Accepted es vinculante. Si un ADR posterior complementa o sustituye parcialmente a uno anterior, aplica el alcance explícito de esa sustitución; no descartes el resto del ADR anterior.
+Comprueba el estado actual de cada ADR en su archivo y en el índice. Un ADR Accepted es vinculante. Si un ADR posterior complementa o sustituye parcialmente a uno anterior, aplica el alcance explícito de esa sustitución; no descartes el resto del ADR anterior. Revisa también los ADR Proposed aplicables a la tarea como propuestas, sin tratarlos como decisiones aceptadas. Para autenticación, credenciales, MFA, sesiones o recuperación, revisa [ADR-0011](docs/adr/0011-password-hashing-and-authentication-security.md) y su [especificación técnica](docs/security/password-and-authentication.md); no implementes ni cambies SQL por el solo hecho de que esos documentos existan.
 
 ### 2.3 Requisitos y documentación específica de la tarea
 
