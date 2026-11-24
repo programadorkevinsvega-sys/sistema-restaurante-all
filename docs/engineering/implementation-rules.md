@@ -4,6 +4,8 @@
 
 Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni debilitan decisiones.
 
+> **Propuesta pendiente:** el [Diseño de crates y dependencias](../architecture/crate-architecture.md), asociado a [ADR-0009](../adr/0009-crate-boundaries-and-dependencies.md), concreta la estructura prevista de paquetes y dependencias. ADR-0009 permanece Proposed; sus detalles no se consideran norma aceptada hasta aprobación explícita.
+
 ## 1. Módulos y contratos
 
 ### Ubicación y composición
@@ -15,18 +17,17 @@ Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni
   propietarios de negocio viven bajo
   `backend/public-backend/modules/<modulo>/`, según ADR-0008.
 - Admin BFF y Public BFF no poseen módulos de negocio ni persistencia propietaria.
-- Cada módulo es un crate dentro del backend propietario definido por ADR-0008 y mantiene sus capas `domain/`,
-  `application/`, `infrastructure/` y `contracts/` según corresponda.
-- `crates/shared/` se limita a utilidades técnicas neutrales;
-  `crates/contracts/` contiene Protobuf y esquemas de eventos;
-  `crates/adapters/` contiene adaptadores local, gRPC y mensajería.
+- Cada módulo tiene un crate de implementación en su raíz (`Cargo.toml`, `sqlx.toml`, `src/{domain,application,adapters,infrastructure}/`) y un crate público obligatorio en `contracts/{Cargo.toml,src/lib.rs}`. Los 20 contratos existen desde el inicio, aunque algunos sean mínimos.
+- `contracts/protobuf/<backend>/<modulo>/v1/` es la única fuente Protobuf;
+  `crates/contracts/events/` contiene esquemas de eventos;
+  `crates/shared/` se limita a utilidades técnicas neutrales;
+  `crates/adapters/` contiene adaptadores local, gRPC y mensajería. El adaptador local existe desde el día uno y los adaptadores local y gRPC implementan los mismos puertos.
 - `packages/` contiene paquetes reutilizables de frontend; nunca reemplaza
   validaciones, autorización o reglas del backend.
 - `infrastructure/` contiene configuración de servicios e infraestructura,
   no migraciones ni lógica de dominio.
 - La distribución concreta de dominios entre los cuatro backends debe
   respetar `requisitos.md`; no duplicar ni asignar módulos por inferencia.
-
 
 - Depender de contratos públicos; no importar implementaciones internas ajenas.
 - DTO no exponen entidades ni modelos SQL.
@@ -54,6 +55,7 @@ SQLx usa por defecto `_sqlx_migrations`. Cada módulo debe configurar su propia 
 - El rol de migración solo modifica su schema y tabla de historial.
 - Migraciones desde un proceso controlado de despliegue, una vez por versión; nunca desde cada réplica.
 - Cambiar el nombre de un historial usado exige migrar registros y coordinar versiones desplegadas; no hacerlo directamente en producción.
+- El repositorio usa un único Cargo workspace en la raíz, con cuatro paquetes binarios independientes y un único `Cargo.lock` compartido.
 - Antes de implementar, fijar SQLx/SQLx CLI y verificar compatibilidad contra Cargo.toml, Cargo.lock y sqlx.toml. En la raíz inspeccionada del repositorio no se encontró Cargo.toml ni Cargo.lock; no se puede afirmar una versión fijada ni compatibilidad comprobada contra una versión concreta.
 
 ### FKs y consultas
@@ -63,7 +65,7 @@ FKs, joins y consultas directas solo dentro del límite de propiedad del mismo m
 ## 3. OpenAPI, Protobuf y generación
 
 - OpenAPI es fuente HTTP y genera tipos/clientes HTTP para los frontends y los dos BFF independientes (Admin BFF y Public BFF).
-- Protobuf es fuente gRPC y genera stubs/tipos para Rust en los cuatro procesos; se utiliza en las fronteras entre procesos.
+- Protobuf es fuente gRPC y genera stubs/tipos para Rust en los cuatro procesos; las fuentes viven únicamente en `contracts/protobuf/<backend>/<modulo>/v1/` y se utilizan en las fronteras entre procesos.
 - Mantener contratos fuente versionados; no duplicar tipos derivados manualmente.
 - Fijar versiones de generadores y comandos reproducibles al incorporar tooling.
 - CI genera desde cero y falla si git diff --exit-code detecta diferencias en artefactos versionados.

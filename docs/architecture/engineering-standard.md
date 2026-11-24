@@ -29,16 +29,18 @@ backend/
 └── <backend>/
     └── modules/
         └── <modulo>/
-            ├── contracts/                 # crate público: traits + DTO + eventos
-            ├── domain/                    # entidades, reglas (privado)
-            ├── application/
-            │   ├── ports/                 # interfaces que el módulo expone/consume
-            │   └── dto/                   # DTO propios (nunca entidades)
-            ├── adapters/
-            │   ├── inbound/               # HTTP, gRPC, handlers de eventos
-            │   └── outbound/              # BD, clientes de otros módulos, bus
-            └── infrastructure/
-                └── composition/           # cableado e inyección de dependencias
+            ├── Cargo.toml                 # crate privado de implementación
+            ├── sqlx.toml                  # configuración SQLx exclusiva del módulo
+            ├── src/
+            │   ├── lib.rs
+            │   ├── domain/
+            │   ├── application/
+            │   ├── adapters/
+            │   └── infrastructure/
+            ├── contracts/
+            │   ├── Cargo.toml             # crate público <modulo>-contracts
+            │   └── src/lib.rs
+            └── migrations/                # migraciones e historial SQLx propios
 ```
 
 **Aplicación en este repositorio:** cada módulo se implementa físicamente una sola vez en `backend/<backend-propietario>/modules/<modulo>/`. PLATFORM pertenece a Admin Platform Backend; todos los demás módulos de negocio canónicos pertenecen a Public Backend, conforme a ADR-0008 y la matriz de `requisitos.md`. Admin BFF y Public BFF son procesos independientes de composición y exposición HTTP/OpenAPI, sin propiedad de dominios ni persistencia de negocio. `crates/` contiene únicamente bibliotecas técnicas neutrales, contratos versionados y adaptadores; no aloja módulos propietarios de negocio. La ruta `backend/<backend>/modules/<modulo>/migrations/` es también la ubicación canónica de las migraciones nuevas del módulo, conforme al ADR-0001. La carpeta raíz `migrations/` se conserva como ubicación histórica.
@@ -48,9 +50,9 @@ backend/
 
 La estructura completa y la responsabilidad de cada carpeta están definidas en [requisitos.md](../../requisitos.md). Las reglas no negociables son:
 
-- `apps/` contiene los puntos de entrada de los cuatro procesos independientes y las aplicaciones frontend.
+- `apps/` contiene los cuatro paquetes binarios independientes. El repositorio usa un único Cargo workspace en la raíz y un único `Cargo.lock` compartido; cada paquete produce y despliega su propio proceso/binario.
 - `backend/<backend>/modules/` contiene exclusivamente módulos cuyo propietario es ese backend.
-- `crates/shared/` aloja utilidades técnicas neutrales; `crates/contracts/` aloja Protobuf y esquemas de eventos; `crates/adapters/` aloja adaptadores local, gRPC y mensajería.
+- `contracts/protobuf/` es la única ubicación fuente de Protobuf versionado; `crates/contracts/events/` aloja esquemas de eventos versionados; `crates/shared/` aloja utilidades técnicas neutrales; `crates/adapters/` aloja adaptadores local, gRPC y mensajería.
 - `packages/` contiene paquetes reutilizables de frontend, nunca lógica autoritativa de dominio.
 - `infrastructure/` contiene configuración de Docker, despliegue, PostgreSQL, NATS, Redis y observabilidad; no es propietaria de migraciones.
 - `docs/`, `rules/` y `migrations/` conservan sus responsabilidades documentales y el legado histórico respectivamente.
@@ -58,12 +60,14 @@ La estructura completa y la responsabilidad de cada carpeta están definidas en 
 
 ### 2.3 Reglas
 
-- Cada módulo DEBE ser un paquete/crate propio, con contratos públicos explícitos (en `contracts/` o en un crate `*-contracts` cuando el diseño lo requiera).
+- Cada uno de los 20 módulos DEBE tener desde el inicio un crate de implementación y un crate público `*-contracts` bajo su directorio propietario, aunque el contrato comience con pocas operaciones.
 - Un módulo SOLO puede depender de: (a) `*-contracts` de otros módulos, (b) bibliotecas técnicas neutrales aprobadas (logging, config, tiempo, errores base), (c) sus propias capas.
 - NO DEBE importar `domain`, `application`, `adapters`, `infrastructure`, repositorios, servicios internos ni modelos de otro módulo, ni directa ni transitivamente.
 - Los tipos internos (`struct`, entidades, errores de BD) NO DEBEN aparecer en la API pública.
 - Visibilidad por defecto: privado. Solo se publica explícitamente lo que está en `contracts`.
 - La composición (ensamblar módulos en el binario) vive en un único lugar (`composition`/`main`), nunca dentro de los módulos.
+
+**Concreción de crates:** la estructura detallada de crates de implementación, crates públicos de contratos, crates de transporte y composición por proceso está desarrollada como propuesta en [Diseño de crates y dependencias](./crate-architecture.md), asociada a ADR-0009. Mientras ADR-0009 permanezca Proposed, sus decisiones específicas de layout no sustituyen las reglas generales aceptadas ni autorizan crear manifests o código.
 
 **Debe fallar:**
 ```rust
@@ -92,6 +96,7 @@ Reglas de evolución:
 - Cambios compatibles (campos opcionales nuevos) → misma versión.
 - Cambios incompatibles → nueva versión (`v2`) con convivencia; el CI DEBE detectar rupturas (`buf breaking`).
 - Los contratos gRPC en las fronteras entre backends y BFF son obligatorios desde el inicio.
+- Los adaptadores local y gRPC implementan los mismos puertos públicos: el local se usa entre módulos del mismo proceso; gRPC, entre procesos. `crates/adapters/local` forma parte de la arquitectura desde el día uno y puede sustituirse por gRPC al extraer un módulo.
 - Todo contrato DEBE propagar contexto explícito: `trace_id`, tenant, usuario/actor, idempotency key. Prohibido el estado global implícito.
 
 ---
@@ -102,7 +107,7 @@ Reglas de evolución:
 
 | Necesidad | Mecanismo |
 |---|---|
-| Pedir algo y necesitar la respuesta ahora (validar stock, consultar precio, autenticar) | **Comando/consulta síncrona** vía trait/puerto local si ambos módulos comparten backend/proceso; gRPC cuando la interacción cruza entre los cuatro procesos de Restaurant OS |
+| Pedir algo y necesitar la respuesta ahora (validar stock, consultar precio, autenticar) | **Comando/consulta síncrona** vía puerto/trait público y DTO; `crates/adapters/local` implementa la invocación entre módulos que comparten proceso y `crates/adapters/grpc` implementa el mismo puerto en fronteras entre procesos |
 | Notificar que algo ya ocurrió (`PedidoCreado`, `PagoConfirmado`) | **Evento durable** mediante Outbox/Inbox y NATS JetStream cuando corresponda |
 | Invalidar cachés / señales efímeras sin garantía | Broadcast ligero mediante NATS Core |
 
