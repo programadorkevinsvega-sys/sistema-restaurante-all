@@ -65,6 +65,7 @@ Un comando contiene identidad de operación, acción solicitada, objetivo, conte
 Los nombres, payloads y versiones pertenecen al módulo propietario del contrato. El envelope de transporte no duplica el modelo de dominio. Los contratos evolucionan mediante versiones compatibles.
 
 Para mensajes durables:
+
 - escribir Outbox junto al cambio local que origina el mensaje;
 - publicar fuera de la transacción de negocio;
 - confirmar publicación durable antes de marcar la fila como publicada;
@@ -81,6 +82,7 @@ La clave idempotente identifica una intención de negocio concreta y tiene alcan
 Cada participante conserva evidencia suficiente para responder a una repetición sin duplicar el efecto. La escritura de Inbox/deduplicación y el efecto de negocio comparten transacción local cuando ambos residen en PostgreSQL.
 
 Si ocurre un timeout después de enviar un comando:
+
 1. no asumir que el participante no ejecutó la operación;
 2. consultar estado por command_id/operation_id o esperar resultado durable;
 3. repetir solo con la misma identidad idempotente si la operación admite repetición;
@@ -93,6 +95,7 @@ Para sistemas externos, utilizar claves idempotentes del proveedor cuando estén
 Una compensación es un nuevo comando de negocio que revierte o neutraliza un efecto según reglas del módulo propietario. No borra el historial ni revierte mágicamente una transacción confirmada.
 
 Ejemplos conceptuales:
+
 - liberar una reserva que todavía puede liberarse;
 - solicitar un reembolso por un cobro ya capturado;
 - cancelar una preparación antes de que alcance un estado irreversible.
@@ -116,6 +119,7 @@ Los valores de intentos, delays, retención y política DLQ se definirán por fl
 ## 9. Orden y concurrencia
 
 No hay orden global garantizado entre módulos. Cuando el orden por agregado sea relevante:
+
 - incluir una versión o secuencia monotónica del agregado bajo autoridad del módulo productor;
 - validar la secuencia recibida;
 - detectar duplicados, eventos atrasados y huecos;
@@ -139,6 +143,7 @@ Propagar W3C Trace Context en HTTP, gRPC, envelopes, Outbox, Inbox y workers. Re
 ## 12. Ejemplo de ownership
 
 En un proceso de pedido:
+
 - SALES puede coordinar el ciclo comercial si es propietario del proceso.
 - PAYMENTS conserva cobros, autorizaciones, capturas y reembolsos.
 - INVENTORY conserva existencias, reservas y movimientos.
@@ -149,6 +154,7 @@ El coordinador registra el avance y solicita acciones por contratos. No accede a
 ## 13. Pruebas requeridas antes de implementar
 
 Cada flujo debe probar:
+
 - duplicación de comandos y eventos;
 - redelivery después del commit y antes del ACK;
 - caída antes/después del commit local y antes/después de publicar Outbox;
