@@ -6,9 +6,10 @@ Antes de proponer o modificar arquitectura, leer en este orden:
 2. [Arquitectura de Restaurant OS](docs/architecture/restaurant-os-architecture.md)
 3. [Reglas de implementación](docs/engineering/implementation-rules.md)
 4. [Estándar de calidad, seguridad y mantenimiento documental](docs/engineering/documentation-quality-and-security-standard.md)
-5. [ADRs aceptados](docs/adr/README.md)
-6. [Requisitos](requisitos.md) y [Roadmap](ROADMAP.md)
-7. [Configuración de protección de main en GitHub](docs/engineering/github-protection-setup.md)
+5. [ADRs aceptados y propuestos aplicables](docs/adr/README.md)
+6. [Seguridad de contraseñas y autenticación](docs/security/password-and-authentication.md), cuando la tarea afecte IDENTITY o autenticación
+7. [Requisitos](requisitos.md) y [Roadmap](ROADMAP.md)
+8. [Configuración de protección de main en GitHub](docs/engineering/github-protection-setup.md)
 
 Al crear o modificar documentación, cumplir además el [Estándar de calidad, seguridad y mantenimiento documental](docs/engineering/documentation-quality-and-security-standard.md). Respetar precedencia: el estándar general es obligatorio; la arquitectura de Restaurant OS puede especializarlo o endurecerlo, nunca debilitarlo; las reglas de implementación están subordinadas. No resolver contradicciones por inferencia: proponer ADR y esperar aprobación explícita.
 
