@@ -14,9 +14,10 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0006: AI como capacidad transversal sin schema propio en esta etapa](./0006-ai-cross-cutting-capability-no-owned-schema.md)
 - [ADR-0007: Cuatro backends independientes y comunicación](./0007-four-independent-backends-and-communication.md)
 - [ADR-0008: Distribución de módulos entre los cuatro procesos](./0008-module-ownership-across-four-processes.md)
+- [ADR-0009: Límites de crates y dirección de dependencias](./0009-crate-boundaries-and-dependencies.md)
 
 ## Decisiones propuestas
 
-- [ADR-0009: Límites de crates y dirección de dependencias](./0009-crate-boundaries-and-dependencies.md) — aceptado el 2026-11-24.
+- [ADR-0010: PostgreSQL Connection Pooling y gestión de recursos](./0010-postgresql-connection-pooling-and-resource-management.md) — Proposed, pendiente de aprobación.
 
-El diseño técnico detallado asociado está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). ADR-0009 está Accepted y establece los límites arquitectónicos para la implementación. La aceptación no significa que los manifests o el código ya existan.
+El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). ADR-0009 está Accepted y establece los límites arquitectónicos para la implementación; su aceptación no significa que los manifests o el código ya existan. ADR-0010 no es una regla aceptada hasta recibir aprobación explícita.
