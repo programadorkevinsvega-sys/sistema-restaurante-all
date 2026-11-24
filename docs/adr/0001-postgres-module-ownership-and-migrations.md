@@ -10,23 +10,25 @@
 
 Restaurant OS inicia con PostgreSQL compartido y módulos con ownership independiente. “Cada módulo gestiona sus migraciones” no es verificable si comparten historial SQLx o credenciales globales.
 
-SQLx usa por defecto _sqlx_migrations. Su configuración permite cambiar table-name y migrations-dir mediante sqlx.toml para sqlx::migrate!() y SQLx CLI. Un Migrator construido manualmente no hereda automáticamente esa configuración y debe configurar su tabla. SQLx advierte que cambiar una tabla de historial usada sin migrar sus registros puede provocar reejecuciones.
+SQLx usa por defecto `_sqlx_migrations`. Su configuración permite cambiar `table-name` y `migrations-dir` mediante `sqlx.toml` para `sqlx::migrate!()` y SQLx CLI. Cada módulo debe apuntar a una tabla schema-qualified distinta dentro de su propio schema. Un `Migrator` construido manualmente no hereda automáticamente esa configuración y debe configurar su tabla explícitamente. Los historiales son independientes: la unicidad de versión se exige dentro de cada historial, no globalmente entre módulos.
 
 ## Decisión
 
 1. Cada módulo posee un schema y sus objetos.
 2. Cada módulo tiene rol PostgreSQL dedicado, limitado a su schema. Workers, jobs y pruebas respetan el ownership.
 3. Separar identidad de migración y runtime; runtime sin DDL ni privilegios globales.
-4. Cada módulo mantiene directorio e historial de migraciones independiente.
-5. Configurar por crate migrations-dir y table-name schema-qualified exclusivo, p. ej. identity._sqlx_migrations.
-6. sqlx::migrate!()/CLI usan sqlx.toml; Migrator manual configura tabla explícitamente.
-7. El rol de migración modifica solo su schema e historial.
-8. Migraciones aplicadas no se reescriben ni renombran; transición mediante plan y pruebas.
-9. FKs y consultas directas dentro del mismo límite de propiedad; no FKs ni joins entre schemas distintos.
+4. Cada módulo mantiene directorio e historial SQLx independiente y exclusivo; está prohibido compartir la tabla `_sqlx_migrations` entre módulos.
+5. La ruta canónica para nuevas migraciones es `backend/<backend>/modules/<modulo>/migrations/`; las ubicaciones existentes se conservan como históricas.
+6. Configurar por módulo `migrations-dir` y `table-name` schema-qualified exclusivo, p. ej. `identity._sqlx_migrations`.
+7. `sqlx::migrate!()`/CLI usan `sqlx.toml`; un `Migrator` manual configura su tabla explícitamente.
+8. El rol de migración modifica solo su schema y su tabla de historial.
+9. Las versiones de migración son independientes por módulo porque cada uno tiene su propio historial.
+10. Migraciones aplicadas no se reescriben ni renombran; transición mediante plan y pruebas.
+11. FKs y consultas directas dentro del mismo límite de propiedad; no FKs ni joins entre schemas distintos.
 
 ## Consecuencias
 
-Se requiere inventario módulo → schema → rol → directorio → historial y un paso de despliegue que ejecute migraciones por módulo. Más operación, pero ownership verificable.
+Se requiere inventario módulo → schema → rol → `backend/<backend>/modules/<modulo>/migrations/` → tabla de historial y un paso de despliegue que ejecute cada historial por módulo. Más operación, pero ownership verificable.
 
 ## Verificación SQLx
 
@@ -36,7 +38,7 @@ La documentación oficial actual describe migrate.table-name, migrations-dir, el
 
 ## Alternativas
 
-- Historial compartido: rechazado, mezcla estados de módulos.
+- Historial compartido: rechazado; mezcla estados, permisos y ownership de módulos. Cada módulo conserva su propia tabla `_sqlx_migrations`.
 - Rol global: rechazado, no impone ownership.
 - Roles por módulo con historial compartido: insuficiente.
 

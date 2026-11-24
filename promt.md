@@ -51,6 +51,10 @@ dominio separado `PURCHASING`. Las recetas y ordenes de produccion pertenecen a
 `PRODUCTION`; `CATALOG` conserva los productos comerciales, `INVENTORY` el
 inventario fisico y `KITCHEN` las comandas y preparacion de pedidos de clientes.
 
+## Topología backend y BFF
+
+`api-server` aloja el monolito modular de backend y expone gRPC. El BFF es un proceso independiente que consume gRPC y expone HTTP/OpenAPI a los frontends. En Docker Compose son dos servicios de aplicación. Esta separación no convierte los módulos internos en microservicios.
+
 ## Responsabilidad de Core y Restaurant vertical
 
 - `crates/core/` contiene los dominios reutilizables: PLATFORM, IDENTITY,
@@ -65,7 +69,7 @@ inventario fisico y `KITCHEN` las comandas y preparacion de pedidos de clientes.
 - El vertical referencia productos de CATALOG, pedidos de SALES, recursos
   fisicos de ORGANIZATION y stock/movimientos de INVENTORY mediante contratos;
   no vuelve a crear ni escribir las entidades propietarias.
-- El codigo se ubica segun estas reglas. Las migraciones historicas permanecen en su ubicacion actual; las nuevas migraciones se organizan en directorios por modulo dentro de `migrations/<modulo>/`, con rol e historial SQLx independientes por modulo.
+- El código de los módulos se ubica según estas reglas. Las migraciones históricas permanecen en su ubicación actual; las nuevas migraciones se guardan en `backend/<backend>/modules/<modulo>/migrations/`. Cada módulo tiene su propio schema PostgreSQL, rol de migración y tabla de historial SQLx schema-qualified (por ejemplo, `identity._sqlx_migrations`). Nunca se comparte la tabla de historial entre módulos; las versiones son independientes por historial.
 
 **Instrucciones importantes:**
 
@@ -93,8 +97,8 @@ Independencia	Cada módulo posee su dominio y sus casos de uso.
 Sin dependencias circulares	Ningún módulo puede generar ciclos de dependencias.
 Contratos públicos	Solo se puede interactuar con las interfaces públicas.
 Inversión de dependencias	Los módulos nunca dependen de implementaciones ajenas.
-Persistencia independiente	Cada módulo administra sus tablas y transacciones.
-Comunicación intercambiable	Adaptadores locales y gRPC implementan los mismos puertos.
+Persistencia independiente	Cada módulo administra sus tablas, schema PostgreSQL, rol, migraciones, historial SQLx y transacciones.
+Comunicación intercambiable	Los módulos internos usan puertos locales; `api-server` y el BFF se comunican por gRPC desde el inicio.
 Eventos	Los acontecimientos se publican mediante contratos versionados.
 Idempotencia	Los comandos importantes no deben ejecutarse dos veces accidentalmente.
 Seguridad multiempresa	Toda operación debe respetar el contexto y los permisos de empresa y sucursal.

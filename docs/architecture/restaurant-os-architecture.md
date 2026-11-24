@@ -34,7 +34,7 @@ Restaurant vertical: KITCHEN y PRODUCTION. Consume contratos de Core y no recrea
 
 - Cada módulo posee un schema PostgreSQL y sus objetos.
 - Cada módulo tiene rol PostgreSQL dedicado con privilegios limitados a su schema. Separar identidad de migración y runtime; runtime sin DDL ni privilegios globales.
-- Cada módulo mantiene directorio e historial de migraciones independiente. SQLx usa por defecto _sqlx_migrations; configurar una tabla de historial schema-qualified distinta por módulo y un directorio propio.
+- Cada módulo mantiene su directorio de migraciones y su tabla de historial SQLx exclusiva, schema-qualified (por ejemplo, `identity._sqlx_migrations`). Nunca se comparte una tabla de historial entre módulos. La ruta canónica futura es `backend/<backend>/modules/<modulo>/migrations/`; las ubicaciones existentes se documentan como históricas.
 - FKs y consultas directas solo dentro del mismo límite de propiedad. No FKs, joins, vistas ni consultas directas entre schemas de módulos distintos.
 - Referencias cross-module mediante IDs estables y contratos. Proyecciones locales solo si son propiedad del consumidor y se alimentan por eventos.
 - No reescribir migraciones históricas potencialmente aplicadas; usar migraciones nuevas y plan de transición.
@@ -45,11 +45,13 @@ Restaurant vertical: KITCHEN y PRODUCTION. Consume contratos de Core y no recrea
 - OpenAPI genera tipos/clientes HTTP para frontends y BFF; Protobuf genera stubs/tipos gRPC para backends y BFF.
 - El código generado no se edita a mano. CI regenera y falla si hay diferencias con el generado versionado.
 - Frontends independientes consumen contratos; no alojan reglas autoritativas. La autorización efectiva es backend.
-- gRPC entre backends y BFF es obligatorio desde el inicio. Solo se difiere el transporte gRPC para módulos internos en el mismo proceso.
+- `api-server` aloja los módulos backend y expone gRPC. El BFF es un proceso independiente que consume gRPC y expone HTTP/OpenAPI a los frontends.
+- Docker Compose define dos servicios de aplicación objetivo: `api-server` y `bff`. Esta topología no implica microservicios por módulo ni afirma que el despliegue ya esté implementado.
+- gRPC entre `api-server` y BFF es obligatorio desde el inicio. Solo se difiere el transporte gRPC para módulos internos que comparten el proceso `api-server`.
 
 ## 7. Comunicación y ejecución asíncrona
 
-- Consulta/comando local mediante contrato/puerto dentro del monolito; gRPC entre backends y BFF desde el inicio y entre servicios separados.
+- Consulta/comando local mediante contrato/puerto entre módulos dentro de `api-server`; gRPC entre `api-server` y BFF desde el inicio y entre servicios separados.
 - Hechos ya ocurridos mediante eventos durables versionados.
 - Outbox atómico con el cambio de negocio.
 - Sin broker, dispatcher con FOR UPDATE SKIP LOCKED; con broker, confirmaciones durables y grupos de consumidores.

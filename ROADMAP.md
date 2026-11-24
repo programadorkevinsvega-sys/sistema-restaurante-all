@@ -36,6 +36,16 @@ fases no cambian esos propietarios ni crean una estructura paralela.
   contratos; no duplica el catalogo base, los pedidos, la identidad de recursos
   fisicos ni el ledger de existencias.
 
+## Topología de ejecución backend y BFF
+
+La topología objetivo mantiene el backend como monolito modular y separa la frontera HTTP para los frontends:
+
+- `api-server`: proceso backend que aloja los módulos de Core y Restaurant vertical y expone sus contratos gRPC.
+- `bff`: proceso independiente que consume `api-server` mediante gRPC y expone HTTP/OpenAPI a los frontends independientes.
+- Docker Compose define dos servicios de aplicación (`api-server` y `bff`) en el entorno inicial.
+- Esta separación de procesos no convierte cada módulo en microservicio: los módulos internos siguen compartiendo el proceso `api-server` y se comunican mediante puertos/contratos locales.
+- La topología es una decisión de arquitectura objetivo; no debe describirse como desplegada hasta contar con manifiestos y evidencia.
+
 ## Modelo SaaS
 
 Restaurant OS sera una plataforma multiempresa con clientes externos.
@@ -146,16 +156,17 @@ Decisión inicial:
 
 - Implementar un monolito modular bien organizado en Rust.
 - Organizar el backend como Cargo workspace con crates por dominio.
-- Compilar el sistema inicial como un unico ejecutable api-server.
+- Compilar los módulos de backend como un único proceso/ejecutable `api-server` (monolito modular).
+- Desplegar el BFF como un proceso/ejecutable independiente; no integrarlo dentro del binario `api-server`.
+- `api-server` aloja los módulos de backend y expone sus contratos gRPC; el BFF consume esos contratos gRPC y expone HTTP documentado con OpenAPI a los frontends independientes.
+- Desde el inicio, Docker Compose define dos servicios de aplicación: `api-server` y `bff`. Esta es la topología objetivo, no evidencia de que ya esté implementada.
 - Aplicar arquitectura hexagonal y DDD dentro de cada modulo.
-- Definir puertos y adaptadores locales o gRPC.
-- Utilizar Tonic y Protocol Buffers para extracción futura.
-- Usar gRPC solo entre servicios extraídos, no en toda comunicacion inicial.
+- Las llamadas entre módulos que comparten el proceso `api-server` pueden usar puertos/traits locales; la frontera `api-server` ↔ BFF usa gRPC desde el inicio con Tonic y Protobuf versionado.
 - Utilizar Outbox y consumidores idempotentes para eventos.
 - Mantener modulos independientes por dominio y con interfaces claras.
 - Utilizar PostgreSQL como base de datos principal.
 - Diseñar aislamiento multi-tenant desde el primer dia.
-- Iniciar con una base compartida y esquemas logicos.
+- Iniciar con una base PostgreSQL compartida y un schema PostgreSQL independiente por módulo.
 - Reservar bases dedicadas para clientes Enterprise.
 - Separar dominios en esquemas: platform, identity, organization y operaciones.
 - Mantener una base PostgreSQL compartida inicialmente, con propiedad por dominio.
@@ -171,7 +182,7 @@ Decisión inicial:
 - Utilizar UUID en entidades principales.
 - Usar NUMERIC para precios y contabilidad.
 - Aplicar RLS y contexto de tenant.
-- Definir despliegue Shared Database / Shared Schema.
+- Definir despliegue Shared Database / Schema per Module: una base compartida inicialmente y un schema PostgreSQL por módulo.
 - Permitir migracion posterior a infraestructura dedicada Enterprise.
 - Definir despliegues compartidos, base dedicada y entorno dedicado.
 - Registrar ubicacion, version y estado de infraestructura por tenant.
@@ -198,18 +209,18 @@ Decisión inicial:
 - Roles y permisos aislados por empresa.
 - Alcance por sucursal, marca y entidad legal.
 - Implementar historial, eliminacion logica y versionamiento.
-- Coordinar ventas, pagos e inventario en transacciones.
+- Coordinar ventas, pagos e inventario mediante transacciones locales por módulo, Outbox/Inbox e idempotencia; los procesos entre dominios usan Saga y compensaciones, nunca una transacción SQL global.
 - Implementar frontend administrativo con Next.js, React y TypeScript.
 - Implementar POS con React, TypeScript y PWA.
 - Evaluar Tauri para integracion nativa de escritorio.
 - Implementar backend Rust con un Cargo workspace.
-- Compilar el monolito modular como un único ejecutable api-server.
+- Compilar los módulos backend como un único ejecutable `api-server`; el BFF es un proceso independiente y se comunica con `api-server` mediante gRPC.
 - Utilizar Axum, PostgreSQL y SQLx.
 - Aplicar independencia, puertos y inversion de dependencias.
 - Prohibir dependencias circulares y persistencia cruzada.
 - Probar cada modulo con implementaciones simuladas.
 - Utilizar Axum para REST y WebSockets.
-- Usar contratos internos, adaptadores locales y Tonic/gRPC para extracción futura.
+- Usar contratos y adaptadores locales entre módulos dentro de `api-server`; usar Tonic/gRPC entre `api-server` y el BFF desde el inicio, y al separar otros servicios.
 - Exponer API REST documentada con OpenAPI.
 - Utilizar WebSockets para actualizacion en tiempo real.
 - Utilizar Redis para caché y coordinación cuando sea necesario.

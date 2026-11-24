@@ -17,13 +17,14 @@ Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni
 
 Cada módulo tiene schema y rol PostgreSQL dedicado con privilegios limitados. Pruebas, workers y jobs respetan el ownership. Separar identidad de migración y runtime; runtime sin DDL ni BYPASSRLS.
 
-SQLx usa por defecto _sqlx_migrations. Si varios módulos migran la misma base/schema con ese nombre, compartirían historial. Por ello:
+SQLx usa por defecto `_sqlx_migrations`. Cada módulo debe configurar su propia tabla de historial schema-qualified dentro de su schema PostgreSQL. La tabla predeterminada sin calificar no debe compartirse entre módulos. Por ello:
 
-- Cada módulo tiene directorio propio y tabla de historial exclusiva, preferiblemente schema-qualified, p. ej. identity._sqlx_migrations y catalog._sqlx_migrations.
+- Cada módulo tiene directorio propio en `backend/<backend>/modules/<modulo>/migrations/` y tabla de historial SQLx exclusiva y schema-qualified, p. ej. `identity._sqlx_migrations` y `catalog._sqlx_migrations`.
+- Está prohibido compartir una tabla `_sqlx_migrations` entre módulos. Cada historial mantiene su propia secuencia de versiones; no se requiere numeración global entre módulos.
 - Configurar sqlx.toml por crate:
 
     [migrate]
-    migrations-dir = "migrations"
+    migrations-dir = "backend/<backend>/modules/identity/migrations"
     table-name = "identity._sqlx_migrations"
 
 - sqlx::migrate!() y SQLx CLI pueden leer la configuración por crate. Un Migrator construido manualmente no hereda automáticamente sqlx.toml; configurar explícitamente su tabla.
@@ -81,7 +82,7 @@ Inspeccionar código, contratos, migraciones y pruebas antes de modificar. Usar 
 
 ## 7. Gobernanza
 
-Los cambios arquitectónicos se revisan contra precedencia y ADRs. Cada ADR nace Proposed; pasa a Accepted solo con aprobación explícita del propietario del producto y fecha. Cambios en docs/architecture requieren revisión CODEOWNERS cuando branch protection lo exija. Integrar mediante PR a main. No afirmar enforcement efectivo hasta verificar branch protection/rulesets. Cambios documentales ejecutan validaciones disponibles; no inventar comandos.
+Los cambios arquitectónicos se revisan contra precedencia y ADRs. Cada ADR nace Proposed; pasa a Accepted solo con aprobación explícita del propietario del producto y fecha. CODEOWNERS identifica responsables; la revisión obligatoria de code owners requiere Ruleset o branch protection configurado expresamente. Integrar mediante PR a main. No afirmar enforcement efectivo hasta verificar branch protection/rulesets. Los pasos objetivo están en [Configuración de protección de main](./github-protection-setup.md). Cambios documentales ejecutan validaciones disponibles; no inventar comandos.
 
 ## 8. Estado de herramientas
 

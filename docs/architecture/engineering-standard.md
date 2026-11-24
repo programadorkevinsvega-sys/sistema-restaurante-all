@@ -6,7 +6,7 @@ Reglas base para cualquier backend, sistema o app nueva. Los ejemplos usan Rust 
 
 ## 1. Principios
 
-1. **Empezar como monolito modular, diseñado para separarse.** Un solo binario hoy; cada módulo puede convertirse en servicio mañana cambiando un adaptador, no su lógica.
+1. **Empezar el backend como monolito modular, diseñado para separarse.** Los módulos backend se alojan inicialmente en un único proceso/binario. Cuando la arquitectura define un BFF, este es un proceso independiente; su separación no convierte cada módulo interno en microservicio. Cada módulo puede extraerse mañana cambiando adaptadores, no sus reglas de negocio.
 2. **Cada módulo es dueño de su lógica, sus datos y su contrato.** Nadie más toca sus internos ni sus tablas.
 3. **Las fronteras se imponen con herramientas, no con convenciones.** Compilador primero, CI después, revisión humana al final.
 4. **Cada interacción entre módulos es una de dos cosas:** consulta/comando (síncrona) o evento (hecho ya ocurrido). Nunca una tercera vía (acceso directo a tablas, imports de internos).
@@ -71,7 +71,7 @@ Cada módulo DEBE tener, desde el inicio:
 1. **Una interfaz pública** (trait/interface) por capacidad: `AuthenticationPort`, etc.
 2. **DTO propios** de request/response/evento. Nunca entidades de dominio ni modelos de BD.
 3. **Un contrato Protobuf versionado equivalente** (`v1`, `v2`...), aunque hoy la implementación sea una llamada en proceso.
-4. **Una implementación en proceso** (en memoria) y, cuando se separe, un **adaptador de transporte** (gRPC/tonic) que implementa el mismo trait.
+4. **Una implementación en proceso** para módulos que comparten backend y un adaptador de transporte (gRPC/Tonic) en las fronteras de procesos. En Restaurant OS, el BFF es un proceso separado y usa gRPC desde el inicio.
 
 Reglas de evolución:
 - Cambios compatibles (campos opcionales nuevos) → misma versión.
@@ -87,7 +87,7 @@ Reglas de evolución:
 
 | Necesidad | Mecanismo |
 |---|---|
-| Pedir algo y necesitar la respuesta ahora (validar stock, consultar precio, autenticar) | **Comando/consulta síncrona** vía trait (en proceso) → gRPC al separar |
+| Pedir algo y necesitar la respuesta ahora (validar stock, consultar precio, autenticar) | **Comando/consulta síncrona** vía trait/puerto local si ambos módulos comparten proceso; gRPC en una frontera de procesos. En Restaurant OS, `api-server` ↔ BFF usa gRPC desde el inicio |
 | Notificar que algo ya ocurrió (`PedidoCreado`, `PagoConfirmado`) | **Evento durable** |
 | Invalidar cachés / señales efímeras sin garantía | Broadcast ligero (p. ej. NATS core) |
 
@@ -256,7 +256,7 @@ Un cambio está terminado solo si:
 ## 11. Resumen en una pantalla
 
 1. Monolito modular, un crate por módulo + crate `contracts`.
-2. Consultas/comandos → trait + DTO + Protobuf (en memoria hoy, gRPC mañana).
+2. Consultas/comandos → contrato/trait + DTO + Protobuf versionado; gRPC desde el inicio entre `api-server` y BFF, y puertos locales entre módulos que comparten proceso.
 3. Hechos → eventos con outbox/inbox, idempotentes.
 4. Stateless desde el día uno; bus en memoria solo en instancia única.
 5. Cada schema tiene un dueño; roles de PostgreSQL lo imponen.
