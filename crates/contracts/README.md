@@ -4,7 +4,7 @@ Esta carpeta contiene contratos versionados que cruzan límites de módulos o se
 
 - events/: esquemas de eventos versionados.
 - proto/: contratos Protobuf versionados para APIs gRPC.
-- OpenAPI es la fuente de verdad para las superficies HTTP y debe mantenerse en su ubicación versionada de contratos HTTP definida por el proyecto.
+- OpenAPI es la fuente de verdad para las superficies HTTP y se mantiene en [openapi/](./openapi/README.md).
 
 Protobuf existe desde el inicio aunque una llamada interna se ejecute localmente. Los contratos gRPC entre backends y BFF son obligatorios desde el inicio; solo se difiere gRPC para llamadas entre módulos internos del mismo proceso.
 
