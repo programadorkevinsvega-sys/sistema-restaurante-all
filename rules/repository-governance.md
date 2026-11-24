@@ -1,4 +1,4 @@
-# Reglas de gobierno del repositorio
+> **Estado: superseded.** Este documento se conserva como referencia histórica. La fuente normativa vigente es [Reglas vigentes de gobernanza](../docs/engineering/implementation-rules.md#7-gobernanza). No añadir reglas nuevas aquí ni resolver contradicciones desde este archivo; actualizar la fuente vigente y registrar ADR cuando corresponda.\n\n# Reglas de gobierno del repositorio
 
 ## Alcance y estado
 
