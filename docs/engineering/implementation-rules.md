@@ -6,6 +6,25 @@ Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni
 
 ## 1. Módulos y contratos
 
+### Ubicación y composición
+
+- Los cuatro procesos tienen puntos de entrada independientes bajo
+  `apps/<proceso>/src/`.
+- Los módulos propietarios viven exclusivamente bajo
+  `backend/<backend-propietario>/modules/<modulo>/`.
+- Cada módulo es un crate y mantiene sus capas `domain/`,
+  `application/`, `infrastructure/` y `contracts/` según corresponda.
+- `crates/shared/` se limita a utilidades técnicas neutrales;
+  `crates/contracts/` contiene Protobuf y esquemas de eventos;
+  `crates/adapters/` contiene adaptadores local, gRPC y mensajería.
+- `packages/` contiene paquetes reutilizables de frontend; nunca reemplaza
+  validaciones, autorización o reglas del backend.
+- `infrastructure/` contiene configuración de servicios e infraestructura,
+  no migraciones ni lógica de dominio.
+- La distribución concreta de dominios entre los cuatro backends debe
+  respetar `requisitos.md`; no duplicar ni asignar módulos por inferencia.
+
+
 - Depender de contratos públicos; no importar implementaciones internas ajenas.
 - DTO no exponen entidades ni modelos SQL.
 - OpenAPI describe HTTP; Protobuf describe gRPC.
