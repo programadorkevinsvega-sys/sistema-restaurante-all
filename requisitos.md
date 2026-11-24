@@ -2468,9 +2468,7 @@ canales digitales, automatizaciones e IA.
 - Compras pertenece a PROCUREMENT.
 - SALES posee pedidos, cuentas y ciclo comercial generico; el servicio de mesas
   y la ocupacion pertenecen a Restaurant vertical.
-- PRODUCTION y KITCHEN conservan la propiedad de sus dominios gastronomicos en
-  `crates/verticals/restaurant/`; INVENTORY posee el ledger fisico y aplica los
-  consumos solicitados por contrato.
+- PRODUCTION y KITCHEN conservan la propiedad de sus dominios gastronómicos y se implementan bajo el backend propietario; INVENTORY posee el ledger físico y aplica los consumos solicitados por contrato.
 - POS, pedidos y cuentas pertenecen a SALES; el procesamiento de pagos pertenece a PAYMENTS.
 - Caja y efectivo pertenecen a CASH; FINANCE consolida tesoreria, cuentas y contabilidad.
 - INTEGRATIONS conecta con los proveedores de pago, mientras PAYMENTS conserva sus cuentas, operaciones y estados.
