@@ -1,6 +1,6 @@
 # Estrategia técnica de consistencia distribuida y Sagas
 
-**Estado:** especificación propuesta vinculada a [ADR-0013](../adr/0013-distributed-transactions-and-saga-consistency.md).  
+**Estado:** especificación técnica aprobada y vigente, vinculada a [ADR-0013 Accepted](../adr/0013-distributed-transactions-and-saga-consistency.md).  
 **Ámbito:** flujos de negocio que coordinan varios módulos dentro o entre los cuatro procesos.  
 **Decisiones relacionadas:** ADR-0001, ADR-0003, ADR-0004, ADR-0007, ADR-0008 y ADR-0009.
 
@@ -10,7 +10,7 @@ Este documento describe cómo coordinar procesos de negocio de varios pasos sin 
 
 Cada módulo conserva su schema, rol, transacciones, migraciones e historial SQLx independientes. No se permiten escrituras, joins, FKs ni consultas directas entre schemas propietarios distintos. Los BFF no coordinan reglas de negocio ni almacenan el estado autoritativo de las Sagas.
 
-Mientras ADR-0013 permanezca Proposed, esta especificación es una propuesta y no autoriza implementación.
+ADR-0013 está Accepted y esta especificación desarrolla sus decisiones. Su aprobación documental no significa que las Sagas, tablas, workers o flujos estén implementados.
 
 ## 2. Modelo de consistencia
 
@@ -184,4 +184,4 @@ No se crea un schema compartido, tabla global de Sagas, crate de negocio transve
 
 ## 16. Estado
 
-**Propuesta técnica; pendiente de aprobación de ADR-0013.** No se han creado tablas, crates, contratos ejecutables, workers ni código. No se han modificado archivos SQL o migraciones ni se han ejecutado operaciones de base de datos.
+**Especificación técnica aprobada conforme a ADR-0013 Accepted; implementación pendiente.** No se han creado tablas, crates, contratos ejecutables, workers ni código. No se han modificado archivos SQL o migraciones ni se han ejecutado operaciones de base de datos.

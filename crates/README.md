@@ -10,4 +10,4 @@ Esta carpeta se reserva para capacidades técnicas neutrales y adaptadores reuti
 
 Las fuentes Protobuf no viven aquí: su única ubicación es `contracts/protobuf/<backend>/<modulo>/v1/`.
 
-El catálogo propuesto, los límites entre contratos y transporte y las reglas de dependencias están descritos en [Diseño de crates y dependencias](../docs/architecture/crate-architecture.md) y ADR-0009. La propuesta sigue pendiente de aprobación; la presencia de estas carpetas no significa que existan crates Rust o dependencias implementadas.
+El catálogo aprobado, los límites entre contratos y transporte y las reglas de dependencias están descritos en [Diseño de crates y dependencias](../docs/architecture/crate-architecture.md) y [ADR-0009 Accepted](../docs/adr/0009-crate-boundaries-and-dependencies.md). La presencia de estas carpetas no significa que existan crates Rust o dependencias implementadas.
