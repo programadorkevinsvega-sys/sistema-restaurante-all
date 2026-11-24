@@ -1,6 +1,6 @@
 # Seguridad de contraseñas y autenticación
 
-**Estado:** propuesta técnica asociada a [ADR-0011](../adr/0011-password-hashing-and-authentication-security.md). No constituye una implementación ni entra en vigor como decisión aceptada hasta que el propietario del producto acepte el ADR.  
+**Estado:** especificación técnica aprobada y vigente, asociada a [ADR-0011 Accepted](../adr/0011-password-hashing-and-authentication-security.md). No constituye una implementación.  
 **Propietario funcional:** IDENTITY, exclusivamente en Public Backend.  
 **Ámbito:** credenciales locales, autenticación, MFA, sesiones, recuperación y controles contra abuso.
 
@@ -50,7 +50,7 @@ No se requiere reset masivo solo por elevar parámetros: el rehash progresivo se
 - No exigir rotación periódica arbitraria; forzar cambio cuando exista evidencia de compromiso o recuperación.
 - No usar preguntas de seguridad ni pistas accesibles antes de autenticar.
 
-**Compatibilidad pendiente:** la definición SQL actual usa `password_min_length DEFAULT 12`. La política propuesta de 15 caracteres requiere alinear configuración persistida, validación y pruebas mediante una tarea SQL/migración separada, autorizada expresamente. Este documento no modifica esa definición ni autoriza ejecutar migraciones.
+**Compatibilidad pendiente:** la definición SQL actual usa `password_min_length DEFAULT 12`. La política aprobada de 15 caracteres requiere alinear configuración persistida, validación y pruebas mediante una tarea SQL/migración separada, autorizada expresamente. Este documento no modifica esa definición ni autoriza ejecutar migraciones.
 
 ## 4. Protección contra ataques online
 
