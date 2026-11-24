@@ -6,7 +6,7 @@
 
 ## 1. Propósito y límites
 
-Este documento traduce la decisión propuesta en requisitos verificables para una futura implementación. No crea crates, código, endpoints, tablas, migraciones, secretos, infraestructura ni dependencias.
+Este documento desarrolla la decisión aceptada en requisitos verificables para su futura implementación. No crea crates, código, endpoints, tablas, migraciones, secretos, infraestructura ni dependencias.
 
 IDENTITY es la única autoridad de credenciales. Admin BFF y Public BFF transportan solicitudes hacia contratos autorizados de IDENTITY; no calculan ni verifican hashes y no leen PostgreSQL de IDENTITY. Admin Platform Backend consume esos contratos cuando corresponda, sin duplicar usuarios o credenciales.
 
@@ -148,3 +148,8 @@ Las pruebas deberán ejecutarse y reportarse con comando, entorno y resultado. L
 - [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) — algoritmo, salt, PHC y costos mínimos de Argon2id.
 - [NIST SP 800-63B-4](https://pages.nist.gov/800-63-4/sp800-63b.html) — longitud, blocklists, Unicode, no truncamiento y ausencia de rotación periódica arbitraria.
 - [RFC 9106](https://www.rfc-editor.org/rfc/rfc9106.html) — especificación de Argon2.
+
+
+## 10. Estado
+
+**Especificación técnica aprobada conforme a ADR-0011 Accepted; implementación pendiente.** No se han creado crates, código, endpoints, tablas, migraciones, secretos, infraestructura ni dependencias por este documento. No se han modificado archivos SQL ni migraciones.
