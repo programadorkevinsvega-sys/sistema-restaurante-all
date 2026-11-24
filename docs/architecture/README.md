@@ -1,7 +1,9 @@
 # Arquitectura de Restaurant OS
 
-La arquitectura del repositorio se organiza en cuatro procesos independientes,
-cada uno con módulos propios:
+La arquitectura del repositorio se organiza en cuatro procesos independientes.
+La propiedad de módulos está definida por ADR-0008: Admin Platform Backend
+contiene PLATFORM; Public Backend contiene los demás módulos de negocio; los
+dos BFF son procesos de composición sin propiedad de dominios ni datos.
 
 1. Admin Platform Backend.
 2. Admin BFF.
@@ -19,7 +21,7 @@ SQLx.
 - [Estándar general](./engineering-standard.md): reglas obligatorias de arquitectura y estructura.
 - [Arquitectura de Restaurant OS](./restaurant-os-architecture.md): especialización de los cuatro procesos, dominios, datos y comunicación.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
-- [ADRs aceptados](../adr/README.md): decisiones arquitectónicas aprobadas.
+- [ADRs aceptados](../adr/README.md): decisiones arquitectónicas aprobadas, incluida la distribución de módulos de ADR-0008.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.
 

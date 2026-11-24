@@ -1,3 +1,7 @@
-# Módulos de admin-platform-backend
+# Admin Platform Backend
 
-Contiene exclusivamente los módulos cuyo backend propietario es `admin-platform-backend`. La responsabilidad de cada módulo se define en `requisitos.md`; no se crean copias del mismo módulo en otro backend.
+Proceso/binario independiente propietario únicamente del módulo `PLATFORM`.
+
+La implementación de PLATFORM vive en `backend/admin-platform-backend/modules/platform/` y administra el ciclo de vida SaaS: tenants, planes, suscripciones, límites y capacidades propias de la plataforma. Para identidad consume los contratos del módulo IDENTITY, propiedad de Public Backend; no duplica usuarios, membresías ni tablas de identidad.
+
+La distribución está definida en [ADR-0008](../../docs/adr/0008-module-ownership-across-four-processes.md).

@@ -40,9 +40,15 @@ Otros verticales podran utilizar conceptos generales sin crear dependencias a me
 ### Limite de propiedad y ubicación de módulos
 
 - Los cuatro procesos son independientes: Admin Platform Backend, Admin BFF,
-  Public BFF y Public Backend. Cada proceso tiene sus propios módulos.
-- La ubicación física de cada módulo es
-  `backend/<backend-propietario>/modules/<modulo>/`.
+  Public BFF y Public Backend.
+- Según [ADR-0008](docs/adr/0008-module-ownership-across-four-processes.md),
+  Admin Platform Backend es propietario únicamente de PLATFORM. Public Backend
+  es propietario de todos los demás módulos de negocio canónicos.
+- Admin BFF y Public BFF son procesos de composición y exposición HTTP/OpenAPI;
+  no poseen dominios, schemas ni tablas de negocio.
+- PLATFORM vive en
+  `backend/admin-platform-backend/modules/platform/`; los demás módulos
+  canónicos viven en `backend/public-backend/modules/<modulo>/`.
 - Cada módulo pertenece a un único backend y conserva su lógica, contratos,
   persistencia, schema, rol, migraciones e historial SQLx.
 - `crates/` contiene únicamente capacidades técnicas compartidas, contratos
@@ -2172,32 +2178,32 @@ Antes de habilitar el entorno productivo deben configurarse:
 
 ## Arquitectura técnica definitiva
 
-La siguiente tabla conserva los dominios y sus responsabilidades. Todos se implementan dentro de `modules/` del único backend propietario; la tabla no asigna un dominio a un proceso concreto, porque esa distribución debe respetar la decisión de composición aprobada y no se debe inferir.
+La siguiente tabla conserva los dominios y sus responsabilidades y aplica la distribución aprobada en ADR-0008. PLATFORM pertenece a Admin Platform Backend; todos los demás dominios de negocio pertenecen a Public Backend. Los BFF no son propietarios de estos módulos.
 
 ### Dominios con propietario único
 
 | Dominio canonico | Responsabilidad | Ubicacion fisica |
 |---|---|---|
-| PLATFORM | SaaS, tenants, planes, suscripciones, limites e infraestructura | `backend/<backend-propietario>/modules/<modulo>/` |
-| IDENTITY | Usuarios, membresias, RBAC, ABAC y sesiones | `backend/<backend-propietario>/modules/<modulo>/` |
-| ORGANIZATION | Empresas legales, grupos, marcas, sucursales y recursos fisicos | `backend/<backend-propietario>/modules/<modulo>/` |
-| CATALOG | Productos, variantes, precios y agrupaciones comerciales genericas | `backend/<backend-propietario>/modules/<modulo>/` |
-| SALES | Pedidos, cuentas y ciclo comercial generico | `backend/<backend-propietario>/modules/<modulo>/` |
-| PAYMENTS | Metodos, cobros, autorizaciones, capturas, reembolsos y liquidaciones | `backend/<backend-propietario>/modules/<modulo>/` |
-| CASH | Cajas, turnos, arqueos y movimientos fisicos de efectivo | `backend/<backend-propietario>/modules/<modulo>/` |
-| KITCHEN | Estaciones operativas, comandas, KDS y preparacion gastronomica | `backend/<backend-propietario>/modules/<modulo>/` |
-| INVENTORY | Existencias, lotes fisicos, bodegas, movimientos y transferencias | `backend/<backend-propietario>/modules/<modulo>/` |
-| PROCUREMENT | Proveedores, cotizaciones, compras y recepciones | `backend/<backend-propietario>/modules/<modulo>/` |
-| PRODUCTION | Recetas versionadas, BOM, rendimientos, ordenes y lotes gastronomicos | `backend/<backend-propietario>/modules/<modulo>/` |
-| BILLING | Facturacion fiscal, documentos electronicos y numeracion | `backend/<backend-propietario>/modules/<modulo>/` |
-| FINANCE | Tesoreria, cuentas por cobrar/pagar y contabilidad | `backend/<backend-propietario>/modules/<modulo>/` |
-| WORKFORCE | Empleados, turnos, asistencia y compensaciones | `backend/<backend-propietario>/modules/<modulo>/` |
-| CUSTOMERS | CRM, fidelizacion, consentimiento y segmentacion | `backend/<backend-propietario>/modules/<modulo>/` |
-| INTEGRATIONS | API, webhooks, conectores, credenciales y hardware | `backend/<backend-propietario>/modules/<modulo>/` |
-| AUTOMATION | Flujos, disparadores, campanas, condiciones y acciones | `backend/<backend-propietario>/modules/<modulo>/` |
-| ANALYTICS | KPI, tendencias, datos semanticos y dashboards | `backend/<backend-propietario>/modules/<modulo>/` |
-| AUDIT | Auditoria transversal e historial de acciones | `backend/<backend-propietario>/modules/<modulo>/` |
-| REPORTING | Plantillas, generacion, exportacion y distribucion de informes | `backend/<backend-propietario>/modules/<modulo>/` |
+| PLATFORM | SaaS, tenants, planes, suscripciones, limites e infraestructura | `backend/admin-platform-backend/modules/platform/` |
+| IDENTITY | Usuarios, membresias, RBAC, ABAC y sesiones | `backend/public-backend/modules/identity/` |
+| ORGANIZATION | Empresas legales, grupos, marcas, sucursales y recursos fisicos | `backend/public-backend/modules/organization/` |
+| CATALOG | Productos, variantes, precios y agrupaciones comerciales genericas | `backend/public-backend/modules/catalog/` |
+| SALES | Pedidos, cuentas y ciclo comercial generico | `backend/public-backend/modules/sales/` |
+| PAYMENTS | Metodos, cobros, autorizaciones, capturas, reembolsos y liquidaciones | `backend/public-backend/modules/payments/` |
+| CASH | Cajas, turnos, arqueos y movimientos fisicos de efectivo | `backend/public-backend/modules/cash/` |
+| KITCHEN | Estaciones operativas, comandas, KDS y preparacion gastronomica | `backend/public-backend/modules/kitchen/` |
+| INVENTORY | Existencias, lotes fisicos, bodegas, movimientos y transferencias | `backend/public-backend/modules/inventory/` |
+| PROCUREMENT | Proveedores, cotizaciones, compras y recepciones | `backend/public-backend/modules/procurement/` |
+| PRODUCTION | Recetas versionadas, BOM, rendimientos, ordenes y lotes gastronomicos | `backend/public-backend/modules/production/` |
+| BILLING | Facturacion fiscal, documentos electronicos y numeracion | `backend/public-backend/modules/billing/` |
+| FINANCE | Tesoreria, cuentas por cobrar/pagar y contabilidad | `backend/public-backend/modules/finance/` |
+| WORKFORCE | Empleados, turnos, asistencia y compensaciones | `backend/public-backend/modules/workforce/` |
+| CUSTOMERS | CRM, fidelizacion, consentimiento y segmentacion | `backend/public-backend/modules/customers/` |
+| INTEGRATIONS | API, webhooks, conectores, credenciales y hardware | `backend/public-backend/modules/integrations/` |
+| AUTOMATION | Flujos, disparadores, campanas, condiciones y acciones | `backend/public-backend/modules/automation/` |
+| ANALYTICS | KPI, tendencias, datos semanticos y dashboards | `backend/public-backend/modules/analytics/` |
+| AUDIT | Auditoria transversal e historial de acciones | `backend/public-backend/modules/audit/` |
+| REPORTING | Plantillas, generacion, exportacion y distribucion de informes | `backend/public-backend/modules/reporting/` |
 
 Estos nombres son las identidades técnicas canónicas; no se les asignan números
 de módulo. KITCHEN y PRODUCTION conservan su identidad y propiedad lógica por
@@ -2207,14 +2213,14 @@ propietario.
 
 ### Topología de los cuatro backends
 
-Restaurant OS se compone de cuatro procesos/binarios independientes, cada uno con sus propios módulos:
+Restaurant OS se compone de cuatro procesos/binarios independientes:
 
-1. Admin Platform Backend.
-2. Admin BFF.
-3. Public BFF.
-4. Public Backend.
+1. Admin Platform Backend: contiene PLATFORM.
+2. Admin BFF: proceso de composición para las interfaces administrativas; no posee módulos de negocio.
+3. Public BFF: proceso de composición para las interfaces públicas y operativas; no posee módulos de negocio.
+4. Public Backend: contiene todos los demás módulos de negocio canónicos.
 
-Los BFF son procesos separados de sus respectivos backends; no existe un único `api-server` que aloje todos los módulos ni un único BFF compartido. Cada proceso conserva sus propios módulos y responsabilidades. Entre procesos se utiliza gRPC para solicitudes/respuestas, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso usan los contratos públicos y puertos/traits locales descritos en el estándar modular; los hechos durables se gestionan mediante Outbox/Inbox. Docker Compose debe representar cuatro servicios independientes. Es una topología objetivo, no evidencia de que ya esté implementada.
+Los BFF son procesos separados de sus respectivos backends; no existe un único `api-server` que aloje todos los módulos ni un único BFF compartido. Las operaciones administrativas sobre dominios empresariales se dirigen mediante contratos al módulo propietario en Public Backend; el frontend que inicia la operación no cambia el ownership. Entre procesos se utiliza gRPC para solicitudes/respuestas, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso usan los contratos públicos y puertos/traits locales descritos en el estándar modular; los hechos durables se gestionan mediante Outbox/Inbox. Docker Compose debe representar cuatro servicios independientes. Es una topología objetivo, no evidencia de que ya esté implementada.
 
 `AI` es una capacidad transversal, no un dominio propietario ni un módulo con schema propio en esta etapa. Se accede mediante un puerto/capacidad y utiliza herramientas autorizadas de los módulos. Cada módulo conserva los datos que necesita para su propio proceso; no se asigna a AI la propiedad de conversaciones, configuración o consumo. Esta regla está registrada en [ADR-0006](docs/adr/0006-ai-cross-cutting-capability-no-owned-schema.md). Si una necesidad futura exige persistencia centralizada o un módulo AI, deberá aprobarse mediante un ADR nuevo. La librería `tenancy`, si se conserva como soporte compartido, no es un dominio propietario: PLATFORM mantiene la propiedad del ciclo de vida de tenants.
 
@@ -4990,7 +4996,7 @@ No es necesario implementar todas las tecnologias desde el primer dia.
 
 ### Criterios de seleccion
 
-- Rust permite compilar cada backend como un binario independiente que contiene sus módulos.
+- Rust permite compilar cada proceso como un binario independiente: los backends de dominio contienen sus módulos propietarios y los BFF contienen composición y transporte.
 - Cargo workspace permite separar módulos en crates y enlazarlos en el binario del backend propietario.
 - SQLx permite persistencia tipada y transacciones controladas sobre PostgreSQL.
 - Hexagonal + DDD mantienen reglas de negocio independientes de transporte y persistencia.
@@ -5016,7 +5022,7 @@ Restaurant OS utilizara un monolito modular implementado en Rust.
 - Admin BFF sera un binario/proceso independiente que expone HTTP/OpenAPI a los frontends administrativos.
 - Public BFF sera un binario/proceso independiente que expone HTTP/OpenAPI a los frontends públicos.
 - Public Backend sera un binario/proceso independiente.
-- Cada uno de los cuatro backends/procesos tendrá sus propios módulos y punto de composición.
+- Admin Platform Backend y Public Backend tendrán sus módulos propietarios y puntos de composición. Admin BFF y Public BFF tendrán puntos de composición propios, sin módulos propietarios de negocio.
 - Los modulos no deben estar acoplados a clases o tablas privadas de otros modulos.
 - Los modulos deben exponer contratos publicos, puertos y fachadas.
 - La arquitectura debe facilitar extraer modulos sin reescribir sus reglas de negocio.
