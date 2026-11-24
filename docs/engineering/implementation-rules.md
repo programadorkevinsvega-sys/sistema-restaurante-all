@@ -17,11 +17,11 @@ Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni
   propietarios de negocio viven bajo
   `backend/public-backend/modules/<modulo>/`, según ADR-0008.
 - Admin BFF y Public BFF no poseen módulos de negocio ni persistencia propietaria.
-- Cada módulo es un crate dentro del backend propietario definido por ADR-0008 y mantiene sus capas `domain/`,
-  `application/`, `infrastructure/` y `contracts/` según corresponda.
-- `crates/shared/` se limita a utilidades técnicas neutrales;
-  `crates/contracts/` contiene Protobuf y esquemas de eventos;
-  `crates/adapters/` contiene adaptadores local, gRPC y mensajería.
+- Cada módulo tiene un crate de implementación en su raíz (`Cargo.toml`, `sqlx.toml`, `src/{domain,application,adapters,infrastructure}/`) y un crate público obligatorio en `contracts/{Cargo.toml,src/lib.rs}`. Los 20 contratos existen desde el inicio, aunque algunos sean mínimos.
+- `contracts/protobuf/<backend>/<modulo>/v1/` es la única fuente Protobuf;
+  `crates/contracts/events/` contiene esquemas de eventos;
+  `crates/shared/` se limita a utilidades técnicas neutrales;
+  `crates/adapters/` contiene adaptadores local, gRPC y mensajería. El adaptador local existe desde el día uno y los adaptadores local y gRPC implementan los mismos puertos.
 - `packages/` contiene paquetes reutilizables de frontend; nunca reemplaza
   validaciones, autorización o reglas del backend.
 - `infrastructure/` contiene configuración de servicios e infraestructura,
