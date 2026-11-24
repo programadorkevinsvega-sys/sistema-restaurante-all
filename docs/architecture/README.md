@@ -22,6 +22,7 @@ SQLx.
 - [Arquitectura de Restaurant OS](./restaurant-os-architecture.md): especialización de los cuatro procesos, dominios, datos y comunicación.
 - [Diseño de crates y dependencias](./crate-architecture.md): diseño técnico aceptado mediante ADR-0009.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
+- [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008, los límites de crates de ADR-0009 y la estrategia PostgreSQL propuesta en ADR-0010.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.

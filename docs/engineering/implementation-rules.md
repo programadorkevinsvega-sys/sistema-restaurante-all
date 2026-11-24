@@ -110,6 +110,10 @@ Inspeccionar código, contratos, migraciones y pruebas antes de modificar. Usar 
 
 Los cambios arquitectónicos se revisan contra precedencia y ADRs. Cada ADR nace Proposed; pasa a Accepted solo con aprobación explícita del propietario del producto y fecha. CODEOWNERS identifica responsables; la revisión obligatoria de code owners requiere Ruleset o branch protection configurado expresamente. Integrar mediante PR a main. No afirmar enforcement efectivo hasta verificar branch protection/rulesets. Los pasos objetivo están en [Configuración de protección de main](./github-protection-setup.md). Cambios documentales ejecutan validaciones disponibles; no inventar comandos.
 
-## 8. Estado de herramientas
+## 8. Documentación y README
+
+Toda creación o modificación de documentación debe cumplir el [Estándar de calidad, seguridad y mantenimiento documental](./documentation-quality-and-security-standard.md). La documentación debe describir evidencia real, respetar ownership y ADR aceptados, evitar secretos y datos sensibles, verificar comandos/variables/enlaces y distinguir capacidades implementadas de planificadas. Los README resumen y enlazan fuentes normativas; no duplican ADR ni reglas. Los documentos de `rules/` marcados como `superseded` son históricos y no deben reactivarse. No declarar validaciones documentales, escáneres, workflows o checks como activos sin evidencia de ejecución. La automatización de CI documental se incorpora mediante un cambio autorizado y verificable.
+
+## 9. Estado de herramientas
 
 Estas reglas no demuestran que Cargo workspace, SQLx, OpenAPI generator, Buf, CI, OpenTelemetry, Collector, broker, Docker deployment o controles de arquitectura estén instalados. Verificar manifests, workflows y evidencia antes de marcarlos activos.
