@@ -14,3 +14,9 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0006: AI como capacidad transversal sin schema propio en esta etapa](./0006-ai-cross-cutting-capability-no-owned-schema.md)
 - [ADR-0007: Cuatro backends independientes y comunicación](./0007-four-independent-backends-and-communication.md)
 - [ADR-0008: Distribución de módulos entre los cuatro procesos](./0008-module-ownership-across-four-processes.md)
+
+## Decisiones propuestas
+
+- [ADR-0009: Límites de crates y dirección de dependencias](./0009-crate-boundaries-and-dependencies.md) — pendiente de aprobación explícita.
+
+El diseño técnico detallado asociado está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). Mientras ADR-0009 permanezca Proposed, no debe tratarse como una decisión Accepted ni como autorización para crear manifests o código.
