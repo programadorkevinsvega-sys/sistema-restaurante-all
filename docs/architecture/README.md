@@ -21,11 +21,12 @@ SQLx.
 - [Estándar general](./engineering-standard.md): reglas obligatorias de arquitectura y estructura.
 - [Arquitectura de Restaurant OS](./restaurant-os-architecture.md): especialización de los cuatro procesos, dominios, datos y comunicación.
 - [Diseño de crates y dependencias](./crate-architecture.md): diseño técnico aceptado mediante ADR-0009.
-- [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](./identifier-strategy.md): especificación propuesta vinculada a ADR-0012; no es una regla vigente hasta que el ADR sea aceptado.
+- [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](./identifier-strategy.md): especificación vigente vinculada a ADR-0012 Accepted; no significa que la generación o migración esté implementada.
+- [Estrategia técnica de consistencia distribuida y Sagas](./distributed-transaction-consistency.md): especificación propuesta vinculada a ADR-0013; pendiente de aprobación.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md): especificación técnica propuesta para IDENTITY, vinculada a ADR-0011; no representa implementación.
-- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008, los límites de crates de ADR-0009 y las propuestas de pooling (ADR-0010), autenticación (ADR-0011) e identificadores (ADR-0012).
+- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008, los límites de crates de ADR-0009 y las propuestas de pooling (ADR-0010), autenticación (ADR-0011) y consistencia distribuida (ADR-0013), junto a la decisión aceptada de identificadores (ADR-0012).
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.
 

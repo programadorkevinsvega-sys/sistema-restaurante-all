@@ -98,6 +98,7 @@ comerciales genéricas; no se convierte en propietario de todos los menús.
 - Efectos externos con claves idempotentes, Outbox adicional o reconciliación/compensación.
 - Jobs periódicos con advisory lock PostgreSQL, lease exclusivo recuperable o elección de líder.
 - No prometer exactly-once extremo a extremo.
+- La coordinación de procesos de negocio multi-módulo mediante Sagas está propuesta en [ADR-0013](../adr/0013-distributed-transactions-and-saga-consistency.md) y [su especificación técnica](./distributed-transaction-consistency.md); permanece Proposed hasta aprobación.
 
 ## 8. Stateless y escalado
 
