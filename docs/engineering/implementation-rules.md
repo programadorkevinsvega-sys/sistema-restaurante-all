@@ -76,7 +76,7 @@ FKs, joins y consultas directas solo dentro del límite de propiedad del mismo m
 
 ### Estado de proceso
 
-No guardar sesiones, estado de usuario, colas durables ni estado de negocio solo en memoria local. Pools acotados y compartidos por proceso; concurrencia limitada por workload. Configurar readiness/liveness, graceful shutdown, timeouts y backpressure.
+No guardar sesiones, estado de usuario, colas durables ni estado de negocio solo en memoria local. Los pools PostgreSQL deben ser acotados y reutilizables por identidad runtime de módulo; no se comparte un pool/rol global entre módulos. Dentro de cada instancia, las operaciones del módulo reutilizan su pool. La concurrencia se limita por workload. Configurar readiness/liveness, graceful shutdown, timeouts y backpressure. La estrategia detallada está propuesta en [ADR-0010](../adr/0010-postgresql-connection-pooling-and-resource-management.md) y no se considera aceptada hasta su aprobación.
 
 ### Outbox
 
