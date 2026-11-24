@@ -1,6 +1,6 @@
 # Estándar de calidad, seguridad y mantenimiento documental
 
-**Estado:** vigente desde su aceptación mediante PR.  
+**Estado:** propuesta documental; entra en vigor al integrarse en `main` mediante PR aprobado.  
 **Ámbito:** todo el repositorio Restaurant OS: procesos backend, BFF, aplicaciones, módulos, crates, contratos, infraestructura, scripts y documentación transversal.  
 **Jerarquía:** estándar especializado subordinado al [Estándar general de arquitectura](../architecture/engineering-standard.md), a la [Arquitectura de Restaurant OS](../architecture/restaurant-os-architecture.md), a los ADR aceptados y a los requisitos oficiales.
 
