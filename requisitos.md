@@ -5004,8 +5004,8 @@ Restaurant OS utilizara un monolito modular implementado en Rust.
 
 - El repositorio sera un Cargo workspace.
 - Los modulos se implementaran como crates de biblioteca.
-- El API principal sera un unico crate ejecutable.
-- El ejecutable inicial sera apps/api-server.
+- El backend modular sera un crate ejecutable `apps/api-server`, que aloja los módulos y expone gRPC.
+- El BFF sera otro crate ejecutable independiente `apps/bff`, que expone HTTP/OpenAPI a los frontends.
 - Los modulos no deben estar acoplados a clases o tablas privadas de otros modulos.
 - Los modulos deben exponer contratos publicos, puertos y fachadas.
 - La arquitectura debe facilitar extraer modulos sin reescribir sus reglas de negocio.
