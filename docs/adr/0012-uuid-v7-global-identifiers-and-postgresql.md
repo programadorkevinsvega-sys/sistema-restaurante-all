@@ -1,8 +1,10 @@
 # ADR-0012: UUID versión 7 como identificador técnico global y PostgreSQL estable actual
 
-- Estado: **Proposed**
+- Estado: **Accepted**
+- Historial: Proposed → Accepted
 - Propuesto: 2026-11-24
-- Aprobación: pendiente del propietario del producto.
+- Aceptado: 2026-11-24
+- Aprobación: propietario del producto, confirmada explícitamente al aprobar y solicitar la fusión del PR #11.
 - Complementa: ADR-0001, ADR-0007, ADR-0008 y ADR-0009.
 - Ámbito: todos los módulos y procesos de Restaurant OS.
 
@@ -14,7 +16,7 @@ UUIDv4 ofrece generación aleatoria, pero sus valores no siguen el orden tempora
 
 UUIDv7 tiene una implicación de privacidad: la marca temporal permite estimar cuándo se generó un identificador. Un UUID, independientemente de su versión, tampoco constituye una credencial ni una prueba de autorización.
 
-A fecha de esta propuesta, PostgreSQL 19.0 es la versión estable más reciente, publicada el 19 de noviembre de 2026. PostgreSQL incorpora generación nativa UUIDv7 mediante `uuidv7()` desde PostgreSQL 18; la versión 19 documenta esta función y el tipo `uuid`.
+A fecha de aceptación de esta decisión, PostgreSQL 19.0 es la versión estable más reciente, publicada el 19 de noviembre de 2026. PostgreSQL incorpora generación nativa UUIDv7 mediante `uuidv7()` desde PostgreSQL 18; la versión 19 documenta esta función y el tipo `uuid`.
 
 ## Decisión propuesta
 
@@ -106,4 +108,4 @@ Este ADR no modifica columnas, defaults, constraints, índices, datos, contratos
 
 ## Estado de implementación
 
-**Propuesta documental; pendiente de aprobación.** No se han modificado archivos SQL ni migraciones, no se han alterado datos, no se han añadido dependencias y no se ha implementado generación UUIDv7 en código.
+**Decisión documental aceptada.** No se han modificado archivos SQL ni migraciones, no se han alterado datos, no se han añadido dependencias y no se ha implementado generación UUIDv7 en código.
