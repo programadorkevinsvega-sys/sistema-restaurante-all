@@ -13,11 +13,11 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
-LINK_RE = re.compile(r"!?\\[[^\\]]*\\]\\(\\s*(<[^>]+>|[^\\s)]+)")
-REFERENCE_RE = re.compile(r"^\\s{0,3}\\[[^\\]]+\\]:\\s*(<[^>]+>|\\S+)", re.MULTILINE)
+LINK_RE = re.compile(r"!? \[([^\]]*)\]\(\s*(<[^>]+>|[^\s)]+)".replace(" ", ""))
+REFERENCE_RE = re.compile(r"^\s{0,3}\[[^\]]+\]:\s*(<[^>]+>|\S+)", re.MULTILINE)
 HTML_HREF_RE = re.compile(r"""\\b(?:href|src)\\s*=\\s*["']([^"']+)["']""", re.IGNORECASE)
 INLINE_CODE_RE = re.compile("(" + chr(96) + r"+)(.*?)\\1", re.DOTALL)
-HEADING_RE = re.compile(r"^#{1,6}\\s+(.+?)\\s*#*\\s*$", re.MULTILINE)
+HEADING_RE = re.compile(r"^#{1,6}\s+(.+?)\s*#*\s*$", re.MULTILINE)
 HTML_ID_RE = re.compile(r"""\\b(?:id|name)\\s*=\\s*["']([^"']+)["']""", re.IGNORECASE)
 
 
@@ -33,12 +33,11 @@ def changed_markdown(base: str, head: str) -> list[Path]:
 
 
 def strip_code(text: str) -> str:
-    lines = text.splitlines()
     kept: list[str] = []
     fence_char: str | None = None
     fence_size = 0
-    for line in lines:
-        match = re.match(r"^\\s{0,3}(" + chr(96) + r"{3,}|~{3,})", line)
+    for line in text.splitlines():
+        match = re.match(r"^\s{0,3}(" + chr(96) + r"{3,}|~{3,})", line)
         if match:
             token = match.group(1)
             if fence_char is None:
@@ -48,21 +47,21 @@ def strip_code(text: str) -> str:
             continue
         if fence_char is None:
             kept.append(line)
-    return INLINE_CODE_RE.sub("", "\\n".join(kept))
+    return INLINE_CODE_RE.sub("", "\n".join(kept))
 
 
 def heading_anchors(text: str) -> set[str]:
     anchors: set[str] = set(HTML_ID_RE.findall(text))
     counts: dict[str, int] = {}
     for match in HEADING_RE.finditer(text):
-        heading = re.sub(r"!?(?:\\[([^\\]]*)\\])\\([^)]*\\)", r"\\1", match.group(1))
+        heading = re.sub(r"!?(?:\[([^\]]*)\])\([^)]*\)", r"\1", match.group(1))
         heading = re.sub(r"<[^>]+>", "", heading)
         heading = heading.replace(chr(96), "").replace("*", "").replace("_", "").replace("~", "")
         heading = html.unescape(heading).strip().lower()
         heading = unicodedata.normalize("NFKD", heading)
         heading = "".join(ch for ch in heading if not unicodedata.combining(ch))
-        slug = re.sub(r"[^\\w -]", "", heading, flags=re.UNICODE)
-        slug = re.sub(r"\\s", "-", slug.strip())
+        slug = re.sub(r"[^\w -]", "", heading, flags=re.UNICODE)
+        slug = re.sub(r"\s", "-", slug.strip())
         slug = re.sub(r"-+", "-", slug)
         count = counts.get(slug, 0)
         counts[slug] = count + 1
@@ -72,7 +71,7 @@ def heading_anchors(text: str) -> set[str]:
 
 def extract_targets(text: str) -> list[str]:
     clean = strip_code(text)
-    targets = [m.group(1) for m in LINK_RE.finditer(clean)]
+    targets = [m.group(2) for m in LINK_RE.finditer(clean)]
     targets.extend(m.group(1) for m in REFERENCE_RE.finditer(clean))
     targets.extend(HTML_HREF_RE.findall(clean))
     return [target[1:-1] if target.startswith("<") and target.endswith(">") else target for target in targets]
@@ -143,7 +142,7 @@ def main() -> int:
             errors.extend(validate_file(path))
 
     if errors:
-        print("\\n".join(errors), file=sys.stderr)
+        print("\n".join(errors), file=sys.stderr)
         print(f"Found {len(errors)} broken local Markdown link(s)/anchor(s).", file=sys.stderr)
         return 1
 
