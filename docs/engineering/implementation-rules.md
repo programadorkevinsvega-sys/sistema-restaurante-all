@@ -56,7 +56,9 @@ No guardar sesiones, estado de usuario, colas durables ni estado de negocio solo
 
 ### Outbox
 
-El evento se persiste en la misma transacción PostgreSQL que el cambio de negocio. No publicar al broker dentro de esa transacción. Sin broker, reclamar lotes con FOR UPDATE SKIP LOCKED y leases recuperables; publicar fuera de la transacción breve. Con broker, marcar publicado tras confirmación durable. Entrega at-least-once; no exactly-once.
+El evento se persiste en la misma transacción PostgreSQL que el cambio de negocio. No publicar al broker dentro de esa transacción. Sin dispatcher durable operativo, reclamar lotes con `FOR UPDATE SKIP LOCKED` y leases recuperables; publicar fuera de la transacción breve. Con NATS JetStream, marcar publicado tras confirmación durable. Entrega at-least-once; no exactly-once.
+
+NATS Core se reserva para señales efímeras que no requieren persistencia durable. NATS JetStream se utiliza para eventos/mensajes que requieren persistencia, confirmación durable, reintentos o recuperación. `FOR UPDATE SKIP LOCKED` coordina el reclamo de filas de trabajo del Outbox entre workers; no es un protocolo de comunicación entre módulos.
 
 ### Inbox e idempotencia
 
