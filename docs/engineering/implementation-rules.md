@@ -64,7 +64,7 @@ FKs, joins y consultas directas solo dentro del límite de propiedad del mismo m
 
 ## 2.1 Política propuesta de identificadores
 
-La política global UUIDv7 y la versión objetivo PostgreSQL están propuestas en [ADR-0012](../adr/0012-uuid-v7-global-identifiers-and-postgresql.md), con detalle en [Estrategia técnica de identificadores](../architecture/identifier-strategy.md). Mientras ADR-0012 permanezca Proposed, estos documentos son una propuesta y no autorizan cambios de código, contratos, columnas, defaults, índices, datos ni migraciones. La convergencia de identificadores existentes requiere un plan separado por módulo y autorización expresa. No modificar archivos SQL ni ejecutar migraciones sin autorización expresa.
+La política global UUIDv7 y la versión objetivo PostgreSQL están aceptadas en [ADR-0012](../adr/0012-uuid-v7-global-identifiers-and-postgresql.md), con detalle en [Estrategia técnica de identificadores](../architecture/identifier-strategy.md). La aceptación define el estándar, pero no significa que generación, contratos, columnas, defaults, índices o datos estén modificados. La convergencia de identificadores existentes requiere un plan separado por módulo y autorización expresa. No modificar archivos SQL ni ejecutar migraciones sin autorización expresa.
 
 ## 2.2 Seguridad de credenciales y autenticación
 
@@ -99,6 +99,10 @@ NATS Core se reserva para señales efímeras que no requieren persistencia durab
 ### Inbox e idempotencia
 
 Cada consumidor deduplica por consumidor y event_id (incluyendo tenant si el modelo lo requiere). Inbox/deduplicación y efectos persistentes se confirman en una transacción local. ACK al transporte después del commit. Efectos externos usan claves idempotentes, Outbox adicional o reconciliación/compensación. Handlers toleran redelivery, concurrencia, reintentos y reinicios.
+
+### Consistencia distribuida y procesos multi-módulo
+
+La coordinación de procesos de negocio durables entre varios módulos está propuesta en [ADR-0013](../adr/0013-distributed-transactions-and-saga-consistency.md) y [Estrategia técnica de consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md). ADR-0013 permanece Proposed: no tratar su patrón Saga como regla aceptada hasta su aprobación. Los principios ya aceptados de transacciones locales, Outbox/Inbox, idempotencia y propiedad de datos de ADR-0001, ADR-0003 y ADR-0007 siguen vigentes.
 
 ### Jobs periódicos
 
