@@ -1,0 +1,3 @@
+# Architecture policies require review by the repository owner.
+# Branch protection must enable required Code Owner review for enforcement.
+docs/architecture/ @programadorkevinsvega-sys
