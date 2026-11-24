@@ -1,4 +1,4 @@
-# Reglas de documentación
+> **Estado: superseded.** Este documento se conserva como referencia histórica. La fuente normativa vigente es [Reglas vigentes de documentación y precedencia](../docs/architecture/README.md). No añadir reglas nuevas aquí ni resolver contradicciones desde este archivo; actualizar la fuente vigente y registrar ADR cuando corresponda.\n\n# Reglas de documentación
 
 ## Alcance
 
