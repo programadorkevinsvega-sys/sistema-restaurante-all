@@ -1,8 +1,9 @@
 # ADR-0011: Protección de contraseñas y controles de autenticación
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Propuesto: 2026-11-24
-- Aceptado: pendiente de aprobación explícita del propietario del producto.
+- Aprobado: 2026-11-24
+- Aprobación: decisión aprobada explícitamente por el propietario del producto.
 - Ámbito: módulo IDENTITY de Public Backend y sus consumidores autorizados.
 - Complementa: ADR-0003, ADR-0007, ADR-0008 y ADR-0009.
 - Documento operativo asociado: [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md).
@@ -15,7 +16,7 @@ El diseño SQL existente de IDENTITY ya contempla `identity.password_credentials
 
 Las contraseñas no pueden almacenarse en texto plano ni protegerse con funciones hash rápidas de propósito general como MD5 o SHA-256. El sistema debe resistir tanto la filtración de la base de datos como ataques en línea contra el proceso de autenticación.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Propiedad y límites
 
@@ -96,7 +97,7 @@ El pepper no será requisito para la primera implementación. Si una decisión p
 
 ## Plan de implementación asociado
 
-La implementación se realizará después de aprobar este ADR y siguiendo el documento operativo asociado:
+La implementación se realizará conforme a este ADR aceptado y siguiendo el documento operativo asociado:
 
 1. Inspeccionar el crate IDENTITY, sus contratos, dependencias y persistencia real; fijar versiones de dependencias en los manifests y lockfile cuando existan.
 2. Implementar un componente interno de hashing/verificación Argon2id en IDENTITY, sin exponer hashes o salts en contratos.
