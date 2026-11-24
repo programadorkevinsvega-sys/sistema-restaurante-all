@@ -17,7 +17,7 @@ Una contradicción no se resuelve por interpretación del agente. Se propone un 
 
 ## 3. Estilo arquitectónico
 
-- Cuatro procesos/binarios independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend. Cada proceso organiza sus propios módulos como monolito modular.
+- Cuatro procesos/binarios independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend. La propiedad de módulos se distribuye según ADR-0008: PLATFORM pertenece a Admin Platform Backend; los demás módulos de negocio pertenecen a Public Backend; los BFF no poseen dominios ni persistencia de negocio.
 - Cada módulo está preparado para separarse como microservicio por una razón medible, sin cambiar sus reglas de negocio ni sus contratos.
 - PostgreSQL compartido inicialmente, con ownership, schema, rol, migraciones e historial SQLx exclusivos por módulo.
 - Stateless y multi-réplica desde el inicio.
@@ -29,10 +29,11 @@ Una contradicción no se resuelve por interpretación del agente. Se propone un 
 
 Los dominios canónicos conservan sus responsabilidades descritas en
 [requisitos.md](../../requisitos.md). Su implementación física vive una sola
-vez bajo `backend/<backend-propietario>/modules/<modulo>/`; cada backend tiene
-su propio conjunto de módulos. La asignación concreta de cada dominio a uno de
-los cuatro procesos se documenta de acuerdo con las decisiones aprobadas y no
-se deduce de esta lista.
+vez bajo `backend/<backend-propietario>/modules/<modulo>/`, conforme a la
+distribución aprobada en [ADR-0008](../adr/0008-module-ownership-across-four-processes.md):
+PLATFORM pertenece a Admin Platform Backend y todos los demás módulos
+canónicos pertenecen a Public Backend. Admin BFF y Public BFF no son
+propietarios de dominios ni de persistencia de negocio.
 
 - PLATFORM: ciclo de vida SaaS, tenants, planes, suscripciones y límites.
 - IDENTITY: usuarios, membresías, autenticación, RBAC, ABAC y sesiones.
@@ -80,7 +81,7 @@ comerciales genéricas; no se convierte en propietario de todos los menús.
 - OpenAPI genera tipos/clientes HTTP para frontends y BFF; Protobuf genera stubs/tipos gRPC para backends y BFF.
 - El código generado no se edita a mano. CI regenera y falla si hay diferencias con el generado versionado.
 - Frontends independientes consumen contratos; no alojan reglas autoritativas. La autorización efectiva es backend.
-- Restaurant OS se compone de cuatro procesos/binarios independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend. Cada uno contiene sus propios módulos y tiene una responsabilidad de backend diferenciada.
+- Restaurant OS se compone de cuatro procesos/binarios independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend. Admin Platform Backend aloja PLATFORM; Public Backend aloja los demás módulos de negocio; los BFF realizan composición y exposición HTTP/OpenAPI sin ownership de dominios ni tablas de negocio.
 - Admin BFF y Public BFF son procesos separados de sus respectivos backends; no existe un único BFF compartido ni un único `api-server` que aloje todos los módulos.
 - Los cuatro procesos se comunican mediante gRPC y mensajería NATS según el tipo de interacción: gRPC para solicitud/respuesta, NATS Core para señales efímeras y NATS JetStream para eventos durables.
 - Docker Compose debe representar cuatro servicios de aplicación independientes. Esta topología es el objetivo arquitectónico y no afirma que el despliegue ya esté implementado.
@@ -115,6 +116,7 @@ OpenTelemetry y W3C Trace Context. traceparent es el portador canónico; tracest
 - [ADR-0005: Contratos Protobuf y gRPC desde el inicio](../adr/0005-grpc-contracts-from-day-one.md)
 - [ADR-0006: AI como capacidad transversal sin schema propio en esta etapa](../adr/0006-ai-cross-cutting-capability-no-owned-schema.md)
 - [ADR-0007: Cuatro backends independientes y comunicación](../adr/0007-four-independent-backends-and-communication.md)
+- [ADR-0008: Distribución de módulos entre los cuatro procesos](../adr/0008-module-ownership-across-four-processes.md)
 
 ## 11. Estado de implementación
 
