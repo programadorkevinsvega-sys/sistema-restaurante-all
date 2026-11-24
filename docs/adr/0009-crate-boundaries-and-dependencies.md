@@ -10,7 +10,7 @@
 
 ADR-0007 y ADR-0008 fijan cuatro procesos independientes y la propiedad de los módulos. El estándar exige módulos aislados, contratos públicos, composición en el borde del proceso y bibliotecas compartidas neutrales. Antes de crear manifiestos Rust es necesario concretar qué paquetes/crates representan esas responsabilidades y qué dependencias pueden cruzar cada frontera.
 
-El repositorio todavía no tiene un workspace Cargo implementado. Esta propuesta define límites y direcciones, no versiones concretas de crates externos ni un grafo de dependencias entre todos los dominios.
+El repositorio todavía no tiene un workspace Cargo implementado. Esta decisión aceptada define límites y direcciones, no versiones concretas de crates externos ni un grafo de dependencias entre todos los dominios.
 
 ## Decisión
 
