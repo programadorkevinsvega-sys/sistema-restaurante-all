@@ -104,4 +104,8 @@ Idempotencia	Los comandos importantes no deben ejecutarse dos veces accidentalme
 Seguridad multiempresa	Toda operación debe respetar el contexto y los permisos de empresa y sucursal.
 Pruebas	Cada módulo debe poder probarse con implementaciones simuladas de sus dependencias.
 
-Un matiz fundamental: independencia no significa que ventas pueda confirmar una venta sin inventario cuando necesita comprobar existencias. Significa que ventas puede desarrollarse, probarse y mantener sus propias operaciones sin conocer la implementación de inventario. Si un servicio externo no está disponible, cada proceso deberá tener una política explícita de recuperación o rechazo.\n\n## Arquitectura normativa\n\nAntes de cualquier cambio, leer [Estándar general](docs/architecture/engineering-standard.md), [Arquitectura de Restaurant OS](docs/architecture/restaurant-os-architecture.md), [Reglas de implementación](docs/engineering/implementation-rules.md) y [ADRs aceptados](docs/adr/README.md). La jerarquía y precedencia de esos documentos es obligatoria.\n
+Un matiz fundamental: independencia no significa que ventas pueda confirmar una venta sin inventario cuando necesita comprobar existencias. Significa que ventas puede desarrollarse, probarse y mantener sus propias operaciones sin conocer la implementación de inventario. Si un servicio externo no está disponible, cada proceso deberá tener una política explícita de recuperación o rechazo.
+
+## Arquitectura normativa
+
+Antes de cualquier cambio, leer [Estándar general](docs/architecture/engineering-standard.md), [Arquitectura de Restaurant OS](docs/architecture/restaurant-os-architecture.md), [Reglas de implementación](docs/engineering/implementation-rules.md) y [ADRs aceptados](docs/adr/README.md). La jerarquía y precedencia de esos documentos es obligatoria.
