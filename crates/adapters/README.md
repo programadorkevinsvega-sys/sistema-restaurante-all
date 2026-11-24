@@ -2,7 +2,7 @@
 
 Esta carpeta contiene adaptadores técnicos que conectan puertos de aplicación con transportes, brokers y otras tecnologías. Un adaptador traduce entre contrato e implementación; no decide reglas del dominio.
 
-- grpc/: clientes y servidores gRPC. Son obligatorios desde el inicio en las fronteras backend ↔ BFF y se usan entre servicios separados. No son obligatorios para llamadas entre módulos internos que comparten proceso.
+- grpc/: clientes y servidores gRPC. Se usan en las fronteras entre procesos independientes, incluidos los cuatro backends de Restaurant OS. No son necesarios para llamadas entre módulos que comparten el mismo backend/proceso.
 - messaging/: integración con brokers y transporte de eventos.
 - local/: adaptadores en proceso o sustitutos de prueba cuando correspondan.
 
