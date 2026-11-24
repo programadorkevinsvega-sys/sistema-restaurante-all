@@ -4996,7 +4996,7 @@ No es necesario implementar todas las tecnologias desde el primer dia.
 
 ### Criterios de seleccion
 
-- Rust permite compilar cada backend como un binario independiente que contiene sus módulos.
+- Rust permite compilar cada proceso como un binario independiente: los backends de dominio contienen sus módulos propietarios y los BFF contienen composición y transporte.
 - Cargo workspace permite separar módulos en crates y enlazarlos en el binario del backend propietario.
 - SQLx permite persistencia tipada y transacciones controladas sobre PostgreSQL.
 - Hexagonal + DDD mantienen reglas de negocio independientes de transporte y persistencia.
