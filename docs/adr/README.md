@@ -20,5 +20,6 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 
 - [ADR-0010: PostgreSQL Connection Pooling y gestión de recursos](./0010-postgresql-connection-pooling-and-resource-management.md) — Proposed, pendiente de aprobación.
 - [ADR-0011: Protección de contraseñas y controles de autenticación](./0011-password-hashing-and-authentication-security.md) — Proposed, pendiente de aprobación.
+- [ADR-0012: UUID versión 7 como identificador técnico global y PostgreSQL estable actual](./0012-uuid-v7-global-identifiers-and-postgresql.md) — Proposed, pendiente de aprobación.
 
-El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). ADR-0009 está Accepted y establece los límites arquitectónicos para la implementación; su aceptación no significa que los manifests o el código ya existan. ADR-0010 y ADR-0011 no son reglas aceptadas hasta recibir aprobación explícita.
+El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). La estrategia técnica de UUIDv7 y PostgreSQL está en [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](../architecture/identifier-strategy.md). ADR-0009 está Accepted y establece los límites arquitectónicos para la implementación; su aceptación no significa que los manifests o el código ya existan. ADR-0010, ADR-0011 y ADR-0012 no son reglas aceptadas hasta recibir aprobación explícita.
