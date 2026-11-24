@@ -66,7 +66,7 @@ FKs, joins y consultas directas solo dentro del límite de propiedad del mismo m
 
 La política global UUIDv7 y la versión objetivo PostgreSQL están propuestas en [ADR-0012](../adr/0012-uuid-v7-global-identifiers-and-postgresql.md), con detalle en [Estrategia técnica de identificadores](../architecture/identifier-strategy.md). Mientras ADR-0012 permanezca Proposed, estos documentos son una propuesta y no autorizan cambios de código, contratos, columnas, defaults, índices, datos ni migraciones. La convergencia de identificadores existentes requiere un plan separado por módulo y autorización expresa. No modificar archivos SQL ni ejecutar migraciones sin autorización expresa.
 
-## 2.1 Seguridad de credenciales y autenticación
+## 2.2 Seguridad de credenciales y autenticación
 
 IDENTITY en Public Backend es el único propietario de credenciales locales, hashing, verificación, MFA, sesiones y recuperación. Los BFF no calculan hashes ni consultan directamente las tablas de IDENTITY; Admin Platform Backend consume sus contratos cuando corresponda y no duplica credenciales.
 
