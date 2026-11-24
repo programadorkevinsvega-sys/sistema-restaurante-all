@@ -1,4 +1,4 @@
-# Reglas de observabilidad y monitoreo
+> **Estado: superseded.** Este documento se conserva como referencia histórica. La fuente normativa vigente es [Reglas vigentes de OpenTelemetry y W3C Trace Context](../docs/engineering/implementation-rules.md#5-opentelemetry-y-w3c-trace-context). No añadir reglas nuevas aquí ni resolver contradicciones desde este archivo; actualizar la fuente vigente y registrar ADR cuando corresponda.\n\n# Reglas de observabilidad y monitoreo
 
 ## Alcance
 
