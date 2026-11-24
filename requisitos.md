@@ -5159,20 +5159,25 @@ restaurant-os/
 ### Estructura interna de un modulo
 
 ```text
-inventory/
-├── src/
-│   ├── domain/
-│   │   ├── entities/
-│   │   ├── value_objects/
-│   │   └── rules/
-│   ├── application/
-│   │   ├── commands/
-│   │   ├── queries/
-│   │   └── ports/
-│   ├── infrastructure/
-│   │   └── persistence/
-│   └── lib.rs
-└── Cargo.toml
+backend/
+└── <backend-propietario>/
+    └── modules/
+        └── <modulo>/
+            ├── Cargo.toml
+            ├── migrations/
+            ├── contracts/
+            └── src/
+                ├── domain/
+                │   ├── entities/
+                │   ├── value_objects/
+                │   └── rules/
+                ├── application/
+                │   ├── commands/
+                │   ├── queries/
+                │   └── ports/
+                ├── infrastructure/
+                │   └── persistence/
+                └── lib.rs
 ```
 
 Las capas deben seguir arquitectura hexagonal:
