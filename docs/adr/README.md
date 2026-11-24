@@ -5,6 +5,9 @@ Cada decisión se registra en un ADR independiente. El flujo es Proposed → Acc
 Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y aprobación. Toda desviación del estándar registra motivo, alcance, riesgos, mitigaciones y condición de revisión.
 
 ## Decisiones aceptadas
+- [ADR-0010: PostgreSQL Connection Pooling y gestión de recursos](./0010-postgresql-connection-pooling-and-resource-management.md)
+- [ADR-0011: Protección de contraseñas y controles de autenticación](./0011-password-hashing-and-authentication-security.md)
+- [ADR-0013: Consistencia distribuida y transacciones de negocio entre módulos](./0013-distributed-transactions-and-saga-consistency.md)
 
 - [ADR-0001: Ownership PostgreSQL y migraciones por módulo](./0001-postgres-module-ownership-and-migrations.md)
 - [ADR-0002: OpenAPI, Protobuf y código generado](./0002-openapi-protobuf-generated-clients.md)
@@ -19,9 +22,6 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 
 ## Decisiones propuestas
 
-- [ADR-0010: PostgreSQL Connection Pooling y gestión de recursos](./0010-postgresql-connection-pooling-and-resource-management.md) — Proposed, pendiente de aprobación.
-- [ADR-0011: Protección de contraseñas y controles de autenticación](./0011-password-hashing-and-authentication-security.md) — Proposed, pendiente de aprobación.
-- [ADR-0013: Consistencia distribuida y transacciones de negocio entre módulos](./0013-distributed-transactions-and-saga-consistency.md) — Proposed, pendiente de aprobación.
 - [ADR-0014: Baja de tenants y conservación de datos de clientes](./0014-tenant-deletion-and-customer-data-preservation.md) — Accepted.
 
-El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). La estrategia técnica de UUIDv7 y PostgreSQL está en [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](../architecture/identifier-strategy.md). La propuesta de consistencia distribuida está en [Estrategia técnica de consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md). ADR-0009 y ADR-0012 están Accepted; su aceptación no significa que los manifests, la generación UUIDv7, las migraciones o el código ya existan. ADR-0010, ADR-0011 y ADR-0013 permanecen Proposed; ADR-0014 está Accepted.
+El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). La estrategia técnica de UUIDv7 y PostgreSQL está en [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](../architecture/identifier-strategy.md). La propuesta de consistencia distribuida está en [Estrategia técnica de consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md). ADR-0009 y los ADR-0010 a ADR-0014 están Accepted. La aceptación de un ADR no significa que sus componentes, controles, pools, Sagas, migraciones o código ya estén implementados.
