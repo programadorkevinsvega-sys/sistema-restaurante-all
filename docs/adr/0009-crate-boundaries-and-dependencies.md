@@ -26,11 +26,14 @@ La separación permite que los consumidores compilen contra la API pública sin 
 ### 2. Layout físico objetivo
 
 ```text
+Cargo.toml                      # único Cargo workspace raíz
+Cargo.lock                      # lockfile compartido por los cuatro binarios
+
 apps/
-  admin-platform-backend/       # binario/composición de PLATFORM
-  admin-bff/                    # binario/composición HTTP administrativa
-  public-bff/                   # binario/composición HTTP pública/operativa
-  public-backend/               # binario/composición de módulos públicos
+  admin-platform-backend/       # paquete/binario independiente de PLATFORM
+  admin-bff/                    # paquete/binario independiente HTTP administrativo
+  public-bff/                   # paquete/binario independiente HTTP público/operativo
+  public-backend/               # paquete/binario independiente de módulos públicos
 
 backend/
   admin-platform-backend/
