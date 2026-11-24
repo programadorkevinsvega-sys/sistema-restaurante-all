@@ -856,8 +856,7 @@ Resultado: un restaurante puede operar.
 Duracion orientativa: 5 a 8 semanas.
 
 - Inventario.
-- Recetas versionadas, ordenes y lotes bajo PRODUCTION en
-  `crates/verticals/restaurant/`.
+- Recetas versionadas, órdenes y lotes bajo la responsabilidad de PRODUCTION, dentro del backend propietario.
 - Compras.
 - Proveedores.
 - Transferencias.
