@@ -66,8 +66,11 @@ Entre procesos se utiliza gRPC para solicitudes y respuestas; NATS Core para se�
 
 ## Responsabilidad y ubicación de módulos
 
-- Los cuatro procesos son independientes y cada uno contiene sus propios
-  módulos bajo `backend/<backend>/modules/`.
+- Los cuatro procesos son independientes. PLATFORM vive en
+  `backend/admin-platform-backend/modules/platform/`; todos los demás módulos
+  canónicos viven en `backend/public-backend/modules/<modulo>/`.
+- Admin BFF y Public BFF no poseen módulos de negocio, schemas ni tablas de
+  negocio; sus módulos internos se limitan a transporte y composición.
 - Cada módulo conserva su responsabilidad, contratos, schema, rol, migraciones
   e historial SQLx exclusivos.
 - `crates/` se reserva para bibliotecas técnicas neutrales, contratos
@@ -75,7 +78,9 @@ Entre procesos se utiliza gRPC para solicitudes y respuestas; NATS Core para se�
 - Las responsabilidades de CATALOG, KITCHEN, PRODUCTION y los demás dominios
   siguen siendo las definidas en `requisitos.md`; esta organización física no
   las fusiona ni las reasigna.
-- No crear duplicados ni asignar un módulo a un backend por inferencia.
+- No crear duplicados ni cambiar la asignación aprobada en
+  [ADR-0008](docs/adr/0008-module-ownership-across-four-processes.md) sin un
+  nuevo ADR aceptado.
 
 ## Arquitectura normativa
 
