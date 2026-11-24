@@ -6,12 +6,12 @@ Reglas base para cualquier backend, sistema o app nueva. Los ejemplos usan Rust 
 
 ## 1. Principios
 
-1. **Empezar el backend como monolito modular, diseñado para separarse.** Los módulos backend se alojan inicialmente en un único proceso/binario. Cuando la arquitectura define un BFF, este es un proceso independiente; su separación no convierte cada módulo interno en microservicio. Cada módulo puede extraerse mañana cambiando adaptadores, no sus reglas de negocio.
+1. **Cada backend se organiza como un monolito modular dentro de su propio proceso/binario, preparado para separarse.** Los módulos de un mismo backend comparten proceso y respetan sus fronteras. Restaurant OS define cuatro procesos independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend. Esta separación entre backends no convierte automáticamente cada módulo interno en microservicio. Cada módulo puede extraerse mañana cambiando adaptadores, no sus reglas de negocio.
 2. **Cada módulo es dueño de su lógica, sus datos y su contrato.** Nadie más toca sus internos ni sus tablas.
 3. **Las fronteras se imponen con herramientas, no con convenciones.** Compilador primero, CI después, revisión humana al final.
 4. **Cada interacción entre módulos es una de dos cosas:** consulta/comando (síncrona) o evento (hecho ya ocurrido). Nunca una tercera vía (acceso directo a tablas, imports de internos).
 5. **Nada de estado local relevante.** La app DEBE poder correr en N réplicas desde el día uno.
-6. **No adoptar infraestructura antes de necesitarla**, pero sí diseñar las interfaces como si ya existiera.
+6. **Adoptar infraestructura conforme a decisiones arquitectónicas aprobadas y necesidades reales.** Las interfaces deben permitir sustituir adaptadores sin cambiar reglas de negocio.
 7. **Todo requisito se demuestra con evidencia**, no con afirmaciones.
 
 ---
@@ -73,7 +73,7 @@ Cada módulo DEBE tener, desde el inicio:
 1. **Una interfaz pública** (trait/interface) por capacidad: `AuthenticationPort`, etc.
 2. **DTO propios** de request/response/evento. Nunca entidades de dominio ni modelos de BD.
 3. **Un contrato Protobuf versionado equivalente** (`v1`, `v2`...), aunque hoy la implementación sea una llamada en proceso.
-4. **Una implementación en proceso** para módulos que comparten backend y un adaptador de transporte (gRPC/Tonic) en las fronteras de procesos. En Restaurant OS, el BFF es un proceso separado y usa gRPC desde el inicio.
+4. **Una implementación en proceso** para módulos que comparten el mismo backend y un adaptador de transporte (gRPC/Tonic) en las fronteras entre procesos. En Restaurant OS, los cuatro backends son procesos independientes; las llamadas síncronas entre ellos usan gRPC conforme a sus contratos.
 
 Reglas de evolución:
 - Cambios compatibles (campos opcionales nuevos) → misma versión.
@@ -89,9 +89,9 @@ Reglas de evolución:
 
 | Necesidad | Mecanismo |
 |---|---|
-| Pedir algo y necesitar la respuesta ahora (validar stock, consultar precio, autenticar) | **Comando/consulta síncrona** vía trait/puerto local si ambos módulos comparten proceso; gRPC en una frontera de procesos. En Restaurant OS, `api-server` ↔ BFF usa gRPC desde el inicio |
-| Notificar que algo ya ocurrió (`PedidoCreado`, `PagoConfirmado`) | **Evento durable** |
-| Invalidar cachés / señales efímeras sin garantía | Broadcast ligero (p. ej. NATS core) |
+| Pedir algo y necesitar la respuesta ahora (validar stock, consultar precio, autenticar) | **Comando/consulta síncrona** vía trait/puerto local si ambos módulos comparten backend/proceso; gRPC cuando la interacción cruza entre los cuatro procesos de Restaurant OS |
+| Notificar que algo ya ocurrió (`PedidoCreado`, `PagoConfirmado`) | **Evento durable** mediante Outbox/Inbox y NATS JetStream cuando corresponda |
+| Invalidar cachés / señales efímeras sin garantía | Broadcast ligero mediante NATS Core |
 
 ### 4.2 Reglas
 
@@ -111,15 +111,16 @@ La app DEBE ser stateless desde el día uno. Con más de una réplica:
 - **Bus de eventos en memoria NO es válido** para eventos que importan: un evento publicado en una réplica solo lo ven los suscriptores de esa réplica.
 - **Eventos durables = Outbox transaccional:** el evento se escribe en la misma transacción que el cambio de datos. Nunca publicar "después" de confirmar.
 - **Despacho del outbox**, una de dos opciones:
-  - *Sin broker:* polling con `FOR UPDATE SKIP LOCKED` (+ `LISTEN/NOTIFY` para despertar). Cada evento lo toma una sola réplica.
-  - *Con broker (NATS/JetStream):* el dispatcher publica al stream; los consumidores usan **queue/consumer groups** para que cada evento lo procese una sola réplica por grupo.
+  - *Mientras no esté disponible el broker durable:* polling del Outbox con `FOR UPDATE SKIP LOCKED` (+ `LISTEN/NOTIFY` para despertar). Este mecanismo reclama filas de trabajo; no sustituye los contratos de comunicación entre módulos.
+  - *Con NATS JetStream:* el dispatcher publica al stream tras la confirmación durable correspondiente; los consumidores usan **queue/consumer groups** para distribuir el procesamiento por grupo.
+  - *Para señales efímeras:* NATS Core, sin tratarlo como almacenamiento durable.
 - **Inbox/idempotencia** en consumidores: tabla de eventos procesados o claves idempotentes.
 - **Jobs periódicos/cron:** con advisory lock de PostgreSQL o elección de líder; nunca "una vez por réplica".
 - **Cachés locales:** evitarlas, usar TTL cortos o invalidación por broadcast.
 - **Sesiones y estado de usuario:** en BD/almacén compartido, nunca en memoria del proceso.
 - Health/readiness probes, apagado ordenado (graceful shutdown) y migraciones compatibles hacia atrás (rolling deploys).
 
-**Cuándo adoptar NATS/JetStream:** cuando haya módulos en procesos separados, o varias réplicas con necesidad real de desacople, reintentos, replay o múltiples consumidores. Antes de eso, outbox + SKIP LOCKED es suficiente y no añade infraestructura.
+**Decisión de mensajería de Restaurant OS:** NATS Core se utiliza para señales efímeras y NATS JetStream para mensajería durable cuando corresponda. `FOR UPDATE SKIP LOCKED` sigue siendo el mecanismo de reclamación de filas Outbox mientras el dispatcher durable no publique al broker. Esta decisión arquitectónica no constituye evidencia de que NATS esté instalado o desplegado.
 
 ---
 
@@ -258,9 +259,9 @@ Un cambio está terminado solo si:
 ## 11. Resumen en una pantalla
 
 1. Monolito modular, un crate por módulo + crate `contracts`.
-2. Consultas/comandos → contrato/trait + DTO + Protobuf versionado; gRPC desde el inicio entre `api-server` y BFF, y puertos locales entre módulos que comparten proceso.
+2. Consultas/comandos → contrato/trait + DTO + Protobuf versionado; puertos locales entre módulos del mismo backend y gRPC entre los cuatro procesos independientes de Restaurant OS.
 3. Hechos → eventos con outbox/inbox, idempotentes.
 4. Stateless desde el día uno; bus en memoria solo en instancia única.
 5. Cada schema tiene un dueño; roles de PostgreSQL lo imponen.
 6. Nueve controles de CI bloqueantes, con inventarios YAML centrales y evidencia por SHA.
-7. NATS/JetStream y microservicios solo cuando haya una razón medible.
+7. NATS Core/JetStream según el tipo de mensajería definido; la extracción de módulos a microservicios requiere una razón medible.
