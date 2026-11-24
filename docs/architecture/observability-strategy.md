@@ -1,6 +1,6 @@
 # Estrategia técnica de observabilidad integral
 
-**Estado:** especificación propuesta vinculada a [ADR-0015](../adr/0015-integrated-observability-platform.md).  
+**Estado:** especificación vigente vinculada a [ADR-0015 Accepted](../adr/0015-integrated-observability-platform.md).  
 **Ámbito:** los cuatro procesos, módulos, workers, PostgreSQL, NATS Core/JetStream, Redis y recursos de infraestructura.  
 **Decisiones relacionadas:** ADR-0003, ADR-0004, ADR-0007, ADR-0010, ADR-0013 y ADR-0015.
 
