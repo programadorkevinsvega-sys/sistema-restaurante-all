@@ -23,11 +23,11 @@ SQLx.
 - [Diseño de crates y dependencias](./crate-architecture.md): diseño técnico aceptado mediante ADR-0009.
 - [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](./identifier-strategy.md): especificación vigente vinculada a ADR-0012 Accepted; no significa que la generación o migración esté implementada.
 - [Estrategia técnica de consistencia distribuida y Sagas](./distributed-transaction-consistency.md): especificación técnica vinculada a ADR-0013 Accepted; no representa implementación.
-- [Estrategia técnica de observabilidad integral](./observability-strategy.md): especificación propuesta vinculada a ADR-0015; no representa instrumentación ni infraestructura desplegada.
+- [Estrategia técnica de observabilidad integral](./observability-strategy.md): especificación vigente vinculada a ADR-0015 Accepted; no representa instrumentación ni infraestructura desplegada.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md): especificación técnica vinculada a ADR-0011 Accepted; no representa implementación.
-- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008, los límites de crates de ADR-0009, las decisiones de pooling (ADR-0010), autenticación (ADR-0011), identificadores (ADR-0012), consistencia distribuida (ADR-0013), baja de tenants/conservación de datos de clientes (ADR-0014) y la propuesta de observabilidad (ADR-0015).
+- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008, los límites de crates de ADR-0009, las decisiones de pooling (ADR-0010), autenticación (ADR-0011), identificadores (ADR-0012), consistencia distribuida (ADR-0013), baja de tenants/conservación de datos de clientes (ADR-0014) y observabilidad (ADR-0015).
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.
 
