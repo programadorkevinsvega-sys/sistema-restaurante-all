@@ -20,21 +20,18 @@ es la fuente de verdad para requisitos, propietarios de dominio y ubicacion de
 los crates; [promt.md](./promt.md) define el orden de trabajo por lotes. Las
 fases no cambian esos propietarios ni crean una estructura paralela.
 
-## Limite entre Core y Restaurant vertical
+## Propiedad de módulos y estructura física
 
-- `crates/core/` aloja las capacidades reutilizables entre verticales: PLATFORM,
-  IDENTITY, ORGANIZATION, CATALOG, SALES, PAYMENTS, CASH, INVENTORY,
-  PROCUREMENT, BILLING, FINANCE, WORKFORCE, CUSTOMERS, INTEGRATIONS,
-  AUTOMATION, ANALYTICS, AUDIT y REPORTING. `tenancy/` es soporte compartido,
-  no un dominio propietario.
-- `crates/verticals/restaurant/` aloja KITCHEN y PRODUCTION, ademas de mesas,
-  reservas, servicio en salon, menu gastronomico y reglas de preparacion.
-- KITCHEN y PRODUCTION siguen siendo propietarios de sus dominios; su ubicacion
-  bajo el vertical refleja que sus reglas son gastronomicas. No duplicarlos en
-  Core.
-- El vertical consume CATALOG, SALES, ORGANIZATION e INVENTORY mediante
-  contratos; no duplica el catalogo base, los pedidos, la identidad de recursos
-  fisicos ni el ledger de existencias.
+Los dominios conservan sus responsabilidades lógicas, pero su código vive bajo
+`backend/<backend-propietario>/modules/<modulo>/`. Cada uno de los cuatro
+procesos tiene módulos propios. La distribución concreta de cada dominio entre
+los procesos debe seguir la matriz de `requisitos.md` y no se debe inferir.
+
+`crates/` contiene únicamente bibliotecas técnicas neutrales, contratos
+versionados y adaptadores. No contiene módulos propietarios de negocio.
+KITCHEN y PRODUCTION mantienen sus responsabilidades gastronómicas; CATALOG
+mantiene productos y agrupaciones comerciales genéricas. Esta separación es de
+propiedad de dominio, no una división física Core/Restaurant vertical.
 
 ## Topología de ejecución de los cuatro backends
 
@@ -156,7 +153,7 @@ El sistema debe diseñarse desde el inicio como una plataforma multiempresa y mu
 Decisión inicial:
 
 - Implementar un monolito modular bien organizado en Rust.
-- Organizar el backend como Cargo workspace con crates por dominio.
+- Organizar el repositorio como Cargo workspace; cada módulo es un crate bajo el backend que lo posee.
 - Construir cada backend como un binario/proceso independiente con su propio conjunto de módulos.
 - Mantener Admin Platform Backend, Admin BFF, Public BFF y Public Backend como cuatro procesos separados.
 - Los dos BFF exponen sus superficies HTTP/OpenAPI a los frontends correspondientes; los backends de plataforma y público exponen sus contratos de backend.
@@ -171,8 +168,7 @@ Decisión inicial:
 - Reservar bases dedicadas para clientes Enterprise.
 - Separar dominios en esquemas: platform, identity, organization y operaciones.
 - Mantener una base PostgreSQL compartida inicialmente, con propiedad por dominio.
-- Implementar los dominios reutilizables en `crates/core/` y KITCHEN/PRODUCTION
-  en `crates/verticals/restaurant/`, segun [requisitos.md](./requisitos.md).
+- Implementar cada dominio bajo `backend/<backend-propietario>/modules/<modulo>/`, respetando su responsabilidad y la distribución aprobada entre los cuatro procesos, según [requisitos.md](./requisitos.md).
 - Priorizar platform, identity, organization, catalog, sales, payments,
   inventory, billing y audit en el nucleo compartido.
 - Diseñar esquemas audit, analytics y integrations por responsabilidad.
