@@ -23,6 +23,7 @@ SQLx.
 - [Diseño de crates y dependencias](./crate-architecture.md): diseño técnico aceptado mediante ADR-0009.
 - [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](./identifier-strategy.md): especificación vigente vinculada a ADR-0012 Accepted; no significa que la generación o migración esté implementada.
 - [Estrategia técnica de consistencia distribuida y Sagas](./distributed-transaction-consistency.md): especificación técnica vinculada a ADR-0013 Accepted; no representa implementación.
+- [Operación de Transactional Outbox e Inbox](./transactional-outbox-inbox-operations.md): especificación técnica vinculada a ADR-0003, ADR-0013 y ADR-0015; desarrolla secuencias por agregado, recuperación de huecos, DLQ, backpressure, límites, alertas e intervención; no representa implementación.
 - [Estrategia técnica de observabilidad integral](./observability-strategy.md): especificación vigente vinculada a ADR-0015 Accepted; no representa instrumentación ni infraestructura desplegada.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
