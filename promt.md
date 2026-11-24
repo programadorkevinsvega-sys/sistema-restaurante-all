@@ -51,9 +51,18 @@ dominio separado `PURCHASING`. Las recetas y ordenes de produccion pertenecen a
 `PRODUCTION`; `CATALOG` conserva los productos comerciales, `INVENTORY` el
 inventario fisico y `KITCHEN` las comandas y preparacion de pedidos de clientes.
 
-## Topología backend y BFF
+## Topología de los cuatro backends
 
-`api-server` aloja el monolito modular de backend y expone gRPC. El BFF es un proceso independiente que consume gRPC y expone HTTP/OpenAPI a los frontends. En Docker Compose son dos servicios de aplicación. Esta separación no convierte los módulos internos en microservicios.
+Restaurant OS se compone de cuatro procesos/binarios independientes, cada uno con sus propios módulos:
+
+1. Admin Platform Backend.
+2. Admin BFF.
+3. Public BFF.
+4. Public Backend.
+
+No existe un único `api-server` que aloje todos los módulos ni un único BFF compartido. Cada backend conserva su composición modular y sus responsabilidades. Los BFF son procesos independientes, no capas integradas dentro de los backends de plataforma/público.
+
+Entre procesos se utiliza gRPC para solicitudes y respuestas; NATS Core para señales efímeras; y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso utilizan los contratos públicos y puertos/traits locales descritos en el estándar modular; los eventos durables usan Outbox/Inbox. `FOR UPDATE SKIP LOCKED` reclama filas de trabajo del Outbox cuando corresponde, no sustituye los contratos de comunicación.
 
 ## Responsabilidad de Core y Restaurant vertical
 
@@ -98,7 +107,7 @@ Sin dependencias circulares	Ningún módulo puede generar ciclos de dependencias
 Contratos públicos	Solo se puede interactuar con las interfaces públicas.
 Inversión de dependencias	Los módulos nunca dependen de implementaciones ajenas.
 Persistencia independiente	Cada módulo administra sus tablas, schema PostgreSQL, rol, migraciones, historial SQLx y transacciones.
-Comunicación intercambiable	Los módulos internos usan puertos locales; `api-server` y el BFF se comunican por gRPC desde el inicio.
+Comunicación intercambiable	Los módulos dentro de un mismo backend usan puertos/traits locales; los cuatro procesos independientes se comunican mediante gRPC y NATS Core/JetStream según corresponda.
 Eventos	Los acontecimientos se publican mediante contratos versionados.
 Idempotencia	Los comandos importantes no deben ejecutarse dos veces accidentalmente.
 Seguridad multiempresa	Toda operación debe respetar el contexto y los permisos de empresa y sucursal.
