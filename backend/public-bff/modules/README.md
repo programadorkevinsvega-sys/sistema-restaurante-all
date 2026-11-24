@@ -1,5 +1,5 @@
-# Módulos
+# Módulos internos de Public BFF
 
-Cada subdirectorio de este nivel representa un módulo/crate con responsabilidad y propiedad de datos propias. Su estructura interna sigue domain, application, infrastructure y contracts. Cada módulo mantiene schema, rol, directorio de migraciones e historial SQLx exclusivos. No crear tablas compartidas, FKs, joins ni consultas directas entre módulos.
+Este directorio no contiene módulos propietarios de dominios de negocio. Si se organiza código aquí, se limita a capacidades internas de composición, transporte o presentación del BFF.
 
-Los módulos concretos se incorporan según la asignación de dominios aprobada; este directorio no asigna dominios por inferencia.
+No crear schemas PostgreSQL, tablas de negocio, migraciones de dominio ni historiales SQLx de módulos propietarios en Public BFF. Los datos y reglas autoritativos permanecen en Public Backend.
