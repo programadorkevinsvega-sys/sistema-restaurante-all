@@ -53,12 +53,14 @@ inventario fisico y `KITCHEN` las comandas y preparacion de pedidos de clientes.
 
 ## Topología de los cuatro backends
 
-Restaurant OS se compone de cuatro procesos/binarios independientes, cada uno con sus propios módulos:
+Restaurant OS se compone de cuatro procesos/binarios independientes:
 
-1. Admin Platform Backend.
-2. Admin BFF.
-3. Public BFF.
-4. Public Backend.
+1. Admin Platform Backend: propietario de PLATFORM.
+2. Admin BFF: composición y exposición HTTP/OpenAPI para interfaces administrativas; sin propiedad de dominios de negocio.
+3. Public BFF: composición y exposición HTTP/OpenAPI para interfaces públicas y operativas; sin propiedad de dominios de negocio.
+4. Public Backend: propietario de todos los demás módulos de negocio canónicos.
+
+La matriz y las rutas físicas aprobadas están en [ADR-0008](docs/adr/0008-module-ownership-across-four-processes.md).
 
 No existe un único `api-server` que aloje todos los módulos ni un único BFF compartido. Cada backend conserva su composición modular y sus responsabilidades. Los BFF son procesos independientes, no capas integradas dentro de los backends de plataforma/público.
 
