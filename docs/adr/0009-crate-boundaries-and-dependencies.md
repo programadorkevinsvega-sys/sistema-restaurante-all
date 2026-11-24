@@ -15,13 +15,13 @@ El repositorio todavía no tiene un workspace Cargo implementado. Esta propuesta
 
 ### 1. Unidad de módulo
 
-Cada módulo de negocio seguirá siendo una unidad de ownership y una implementación crate privada del backend propietario. Cuando otros módulos o procesos deban consumir su API, tendrá además un crate público `<modulo>-contracts` separado de su implementación:
+Cada uno de los 20 módulos tendrá desde el inicio dos crates dentro de su propia unidad de ownership: un crate público `<modulo>-contracts` y un crate privado de implementación. El contrato existe aunque inicialmente tenga pocas operaciones; no es opcional ni depende de que ya haya consumidores externos:
 
 - `<modulo>-contracts`: traits/puertos públicos, DTO de solicitud/respuesta, tipos de eventos y errores de contrato. No contiene entidades, repositorios, SQL ni reglas de negocio.
 - `<modulo>` (implementación): domain, application, puertos internos, adaptadores y persistencia del módulo. No expone sus internos.
 - Los dos crates pertenecen al mismo módulo y no dividen su ownership.
 
-La separación del crate de contratos permite que un consumidor compile contra la API sin incorporar ni poder importar la implementación del propietario. Si un módulo todavía no tiene consumidores externos, el crate de contratos puede ser mínimo; no se crea una abstracción vacía por anticipado.
+La separación permite que los consumidores compilen contra la API pública sin incorporar ni poder importar la implementación del propietario. Un contrato inicialmente pequeño sigue siendo el límite público estable del módulo.
 
 ### 2. Layout físico objetivo
 
@@ -35,35 +35,56 @@ apps/
 backend/
   admin-platform-backend/
     modules/platform/
-      contracts/                 # crate platform-contracts
-      implementation/            # crate platform
+      Cargo.toml                 # crate de implementación PLATFORM
+      sqlx.toml                  # configuración SQLx exclusiva del módulo
+      src/
+        lib.rs
+        domain/
+        application/
+        adapters/
+        infrastructure/
+      contracts/
+        Cargo.toml                # crate platform-contracts
+        src/
+          lib.rs
       migrations/                # propiedad exclusiva de PLATFORM
   public-backend/
     modules/<module>/
-      contracts/                 # crate <module>-contracts
-      implementation/            # crate <module>
+      Cargo.toml                 # crate de implementación del módulo
+      sqlx.toml                  # configuración SQLx exclusiva del módulo
+      src/
+        lib.rs
+        domain/
+        application/
+        adapters/
+        infrastructure/
+      contracts/
+        Cargo.toml                # crate <module>-contracts
+        src/
+          lib.rs
       migrations/                # propiedad exclusiva del módulo
   admin-bff/                     # solo composición/transporte, no dominios
   public-bff/                    # solo composición/transporte, no dominios
 
+contracts/
+  protobuf/
+    <backend>/<modulo>/v1/*.proto # fuente Protobuf versionada por propietario
+
 crates/
   shared/                        # utilidades técnicas neutrales y pequeñas
   contracts/
-    proto/
-      <backend>/<module>/v1/*.proto
-    events/
-      <owner-module>/v1/*         # esquemas de eventos, si se versionan aquí
+    events/                      # esquemas de eventos versionados por propietario
   adapters/
-    grpc/                        # infraestructura genérica gRPC/Tonic
-    messaging/                   # infraestructura NATS Core/JetStream
-    local/                       # utilidades genéricas de invocación local, si hacen falta
+    local/                       # adaptadores de llamadas entre módulos del mismo proceso
+    grpc/                        # adaptadores gRPC para fronteras entre procesos
+    messaging/                   # adaptadores NATS Core/JetStream
 ```
 
-Las rutas `contracts/` e `implementation/` son una propuesta de layout para el contenido de cada módulo; no crean todavía directorios ni manifiestos. La ruta de migraciones sigue siendo la canónica fijada por ADR-0001: `backend/<backend>/modules/<modulo>/migrations/`. En el layout futuro debe quedar como hermana de `contracts/` e `implementation/`, no dentro de un crate técnico compartido.
+El crate de implementación vive en la raíz del módulo y contiene las capas bajo `src/`; el crate público vive en `contracts/`. No existe un directorio intermedio `implementation/`. La ruta de migraciones sigue siendo la canónica fijada por ADR-0001: `backend/<backend>/modules/<modulo>/migrations/`, hermana de `src/` y `contracts/`.
 
 ### 3. Crates de proceso y composición
 
-Cada uno de los cuatro binarios tiene un único crate de entrada y composición bajo `apps/<proceso>/`. Ese crate:
+El repositorio tendrá un único Cargo workspace en la raíz (`Cargo.toml`) y un único `Cargo.lock` compartido. El workspace incluirá cuatro paquetes binarios independientes, uno bajo cada `apps/<proceso>/`; compartir workspace y lockfile no fusiona sus procesos, ejecutables, configuración ni despliegues. Cada binario tiene su propio crate de entrada y composition root. Ese crate:
 
 - construye configuración, logging, telemetría, pools y clientes;
 - instancia implementaciones propietarias del proceso;
@@ -100,7 +121,7 @@ domain
 - El crate `<modulo>-contracts` es independiente de las capas internas y solo contiene la API pública estable.
 - La implementación de un módulo puede depender de los crates `*-contracts` de otros módulos permitidos; nunca de sus crates de implementación.
 
-Las llamadas síncronas entre módulos del mismo backend se resuelven mediante puertos/traits locales y DTO del contrato. Las llamadas entre procesos usan clientes/servidores gRPC generados desde Protobuf versionado, según ADR-0005 y ADR-0007. No se debe envolver una llamada local en gRPC solo para simular una frontera de proceso.
+Las llamadas síncronas entre módulos del mismo backend se realizan mediante sus puertos/traits públicos y DTO del contrato, implementados por `crates/adapters/local`. Los adaptadores local y gRPC implementan los mismos puertos: el local conecta módulos que comparten proceso; gRPC conecta procesos independientes. No se debe envolver una llamada local en gRPC solo para simular una frontera de proceso. Esta sustitución de adaptador permite extraer un módulo sin reescribir sus casos de uso ni sus puertos.
 
 ### 6. Contratos de transporte y generación
 
@@ -118,16 +139,16 @@ No se propone un único crate gigante que mezcle todos los contratos de negocio.
 
 `crates/shared` solo puede alojar capacidades técnicas genéricas sin semántica de dominio (por ejemplo, configuración base, propagación de contexto, utilidades de observabilidad o tipos realmente transversales y estables). Antes de agregar una utilidad se debe comprobar que no pertenece naturalmente a un módulo.
 
-`crates/adapters` puede alojar infraestructura de transporte reutilizable (gRPC/Tonic, NATS Core/JetStream y mecanismos locales genéricos). La persistencia SQLx y los repositorios que conocen tablas/schema permanecen dentro del módulo propietario. Un crate de adaptador no puede consultar varios schemas ni convertirse en repositorio compartido de negocio.
+`crates/adapters/local` es parte del diseño desde el día uno: implementa los puertos públicos para invocaciones entre módulos que comparten el mismo proceso y permite sustituir esa comunicación por gRPC cuando un módulo se extraiga. `crates/adapters/grpc` implementa esos mismos puertos para las fronteras entre procesos; `crates/adapters/messaging` proporciona el transporte NATS Core/JetStream. Estos adaptadores no poseen reglas de negocio ni persistencia. SQLx y los repositorios que conocen tablas/schema permanecen dentro del módulo propietario.
 
 No se crea un crate común para entidades, enums, DTO o reglas de negocio compartidas. Si dos módulos necesitan un concepto, se acuerda un contrato explícito o cada uno mantiene su modelo/proyección.
 
 ### 8. Dependencias externas y versiones
 
-La selección de versiones de Rust, SQLx, Tonic, Prost, NATS, Tokio, serialización, OpenTelemetry y generadores queda pendiente de inventario técnico y compatibilidad. Esta propuesta no fija versiones ni añade dependencias. Cuando se implemente el workspace:
+La selección de versiones de Rust, SQLx, Tonic, Prost, NATS, Tokio, serialización, OpenTelemetry y generadores queda pendiente de inventario técnico y compatibilidad. Esta propuesta no fija versiones ni añade dependencias. El único workspace Cargo estará en la raíz, con cuatro paquetes binarios independientes y `Cargo.lock` compartido. Al implementarlo:
 
 - centralizar versiones compatibles en el workspace Cargo;
-- fijar `Cargo.lock` para binarios;
+- versionar el único `Cargo.lock` raíz;
 - evitar dependencias duplicadas con versiones incompatibles;
 - justificar cada dependencia y limitar features;
 - validar MSRV, licencias, advisories y reproducibilidad en CI.
