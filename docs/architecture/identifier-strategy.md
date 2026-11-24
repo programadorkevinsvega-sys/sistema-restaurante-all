@@ -1,6 +1,6 @@
 # Estrategia técnica de identificadores UUIDv7 y PostgreSQL
 
-**Estado:** propuesta técnica vinculada a [ADR-0012](../adr/0012-uuid-v7-global-identifiers-and-postgresql.md); no es una política vigente hasta la aceptación del ADR.  
+**Estado:** especificación técnica aprobada y vigente, vinculada a [ADR-0012 Accepted](../adr/0012-uuid-v7-global-identifiers-and-postgresql.md).  
 **Ámbito:** los cuatro procesos y todos los módulos de Restaurant OS.  
 **Base técnica inicial:** PostgreSQL 19.0, versión estable publicada el 19 de noviembre de 2026.
 
@@ -42,7 +42,7 @@ UUIDv7 tampoco garantiza que cada inserción ocurra literalmente en la última p
 
 PostgreSQL utiliza el tipo nativo `uuid` para almacenar identificadores UUID de distintas versiones. PostgreSQL 18 incorporó la función `uuidv7()`; PostgreSQL 19 la documenta como generador UUID versión 7. La función incorpora timestamp Unix con precisión de milisegundos, fracción submilisegundo y bits aleatorios.
 
-La versión objetivo inicial propuesta es PostgreSQL 19.0. El proyecto debe mantener una política de actualización a la última versión mayor estable aprobada y sus actualizaciones menores/de seguridad, después de comprobar compatibilidad del stack.
+La versión objetivo inicial aprobada es PostgreSQL 19.0. El proyecto debe mantener una política de actualización a la última versión mayor estable aprobada y sus actualizaciones menores/de seguridad, después de comprobar compatibilidad del stack.
 
 La función nativa no determina por sí sola que todas las entidades deban generar su ID en SQL. Cada diseño de módulo deberá decidir la autoridad de generación para su flujo:
 
