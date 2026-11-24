@@ -361,8 +361,7 @@ Entregable:
 Objetivo: disponer del flujo minimo operativo de un restaurante.
 
 CATALOG y SALES aportan las capacidades base; el menu, los modificadores y los
-flujos de servicio propios del restaurante pertenecen a
-`crates/verticals/restaurant/`.
+flujos de servicio propios del restaurante pertenecen a los módulos gastronómicos responsables dentro del backend propietario.
 
 - Categorias y productos.
 - Variantes y modificadores.
