@@ -91,6 +91,7 @@ Si el resultado de publicación es incierto (por ejemplo, timeout después de en
 La confirmación debe corresponder a la persistencia durable aceptada por JetStream y a la configuración efectiva del stream. Un ACK de publicación no significa que un consumidor haya procesado el evento.
 
 Ante un fallo:
+
 - error transitorio: diferir y reintentar conforme a política;
 - error permanente de contrato/configuración: detener el ciclo de reintento automático y escalar;
 - resultado desconocido: reconciliar o republicar con la misma identidad idempotente, sin crear un evento lógico nuevo;
@@ -182,6 +183,7 @@ La política debe clasificar, al menos:
 - **Conflicto de secuencia/integridad:** hueco, secuencia duplicada con identidad distinta o causalidad inconsistente.
 
 Reglas:
+
 - Los reintentos son limitados, con backoff exponencial y jitter.
 - El máximo de intentos, delays, ventana total y clasificación de errores se configuran por módulo/flujo/entorno según criticidad y SLO; no hay un número universal.
 - Respetar deadlines de negocio sin asumir que su expiración deshace un efecto.
@@ -197,6 +199,7 @@ Reglas:
 DLQ/cuarentena aísla mensajes que no pueden progresar automáticamente, sin perder evidencia ni bloquear indefinidamente el flujo normal. No es un mecanismo de descarte ni un archivo histórico ilimitado.
 
 Cada mensaje en DLQ debe conservar o referenciar de forma segura:
+
 - envelope y payload original exactos, o una referencia durable e íntegra a ellos;
 - `event_id`, tipo/versión, productor, agregado y secuencia;
 - consumidor y stream/consumer de origen;
@@ -224,6 +227,7 @@ La retención de DLQ es distinta de la retención de streams de negocio, Outbox/
 ### 8.3 Inspección
 
 La inspección debe:
+
 1. Identificar productor, consumidor, contrato, agregado y secuencia.
 2. Revisar causa, intentos, timestamps y trazas correlacionadas.
 3. Determinar si el fallo es transitorio, permanente, incompatibilidad de versión, dato inválido, autorización, secuencia o integridad.
@@ -236,6 +240,7 @@ El acceso de inspección será de solo lectura por defecto. Ver o exportar paylo
 ### 8.4 Reprocesamiento seguro
 
 Antes de redrive/replay:
+
 - corregir y validar la causa;
 - verificar el estado del efecto en el módulo propietario;
 - confirmar compatibilidad del consumidor con la versión original;
@@ -296,6 +301,7 @@ Los valores se obtendrán de pruebas de carga, throughput esperado, latencia obj
 ### 9.5 Modo degradado y recuperación
 
 Cuando una dependencia no esté disponible:
+
 - conservar en Outbox los mensajes aún no publicados;
 - limitar la admisión de trabajo nuevo si el backlog amenaza la capacidad o los SLO;
 - mantener health/readiness coherentes con la capacidad real de procesar trabajo;
@@ -312,7 +318,8 @@ La instrumentación sigue ADR-0015 y usa OpenTelemetry, Prometheus, Alertmanager
 
 ### 10.1 Métricas mínimas
 
-**Outbox**
+#### Outbox
+
 - cantidad de mensajes pendientes y reclamados;
 - edad del mensaje pendiente más antiguo;
 - tasa de inserción/publicación;
@@ -320,7 +327,8 @@ La instrumentación sigue ADR-0015 y usa OpenTelemetry, Prometheus, Alertmanager
 - errores, timeouts, expiración de leases y republicaciones;
 - lotes, concurrencia y tiempo de ciclo del dispatcher.
 
-**Inbox y consumidores**
+#### Inbox y consumidores
+
 - mensajes recibidos, procesados, duplicados y fallidos;
 - tiempo desde publicación/ocurrencia hasta procesamiento;
 - ACK, redelivery, pending ACK y consumer lag;
@@ -328,14 +336,16 @@ La instrumentación sigue ADR-0015 y usa OpenTelemetry, Prometheus, Alertmanager
 - mensajes diferidos y tiempo de espera de secuencia;
 - latencia de transacción local y espera de pool SQLx.
 
-**DLQ**
+#### DLQ
+
 - entradas por causa normalizada;
 - tamaño/almacenamiento utilizado;
 - antigüedad del mensaje más antiguo;
 - tasa de crecimiento, redrive, éxito/fallo de replay;
 - mensajes próximos a vencer según política aprobada.
 
-**Capacidad y backpressure**
+#### Capacidad y backpressure
+
 - concurrencia activa y límites;
 - mensajes en vuelo;
 - tamaño de lotes y buffers;
@@ -347,6 +357,7 @@ La instrumentación sigue ADR-0015 y usa OpenTelemetry, Prometheus, Alertmanager
 ### 10.2 Alertas obligatorias
 
 Las alertas deben cubrir, al menos:
+
 - Outbox pendiente o mensaje más antiguo por encima del objetivo del flujo;
 - publicación detenida, errores persistentes o leases que expiran repetidamente;
 - crecimiento sostenido del backlog o del consumer lag;
@@ -418,6 +429,7 @@ Toda intervención manual se ejecuta mediante herramientas/operaciones autorizad
 La limpieza de registros no es automática por antigüedad sin evaluar sus obligaciones.
 
 Antes de eliminar registros publicados/procesados se deben definir:
+
 - ventana máxima de redelivery y replay del transporte;
 - ventana de recuperación y reconciliación;
 - necesidades de auditoría y soporte;
