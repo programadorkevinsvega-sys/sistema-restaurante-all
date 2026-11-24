@@ -75,6 +75,7 @@ OpenTelemetry y W3C Trace Context. traceparent es el portador canónico; tracest
 - [ADR-0003: Stateless, Outbox/Inbox y coordinación de jobs](../adr/0003-stateless-outbox-inbox-and-jobs.md)
 - [ADR-0004: W3C Trace Context en todos los contratos](../adr/0004-w3c-trace-context.md)
 - [ADR-0005: Contratos Protobuf y gRPC desde el inicio](../adr/0005-grpc-contracts-from-day-one.md)
+- [ADR-0006: AI como capacidad transversal sin schema propio en esta etapa](../adr/0006-ai-cross-cutting-capability-no-owned-schema.md)
 
 ## 11. Estado de implementación
 
