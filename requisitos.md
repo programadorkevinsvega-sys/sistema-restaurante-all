@@ -601,9 +601,10 @@ Las modalidades deben activar o desactivar capacidades sin duplicar el nucleo.
 ## Grupo D - Productos, menu y produccion
 
 Esta agrupacion funcional no define propiedad tecnica. CATALOG es propietario
-de los productos comerciales y menus; PRODUCTION es propietario de recetas,
-formulas y ordenes de produccion; INVENTORY conserva existencias y movimientos;
-KITCHEN coordina la preparacion de pedidos de clientes.
+de productos comerciales y agrupaciones comerciales genericas; Restaurant
+vertical es propietario de menus gastronomicos y reglas de servicio; PRODUCTION
+es propietario de recetas, formulas y ordenes de produccion; INVENTORY conserva
+existencias y movimientos; KITCHEN coordina la preparacion de pedidos de clientes.
 
 ### Catalogo comercial (CATALOG)
 
@@ -615,8 +616,6 @@ KITCHEN coordina la preparacion de pedidos de clientes.
 - Adiciones.
 - Combos.
 - Promociones.
-- Menus por horario.
-- Menus por sucursal.
 - Disponibilidad.
 - Precios.
 - Impuestos por producto.
@@ -638,6 +637,13 @@ KITCHEN coordina la preparacion de pedidos de clientes.
 - Crear ordenes y lotes de produccion; registrar materiales consumidos y
   productos obtenidos mediante referencias a INVENTORY.
 
+### Menús gastronómicos y servicio (Restaurant vertical)
+
+- Componer menús gastronómicos con referencias a productos de CATALOG.
+- Configurar menús por horario, sucursal, día y temporada.
+- Configurar cursos, modificadores culinarios y reglas de servicio.
+- Configurar productos y menús para mostrador, mesa o delivery.
+
 ### Variantes por sucursal
 
 - Permitir aplicar recetas centrales o excepciones de PRODUCTION por sucursal.
@@ -649,15 +655,14 @@ KITCHEN coordina la preparacion de pedidos de clientes.
 Un producto comercial de CATALOG puede referenciar una receta efectiva de
 PRODUCTION. La formula y su version no se duplican en CATALOG.
 
-### Disponibilidad y menus
+### Disponibilidad comercial (CATALOG)
 
 - Activar o desactivar productos por sucursal.
-- Configurar disponibilidad por horario.
-- Configurar menus por dia.
-- Configurar menus por temporada.
-- Configurar productos para mostrador, mesa o delivery.
+- Configurar disponibilidad comercial por horario.
 - Configurar agotados temporales.
 - Configurar restricciones de venta.
+
+La composición y programación de menús gastronómicos corresponde a Restaurant vertical, que utiliza los productos y referencias comerciales de CATALOG.
 
 ### Requisitos por sucursal
 
@@ -934,7 +939,7 @@ Modulo para administrar empleados, contratos, horarios, asistencia y compensacio
 - Horas trabajadas.
 - Registro de actividad.
 - Comparacion por turno y sucursal.
-- Las metricas de ventas y propinas se consolidan desde Sales/Finance; las predicciones de demanda pertenecen a Analytics/AI.
+- Las metricas de ventas y propinas se consolidan desde SALES/FINANCE; las predicciones de demanda pertenecen a ANALYTICS, que puede consumir capacidades transversales de IA.
 
 ### Requisitos por sucursal
 
@@ -1188,7 +1193,7 @@ La base principal sera PostgreSQL con un modelo multi-tenant desde el primer dia
 
 Arquitectura definitiva:
 
-- Shared Database, Shared Schema.
+- Shared Database, Schema per Module: una base PostgreSQL compartida inicialmente y un schema PostgreSQL por módulo.
 - Tenant Isolation mediante tenant_id.
 - PostgreSQL Row-Level Security.
 - Dedicated Deployment Option para clientes Enterprise.
@@ -1205,12 +1210,13 @@ Modelo comercial:
 ### Estrategia inicial
 
 - Utilizar una base compartida.
-- Utilizar tablas compartidas.
+- Cada módulo administra sus propias tablas dentro de su schema PostgreSQL; no hay tablas compartidas entre módulos.
 - Aislar estrictamente los datos por tenant.
 - No crear una base independiente por restaurante inicialmente.
 - Permitir bases dedicadas posteriormente para clientes Enterprise.
 - Utilizar migraciones reproducibles.
-- Utilizar claves externas y restricciones.
+- Utilizar claves foráneas y restricciones únicamente dentro del schema y límite de propiedad del mismo módulo.
+- Las referencias entre módulos usan IDs estables y contratos; no crean FKs, joins, vistas ni consultas directas entre schemas.
 - Utilizar indices segun patrones de consulta.
 
 ### Tenant compartido
@@ -1221,9 +1227,11 @@ Modelo comercial:
 - Las sucursales deben pertenecer al tenant correspondiente.
 - Las credenciales externas deben estar aisladas por tenant.
 
-### Esquemas logicos
+### Schemas PostgreSQL por módulo
 
-| Esquema | Contenido | Prioridad |
+Cada fila identifica un schema PostgreSQL real y exclusivo del módulo propietario; no son namespaces lógicos intercambiables. No se comparten tablas entre módulos.
+
+| Schema PostgreSQL | Contenido y responsabilidad del módulo | Prioridad |
 |---|---|---|
 | platform | SaaS, planes y suscripciones | Alta |
 | identity | Usuarios y permisos | Alta |
@@ -1244,19 +1252,16 @@ Modelo comercial:
 | automation | Flujos automatizados | Media |
 | analytics | Indicadores, tendencias, modelos semanticos y dashboards | Media |
 | audit | Auditoria y trazabilidad | Alta |
-| ai | Uso, conversaciones y configuracion de modelos; componente transversal | Media |
 | reporting | Plantillas, generacion, exportacion y distribucion de informes | Media |
 
-Los esquemas pueden ser namespaces logicos o esquemas PostgreSQL, segun la implementacion final.
+Cada schema PostgreSQL pertenece a un único módulo. No se permiten namespaces lógicos que sustituyan el aislamiento mediante schemas PostgreSQL.
 
-No se debe crear una base independiente por cada dominio o restaurante
-inicialmente. Los dominios compartiran una base PostgreSQL, con propiedad
-separada por esquema y transacciones locales a cada dominio.
+No se debe crear una base independiente por cada dominio o restaurante inicialmente. Los módulos comparten una base PostgreSQL, pero cada uno conserva sus tablas, rol, migraciones e historial SQLx exclusivos dentro de su schema. Las transacciones son locales al módulo.
 
 ### Integridad
 
-- Definir claves primarias y externas.
-- Definir restricciones de unicidad.
+- Definir claves primarias y restricciones de unicidad.
+- Las claves foráneas solo pueden relacionar tablas del mismo módulo/schema; las referencias cross-module son IDs lógicos validados mediante contratos.
 - Definir indices de tenant y sucursal.
 - Evitar datos huérfanos.
 - Registrar versiones de configuracion.
@@ -1485,7 +1490,7 @@ Pagos, cajas y recursos fisicos se describen en sus dominios propietarios; esta 
 - attendance_records
 - tips
 
-### IA y automatizacion
+### Automatización y datos analíticos
 
 - automation_workflows
 - workflow_versions
@@ -1494,11 +1499,10 @@ Pagos, cajas y recursos fisicos se describen en sus dominios propietarios; esta 
 - workflow_steps
 - workflow_approvals
 - notifications
-- ai_conversations
-- ai_usage
-- ai_insights
 - anomaly_events
 - forecasts
+
+La capacidad de IA es transversal y no tiene schema ni tablas propios aprobados actualmente. Si una función requiere persistencia, los datos pertenecen al módulo dueño del proceso y se guardan en su schema. Conversaciones, configuración y medición de consumo no deben materializarse como tablas de un supuesto módulo `AI` sin un ADR nuevo.
 
 ### Criterios de modelado
 
@@ -1842,7 +1846,7 @@ Las diferencias deben corregirse mediante ajustes trazables, no mediante edicion
 | employee_shifts | tenant_id, employee_id, starts_at, ends_at | Turnos |
 | attendance_records | tenant_id, employee_id, clock_in, clock_out | Asistencia |
 | forecasts | tenant_id, metric, forecast_date, value | Predicciones |
-| ai_insights | tenant_id, insight_type, confidence, payload | Hallazgos de IA |
+| ai_insights | tenant_id, insight_type, confidence, payload | Hallazgos analíticos derivados de IA, bajo ownership de ANALYTICS |
 
 ### Reglas financieras
 
@@ -1878,16 +1882,17 @@ Las tablas de auditoria o eventos de altísimo volumen pueden evaluarse con iden
 
 No es suficiente referenciar solo product_id.
 
-Las relaciones deben validar tenant_id.
+Las relaciones dentro del mismo módulo deben validar tenant_id.
 
 ```sql
 UNIQUE (tenant_id, id)
 
-FOREIGN KEY (tenant_id, product_id)
-REFERENCES catalog.products (tenant_id, id)
+-- Ejemplo únicamente intra-módulo:
+FOREIGN KEY (tenant_id, related_id)
+REFERENCES <schema_del_mismo_modulo>.<tabla_propietaria> (tenant_id, id)
 ```
 
-Las tablas principales deben permitir referencias compuestas que impidan relaciones cruzadas.
+Una referencia a un producto de CATALOG desde otro módulo no crea una FK hacia `catalog`: conserva el ID lógico y valida tenant/estado mediante el contrato de CATALOG. Las claves foráneas compuestas impiden relaciones cruzadas solo dentro del límite de propiedad del módulo.
 
 ### Restricciones por dominio
 
@@ -2099,7 +2104,7 @@ Datos que deben preservar:
 - Comparar suscripciones y configuracion.
 - Reportar diferencias antes de habilitar destino.
 
-Todas las instalaciones deben utilizar el mismo modelo lógico y el mismo sistema de migraciones.
+Todas las instalaciones deben utilizar el mismo modelo de dominios y el mismo sistema de migraciones por módulo. Cada módulo conserva su propio historial SQLx; no se comparte la tabla `_sqlx_migrations` entre módulos.
 
 ## Preparacion de base de datos para produccion
 
@@ -2161,6 +2166,8 @@ Antes de habilitar el entorno productivo deben configurarse:
 
 ## Arquitectura técnica definitiva
 
+La siguiente tabla conserva los dominios, responsabilidades y ubicaciones de sus crates. La topología de procesos y la ubicación de migraciones son reglas físicas adicionales y no cambian la propiedad funcional de ningún módulo.
+
 ### Dominios con propietario único
 
 | Dominio canonico | Responsabilidad | Ubicacion del crate |
@@ -2191,11 +2198,15 @@ de modulo. KITCHEN y PRODUCTION conservan su identidad y propiedad de dominio,
 pero su implementacion pertenece al Restaurant vertical porque sus reglas son
 gastronomicas. No deben duplicarse como crates bajo `crates/core/`.
 
-`AI` es una capacidad transversal que utiliza herramientas autorizadas y puede
-ser propietaria de conversaciones, uso y configuracion de modelos, pero no de
-ventas, inventarios o finanzas. La libreria `tenancy`, si se conserva como
-soporte compartido, no es un dominio propietario: PLATFORM mantiene la
-propiedad del ciclo de vida de tenants.
+### Topología de procesos y BFF
+
+- `api-server` es un proceso independiente que aloja el monolito modular de backend y expone gRPC.
+- `bff` es otro proceso independiente: consume `api-server` por gRPC y expone HTTP/OpenAPI a los frontends independientes.
+- El despliegue objetivo usa dos servicios de aplicación en Docker Compose: `api-server` y `bff`.
+- La separación del BFF no convierte cada dominio en microservicio. Los módulos dentro de `api-server` siguen comunicándose mediante puertos/contratos locales.
+- Es una topología objetivo; su implementación debe verificarse en manifiestos y no se presume activa.
+
+`AI` es una capacidad transversal, no un dominio propietario ni un módulo con schema propio en esta etapa. Se accede mediante un puerto/capacidad y utiliza herramientas autorizadas de los módulos. Cada módulo conserva los datos que necesita para su propio proceso; no se asigna a AI la propiedad de conversaciones, configuración o consumo. Esta regla está registrada en [ADR-0006](docs/adr/0006-ai-cross-cutting-capability-no-owned-schema.md). Si una necesidad futura exige persistencia centralizada o un módulo AI, deberá aprobarse mediante un ADR nuevo. La librería `tenancy`, si se conserva como soporte compartido, no es un dominio propietario: PLATFORM mantiene la propiedad del ciclo de vida de tenants.
 
 Algunos comentarios de las migraciones y datos iniciales en Audit/Reporting aun
 conservan el nombre historico `purchasing`. Es un alias heredado de PROCUREMENT,
@@ -2370,7 +2381,7 @@ La aplicacion no sera la unica barrera de aislamiento.
 
 - PostgreSQL aplicara Row-Level Security.
 - Las consultas deben validar tenant_id.
-- Las claves foraneas compuestas deben impedir relaciones cruzadas.
+- Las claves foráneas compuestas deben impedir relaciones cruzadas dentro del mismo módulo; no se crean FKs entre schemas propietarios distintos.
 - Las politicas RLS deben rechazarse o no devolver filas ajenas.
 - Los permisos de aplicacion no reemplazan las restricciones de base de datos.
 - Las restricciones de base de datos no reemplazan la auditoria y autorizacion de aplicacion.
@@ -2574,7 +2585,7 @@ El inventario no debe depender exclusivamente de stock_balances. Debe existir tr
 7. Retencion segun politicas configuradas.
 8. Versionamiento de recetas, precios, menus y configuraciones.
 9. Vigencias con fechas de inicio y fin.
-10. Transacciones coordinadas para venta, pago e inventario.
+10. Transacciones locales por módulo; coordinación entre SALES, PAYMENTS e INVENTORY mediante contratos, Outbox/Inbox, idempotencia y Saga.
 11. Idempotencia mediante clave unica por operacion POS.
 12. Row-Level Security de PostgreSQL para reforzar aislamiento.
 13. Validacion de permisos en la aplicacion y en el acceso a datos.
@@ -2584,7 +2595,7 @@ El inventario no debe depender exclusivamente de stock_balances. Debe existir tr
 - La venta y la solicitud de cobro deben coordinarse mediante registros idempotentes y eventos; la llamada al proveedor ocurre fuera de la transaccion SQL.
 - El resultado del cobro debe actualizar SALES mediante eventos de PAYMENTS, sin duplicar la transaccion financiera.
 - Los movimientos de inventario deben coordinarse con la venta.
-- Los errores deben revertir cambios incompletos.
+- Un error revierte la transacción local del módulo afectado. Los efectos ya confirmados en otros módulos se resuelven mediante compensaciones y reconciliaciones de la Saga; no se presupone rollback SQL global.
 - Los reintentos deben conservar la clave idempotente.
 - Los documentos fiscales deben vincularse al registro validado.
 
@@ -4223,9 +4234,9 @@ Las reglas deben distinguir caidas normales, estacionales y anomalas.
 - Los usuarios deben tener permisos separados para crear, aprobar y auditar reglas.
 - Las ejecuciones deben mostrar sucursal, usuario y contexto.
 
-### Modulo 18 - Inteligencia artificial - AI Manager
+### Capacidad transversal de inteligencia artificial - AI Manager
 
-Modulo de asistencia empresarial que consulta datos reales del restaurante y ayuda a analizar, predecir y proponer acciones.
+Capacidad de asistencia empresarial que consulta datos reales del restaurante mediante contratos y herramientas autorizadas, y ayuda a analizar, predecir y proponer acciones. No constituye un dominio propietario ni tiene schema PostgreSQL propio en esta etapa. Cada módulo conserva los datos de su proceso; cualquier persistencia compartida futura requiere un ADR nuevo.
 
 #### Analista financiero
 
@@ -4953,8 +4964,8 @@ La facturacion debe ser un componente independiente del POS.
 | Backend | Rust + Axum |
 | Monorepo Rust | Cargo workspace |
 | Persistencia Rust | PostgreSQL + SQLx |
-| API principal | REST + OpenAPI |
-| Comunicación futura | gRPC + Tonic + Protocol Buffers |
+| API hacia frontends | HTTP + OpenAPI expuesta por el BFF |
+| Comunicación backend ↔ BFF | gRPC + Tonic + Protobuf versionado desde el inicio; llamadas entre módulos del mismo proceso mediante puertos locales |
 | Tiempo real | WebSockets |
 | Base de datos | PostgreSQL |
 | Caché | Redis |
@@ -4975,8 +4986,8 @@ No es necesario implementar todas las tecnologias desde el primer dia.
 - Cargo workspace permite separar módulos en crates y enlazarlos en apps/api-server.
 - SQLx permite persistencia tipada y transacciones controladas sobre PostgreSQL.
 - Hexagonal + DDD mantienen reglas de negocio independientes de transporte y persistencia.
-- Axum puede servir el API principal dentro del binario.
-- Tonic proporciona gRPC y HTTP/2 para la extracción futura de módulos.
+- Axum sirve la API HTTP del BFF; `api-server` expone los servicios gRPC mediante Tonic.
+- Tonic proporciona gRPC y HTTP/2 en la frontera `api-server` ↔ BFF desde el inicio y permite futuras extracciones de servicios.
 - PostgreSQL ofrece transacciones y relaciones sólidas.
 - Redis puede utilizarse para caché, sesiones y coordinación.
 - WebSockets permiten actualizar pedidos y pantallas de cocina.
@@ -4993,8 +5004,8 @@ Restaurant OS utilizara un monolito modular implementado en Rust.
 
 - El repositorio sera un Cargo workspace.
 - Los modulos se implementaran como crates de biblioteca.
-- El API principal sera un unico crate ejecutable.
-- El ejecutable inicial sera apps/api-server.
+- El backend modular sera un crate ejecutable `apps/api-server`, que aloja los módulos y expone gRPC.
+- El BFF sera otro crate ejecutable independiente `apps/bff`, que expone HTTP/OpenAPI a los frontends.
 - Los modulos no deben estar acoplados a clases o tablas privadas de otros modulos.
 - Los modulos deben exponer contratos publicos, puertos y fachadas.
 - La arquitectura debe facilitar extraer modulos sin reescribir sus reglas de negocio.
@@ -5007,6 +5018,7 @@ restaurant-os/
 ├── apps/
 │   ├── admin-web/
 │   ├── api-server/
+│   ├── bff/ # proceso independiente: HTTP/OpenAPI para los frontends
 │   ├── customer-portal/
 │   ├── kitchen-display/
 │   └── pos/
@@ -5047,7 +5059,12 @@ restaurant-os/
 │   ├── deployment/
 │   ├── docker/
 │   └── monitoring/
-├── migrations/
+├── backend/
+│   └── <backend>/
+│       └── modules/
+│           └── <modulo>/
+│               └── migrations/ # ruta canónica por módulo
+├── migrations/ # solo ubicación histórica; no añadir migraciones nuevas aquí
 ├── packages/
 │   ├── permissions/
 │   ├── shared-types/
@@ -5072,9 +5089,7 @@ No duplican esos dominios compartidos. Las nuevas capacidades se agregan al
 vertical solo cuando son propias de restaurantes; no crear subcrates por
 anticipado sin una responsabilidad implementable.
 
-`AI` es una capacidad transversal, no un dominio propietario. PLATFORM conserva
-el ciclo de vida de tenants; `tenancy/` aporta solo contexto y utilidades
-compartidas.
+`AI` es una capacidad transversal accesible mediante un puerto, no un dominio propietario ni un módulo con schema propio en esta etapa. Cada módulo conserva los datos de su proceso en su schema. PLATFORM conserva el ciclo de vida de tenants; `tenancy/` aporta solo contexto y utilidades compartidas.
 
 El mismo modulo debe poder compilarse como crate independiente y como parte del binario principal.
 
@@ -5134,14 +5149,14 @@ Las interfaces asincronas dinamicas deben utilizar async-trait.
 Mecanismos iniciales:
 
 - Contratos locales para operaciones inmediatas dentro del mismo proceso.
-- gRPC con Tonic y Protocol Buffers para servicios extraidos.
+- gRPC con Tonic y Protocol Buffers entre `api-server` y BFF desde el inicio, y para otros servicios cuando se extraigan.
 - Eventos asincronos para hechos publicados por otros modulos.
 
 gRPC no debe utilizarse para absolutamente toda comunicacion.
 
 ### Contratos gRPC
 
-Los contratos futuros deben definir operaciones como:
+Los contratos gRPC versionados deben definir operaciones como:
 
 ```proto
 syntax = "proto3";
@@ -5307,22 +5322,23 @@ Independencia no significa que una venta pueda confirmarse sin comprobar inventa
 | Organizacion | Cargo Workspace |
 | Arquitectura | Hexagonal + DDD |
 | Persistencia | PostgreSQL + SQLx |
-| Comunicación futura | gRPC + Tonic |
+| Comunicación backend ↔ BFF | gRPC + Tonic + Protobuf desde el inicio; gRPC entre módulos internos solo cuando crucen procesos |
 | Eventos | Outbox + broker |
 | Caché | Redis |
 | Frontend | React + TypeScript |
-| Despliegue inicial | Un binario dentro de Docker |
+| Despliegue objetivo inicial | Dos procesos/servicios de aplicación: `api-server` (módulos backend, gRPC) y `bff` (HTTP/OpenAPI), coordinados con Docker Compose |
 
-No se deben crear microservicios ni implementar gRPC entre modulos que residen en el mismo binario desde el primer dia.
+El backend conserva un monolito modular dentro de `api-server`; el BFF es un proceso independiente desde el inicio. No se deben convertir los módulos internos en microservicios ni usar gRPC entre módulos que comparten el proceso `api-server`.
 
-- Construir primero el monolito modular.
-- Mantener contratos, puertos y adaptadores preparados.
-- Introducir Tonic y el broker al extraer servicios reales.
-- Mantener simplicidad operativa inicial y libertad de crecimiento posterior.
+- Construir el backend como monolito modular.
+- Desplegar `api-server` y `bff` como dos servicios de aplicación.
+- Usar Tonic/gRPC y Protobuf versionado entre `api-server` y BFF desde el inicio.
+- Mantener puertos locales entre módulos internos del mismo proceso.
+- No declarar esta topología implementada hasta verificar los manifiestos de despliegue.
 
-## Arquitectura del AI Manager
+## Capacidad transversal del AI Manager
 
-El nucleo de IA debe integrarse con los modulos empresariales mediante herramientas autorizadas y contexto multitenant.
+La capacidad de IA se integra con los módulos empresariales mediante puertos, contratos, herramientas autorizadas y contexto multi-tenant. No posee schema ni almacenamiento propio aprobado actualmente; cada módulo conserva sus propios datos. Cualquier persistencia centralizada futura requiere un ADR nuevo.
 
 ### Agentes especializados
 

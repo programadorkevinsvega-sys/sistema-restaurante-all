@@ -1,3 +1,7 @@
+> **Estado: propuestas e ideas no aprobadas.** Este documento conserva posibilidades para evaluar; no crea módulos, crates, schemas, responsabilidades ni compromisos de roadmap. Ninguna propuesta se considera arquitectura vigente hasta que se evalúe y, cuando corresponda, se apruebe mediante ADR y se incorpore a los documentos normativos.
+>
+> Las capacidades existentes mantienen la propiedad y responsabilidades definidas en [requisitos.md](./requisitos.md). Las ideas de esta lista no pueden reasignar ni duplicar esas responsabilidades.
+
 Las que más valor tendrían
 
 Motor de precios y promociones. Hoy las promociones aparecen como “Optional” y el catálogo maneja precios por sucursal. Un motor propio (reglas por horario, canal, cliente, cantidad, combos, cupones, prioridad y conflictos entre descuentos) evita que esa lógica quede regada entre ventas, catálogo y clientes. Es de lo que más toca un restaurante todos los días.
