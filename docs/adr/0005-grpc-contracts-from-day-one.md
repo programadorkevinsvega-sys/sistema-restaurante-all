@@ -6,6 +6,8 @@
 - Aceptado: 2026-11-24
 - Aprobación: propietario del producto, confirmada explícitamente en la conversación de arquitectura.
 
+> **Nota de vigencia:** ADR-0007 sustituye parcialmente este ADR en lo relativo a la topología de procesos, los nombres de los procesos y el despliegue inicial de dos servicios. La decisión de definir Protobuf versionado desde el inicio y utilizar gRPC en las fronteras entre procesos permanece vigente.
+
 ## Contexto
 
 Definir Protobuf desde el inicio y usar gRPC en toda llamada no son la misma decisión. El estándar exige contratos Protobuf versionados y gRPC entre `api-server` y BFF. Para cumplir esa frontera, el BFF es un proceso independiente; los módulos internos alojados en `api-server` pueden invocarse mediante puertos locales.
