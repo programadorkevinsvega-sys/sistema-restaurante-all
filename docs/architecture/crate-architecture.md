@@ -10,7 +10,7 @@ Este documento concreta el layout y las reglas de dependencias que deberán apli
 La solución se compone de cuatro binarios independientes, módulos de negocio con implementación privada y contratos públicos separados, y crates técnicos neutrales. Los crates de transporte se mantienen separados de los contratos de aplicación y del dominio.
 
 - Cada módulo es una unidad de ownership con un crate de implementación.
-- Cada módulo expone un crate `<modulo>-contracts` cuando otros módulos/procesos necesitan consumir su API.
+- Cada uno de los 20 módulos tiene desde el inicio un crate público `<modulo>-contracts`, aunque su API inicial sea pequeña.
 - Cada binario tiene un único composition root.
 - Un consumidor nunca depende del crate de implementación de otro módulo.
 - Los BFF dependen de clientes de transporte, no de implementaciones de negocio.
@@ -19,28 +19,53 @@ La solución se compone de cuatro binarios independientes, módulos de negocio c
 ## 2. Layout propuesto
 
 ```text
+Cargo.toml                      # único Cargo workspace raíz
+Cargo.lock                      # lockfile compartido por los cuatro binarios
+
 apps/
-  admin-platform-backend/       # binario Admin Platform Backend
-  admin-bff/                    # binario Admin BFF
-  public-bff/                   # binario Public BFF
-  public-backend/               # binario Public Backend
+  admin-platform-backend/       # paquete/binario independiente
+  admin-bff/                    # paquete/binario independiente
+  public-bff/                   # paquete/binario independiente
+  public-backend/               # paquete/binario independiente
 
 backend/
   admin-platform-backend/
     modules/
       platform/
-        contracts/              # platform-contracts
-        implementation/         # platform
+        Cargo.toml              # crate de implementación PLATFORM
+        sqlx.toml               # configuración SQLx del módulo
+        src/
+          lib.rs
+          domain/
+          application/
+          adapters/
+          infrastructure/
+        contracts/
+          Cargo.toml            # crate platform-contracts
+          src/
+            lib.rs
         migrations/             # migraciones e historial exclusivo PLATFORM
   public-backend/
     modules/
       identity/
-        contracts/              # identity-contracts
-        implementation/         # identity
+        Cargo.toml              # crate de implementación IDENTITY
+        sqlx.toml               # configuración SQLx del módulo
+        src/
+          lib.rs
+          domain/
+          application/
+          adapters/
+          infrastructure/
+        contracts/
+          Cargo.toml            # crate identity-contracts
+          src/
+            lib.rs
         migrations/             # migraciones e historial exclusivo IDENTITY
       organization/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       catalog/
         contracts/
@@ -114,22 +139,23 @@ backend/
   admin-bff/                    # módulos técnicos de transporte/composición
   public-bff/                    # módulos técnicos de transporte/composición
 
+contracts/
+  protobuf/
+    admin-platform-backend/platform/v1/*.proto
+    public-backend/identity/v1/*.proto
+    public-backend/<module>/v1/*.proto
+
 crates/
   shared/                        # capacidades técnicas neutrales
   contracts/
-    proto/
-      admin-platform-backend/platform/v1/*.proto
-      public-backend/identity/v1/*.proto
-      public-backend/<module>/v1/*.proto
-    events/
-      <owner-module>/v1/*         # esquemas versionados, si se mantienen como archivos
+    events/                      # esquemas de eventos versionados por módulo propietario
   adapters/
+    local/                       # llamadas entre módulos que comparten proceso
     grpc/                        # infraestructura genérica gRPC/Tonic
     messaging/                   # NATS Core y JetStream
-    local/                       # utilidades genéricas locales, si son necesarias
 ```
 
-El árbol es un layout objetivo, no una instrucción para crear todas las carpetas ahora. La ruta canónica de migraciones sigue siendo `backend/<backend>/modules/<modulo>/migrations/` (ADR-0001). El ejemplo muestra los 20 módulos sin cambiar sus responsabilidades ni su propiedad.
+El árbol es un layout objetivo, no una instrucción para crear carpetas ahora. Existe un único workspace Cargo en la raíz, con cuatro paquetes binarios independientes y `Cargo.lock` compartido. La ruta canónica de migraciones sigue siendo `backend/<backend>/modules/<modulo>/migrations/` (ADR-0001). El ejemplo muestra los 20 módulos sin cambiar sus responsabilidades ni su propiedad.
 
 ## 3. Inventario por proceso
 
@@ -144,31 +170,23 @@ Admin BFF puede consultar ambos backends; Public BFF consume Public Backend. Nin
 
 ## 4. Anatomía de un módulo
 
-Cada módulo tiene un crate de implementación privado y un crate público de contratos cuando exista un consumidor real.
+Cada módulo tiene desde el inicio un crate de implementación privado y un crate público de contratos, aunque inicialmente el contrato tenga pocas operaciones.
 
 ```text
 modules/<module>/
-  contracts/                     # <module>-contracts
+  Cargo.toml                     # crate de implementación privado
+  sqlx.toml                      # configuración SQLx exclusiva del módulo
+  src/
+    lib.rs
+    domain/
+    application/
+    adapters/
+    infrastructure/
+  contracts/
+    Cargo.toml                   # crate público <module>-contracts
     src/
       lib.rs
-      ports/                     # traits públicos
-      dto/                       # requests/responses públicos
-      events/                    # eventos publicados y sus tipos
-      errors.rs                  # errores estables de contrato
-  implementation/                # <module>
-    src/
-      domain/
-      application/
-        ports/
-        use_cases/
-      adapters/
-        inbound/
-        outbound/
-      infrastructure/
-        persistence/
-        messaging/
-      lib.rs
-  migrations/
+  migrations/                    # migraciones e historial SQLx exclusivos
 ```
 
 Las capas pueden organizarse en módulos Rust dentro del crate de implementación; no se convierten automáticamente en crates separados. Solo se separa una capa en otro crate si hay una razón concreta de aislamiento, compilación o reutilización y se conserva la regla de no exponer internos. El crate de contratos no contiene SQLx, modelos de persistencia, entidades de dominio ni dependencias de framework.
@@ -213,17 +231,17 @@ Los BFF contienen composición de endpoints, autenticación/autorización de bor
 | `crates/contracts/events` | Esquemas de eventos versionados con owner explícito | Eventos sin propietario o modelos internos de persistencia |
 | `crates/adapters/grpc` | Infraestructura genérica cliente/servidor, interceptores, propagación de contexto | Reglas de negocio o mapeos específicos de dominio |
 | `crates/adapters/messaging` | Conexión NATS Core/JetStream, publicación/consumo genérico, manejo técnico de ACK | Tablas Outbox/Inbox ajenas, políticas de negocio o definición de ownership |
-| `crates/adapters/local` | Utilidades genéricas para wiring/invocación local si se demuestra necesidad | Un crate por cada pareja de módulos o un bus local global que oculte dependencias |
+| `crates/adapters/local` | Adaptador local obligatorio desde el día uno para implementar los puertos públicos entre módulos que comparten proceso; usa los mismos puertos que implementa el adaptador gRPC y puede sustituirse al extraer un módulo | Un crate por pareja de módulos, un bus global que oculte dependencias o acceso a internos/tablas ajenas |
 
 La persistencia SQLx es específica de cada módulo y permanece en su implementación. La tabla Outbox/Inbox, cuando exista, es propiedad del módulo/consumidor correspondiente; el adaptador de mensajería no la convierte en tabla compartida.
 
 ## 7. Mapa de contratos Protobuf
 
-Los archivos fuente se ubican por proceso propietario y módulo:
+Los archivos fuente Protobuf se ubican en una única raíz `contracts/protobuf/`, por proceso propietario y módulo:
 
-- `crates/contracts/proto/admin-platform-backend/platform/v1/`
-- `crates/contracts/proto/public-backend/identity/v1/`
-- `crates/contracts/proto/public-backend/<module>/v1/`
+- `contracts/protobuf/admin-platform-backend/platform/v1/`
+- `contracts/protobuf/public-backend/identity/v1/`
+- `contracts/protobuf/public-backend/<module>/v1/`
 
 Los tipos generados se publican en crates de transporte separados por servicio/módulo, por ejemplo `platform-proto` e `identity-proto`. Los nombres finales de paquetes se fijarán al crear el workspace. No se crea un crate único que exporte implementaciones de todos los módulos.
 
@@ -239,8 +257,9 @@ Antes de añadir cada dependencia se documentará: módulo consumidor, módulo p
 
 No fijar versiones de Tokio, SQLx, Tonic, Prost, NATS, OpenTelemetry ni generadores en este diseño. Primero se debe inventariar el toolchain, establecer MSRV y verificar compatibilidad. Al implementar:
 
-- usar workspace Cargo con versiones centralizadas;
-- versionar `Cargo.lock` para binarios;
+- usar un único workspace Cargo en la raíz con cuatro paquetes binarios independientes;
+- centralizar versiones compatibles en el workspace;
+- versionar el único `Cargo.lock` raíz;
 - fijar generadores y herramientas de CI;
 - controlar features y duplicados;
 - validar licencias, advisories, MSRV y builds reproducibles.
@@ -249,10 +268,10 @@ No fijar versiones de Tokio, SQLx, Tonic, Prost, NATS, OpenTelemetry ni generado
 
 1. Confirmar/aceptar ADR-0009 y el layout.
 2. Definir toolchain, workspace y convenciones de nombres.
-3. Crear crates de composición de los cuatro procesos y crates técnicos mínimos.
+3. Crear los cuatro paquetes binarios independientes dentro del workspace raíz y los crates técnicos definidos, incluido `crates/adapters/local`.
 4. Crear primero los contratos públicos y la implementación del primer módulo vertical seleccionado, sin inventar dependencias.
 5. Integrar módulos del mismo backend por puertos locales.
-6. Añadir contratos Protobuf y adaptadores gRPC para las fronteras entre procesos.
+6. Añadir/compilar los contratos Protobuf desde `contracts/protobuf/` y los adaptadores gRPC para las fronteras entre procesos; el adaptador local permanece para llamadas dentro del mismo proceso.
 7. Añadir adaptadores NATS cuando existan eventos que lo requieran.
 8. Activar controles de CI de fronteras de crates, generación y compatibilidad.
 
