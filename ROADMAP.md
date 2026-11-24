@@ -22,10 +22,11 @@ fases no cambian esos propietarios ni crean una estructura paralela.
 
 ## Propiedad de módulos y estructura física
 
-Los dominios conservan sus responsabilidades lógicas, pero su código vive bajo
-`backend/<backend-propietario>/modules/<modulo>/`. Cada uno de los cuatro
-procesos tiene módulos propios. La distribución concreta de cada dominio entre
-los procesos debe seguir la matriz de `requisitos.md` y no se debe inferir.
+Los dominios conservan sus responsabilidades lógicas y se implementan una sola
+vez bajo `backend/<backend-propietario>/modules/<modulo>/`. Según ADR-0008,
+PLATFORM pertenece a Admin Platform Backend y todos los demás módulos de
+negocio pertenecen a Public Backend. Admin BFF y Public BFF no son propietarios
+de dominios ni de persistencia de negocio.
 
 `crates/` contiene únicamente bibliotecas técnicas neutrales, contratos
 versionados y adaptadores. No contiene módulos propietarios de negocio.
@@ -35,12 +36,14 @@ propiedad de dominio, no una división física Core/Restaurant vertical.
 
 ## Topología de ejecución de los cuatro backends
 
-La topología de Restaurant OS está compuesta por cuatro procesos/binarios independientes; cada uno contiene sus propios módulos:
+La topología de Restaurant OS está compuesta por cuatro procesos/binarios independientes:
 
-- Admin Platform Backend.
-- Admin BFF.
-- Public BFF.
-- Public Backend.
+- Admin Platform Backend: propietario de PLATFORM.
+- Admin BFF: composición de APIs administrativas; sin módulos propietarios de negocio.
+- Public BFF: composición de APIs públicas y operativas; sin módulos propietarios de negocio.
+- Public Backend: propietario de los demás módulos de negocio canónicos.
+
+La distribución y las rutas físicas están definidas en ADR-0008 y en la matriz de `requisitos.md`.
 
 Los BFF son procesos independientes, no están integrados dentro de los backends ni existe un único BFF compartido. Admin Platform Backend aloja PLATFORM; Public Backend aloja los demás módulos de negocio. Admin BFF y Public BFF realizan composición y exposición HTTP/OpenAPI, sin ownership de dominios ni persistencia de negocio. Entre procesos se utiliza gRPC para solicitudes/respuestas, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso se comunican mediante contratos públicos y puertos/traits locales; los eventos durables usan Outbox/Inbox. Docker Compose debe representar cuatro servicios independientes. Esta es la topología objetivo y no evidencia de que el despliegue ya esté implementado.
 
