@@ -10,9 +10,12 @@ Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni
 
 - Los cuatro procesos tienen puntos de entrada independientes bajo
   `apps/<proceso>/src/`.
-- Los módulos propietarios viven exclusivamente bajo
-  `backend/<backend-propietario>/modules/<modulo>/`.
-- Cada módulo es un crate y mantiene sus capas `domain/`,
+- PLATFORM vive exclusivamente bajo
+  `backend/admin-platform-backend/modules/platform/`; los demás módulos
+  propietarios de negocio viven bajo
+  `backend/public-backend/modules/<modulo>/`, según ADR-0008.
+- Admin BFF y Public BFF no poseen módulos de negocio ni persistencia propietaria.
+- Cada módulo es un crate dentro del backend propietario definido por ADR-0008 y mantiene sus capas `domain/`,
   `application/`, `infrastructure/` y `contracts/` según corresponda.
 - `crates/shared/` se limita a utilidades técnicas neutrales;
   `crates/contracts/` contiene Protobuf y esquemas de eventos;
