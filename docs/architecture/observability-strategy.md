@@ -254,4 +254,4 @@ Antes de considerar observabilidad implementada, demostrar:
 
 ## 11. Estado
 
-Esta especificación es propuesta y no demuestra despliegue ni implementación. No crear contenedores, manifests, exporters, crates, dependencias, dashboards, alertas, roles PostgreSQL ni configuraciones en esta fase. Cualquier cambio de SQL/migraciones requiere autorización expresa y tarea separada.
+Esta especificación está aprobada y vigente conforme a ADR-0015 Accepted; no demuestra despliegue ni implementación. No crear contenedores, manifests, exporters, crates, dependencias, dashboards, alertas, roles PostgreSQL ni configuraciones en esta fase. Cualquier cambio de SQL/migraciones requiere autorización expresa y tarea separada.
