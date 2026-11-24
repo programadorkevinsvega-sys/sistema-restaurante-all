@@ -4981,7 +4981,7 @@ No es necesario implementar todas las tecnologias desde el primer dia.
 - Cargo workspace permite separar módulos en crates y enlazarlos en apps/api-server.
 - SQLx permite persistencia tipada y transacciones controladas sobre PostgreSQL.
 - Hexagonal + DDD mantienen reglas de negocio independientes de transporte y persistencia.
-- Axum puede servir el API principal dentro del binario.
+- Axum sirve la API HTTP del BFF; `api-server` expone los servicios gRPC mediante Tonic.
 - Tonic proporciona gRPC y HTTP/2 en la frontera `api-server` ↔ BFF desde el inicio y permite futuras extracciones de servicios.
 - PostgreSQL ofrece transacciones y relaciones sólidas.
 - Redis puede utilizarse para caché, sesiones y coordinación.
@@ -5144,7 +5144,7 @@ Las interfaces asincronas dinamicas deben utilizar async-trait.
 Mecanismos iniciales:
 
 - Contratos locales para operaciones inmediatas dentro del mismo proceso.
-- gRPC con Tonic y Protocol Buffers para servicios extraidos.
+- gRPC con Tonic y Protocol Buffers entre `api-server` y BFF desde el inicio, y para otros servicios cuando se extraigan.
 - Eventos asincronos para hechos publicados por otros modulos.
 
 gRPC no debe utilizarse para absolutamente toda comunicacion.
@@ -5317,7 +5317,7 @@ Independencia no significa que una venta pueda confirmarse sin comprobar inventa
 | Organizacion | Cargo Workspace |
 | Arquitectura | Hexagonal + DDD |
 | Persistencia | PostgreSQL + SQLx |
-| Comunicación futura | gRPC + Tonic |
+| Comunicación backend ↔ BFF | gRPC + Tonic + Protobuf desde el inicio; gRPC entre módulos internos solo cuando crucen procesos |
 | Eventos | Outbox + broker |
 | Caché | Redis |
 | Frontend | React + TypeScript |
