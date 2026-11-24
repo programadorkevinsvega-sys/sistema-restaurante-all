@@ -37,17 +37,23 @@ Las mesas, comandas, cocina, recetas gastronomicas y domicilios no deben integra
 
 Otros verticales podran utilizar conceptos generales sin crear dependencias a mesas, cocinas o recetas gastronomicas.
 
-### Limite de carpetas: Core y Restaurant vertical
+### Limite de propiedad y ubicación de módulos
 
-- `crates/core/` contiene capacidades de negocio reutilizables entre verticales.
-- `crates/verticals/restaurant/` contiene reglas, flujos y modelos propios de la
-  operación gastronómica.
-- El Restaurant vertical consume contratos de Core y puede guardar sus propios
-  datos; no duplica productos base, pedidos, pagos ni el ledger de inventario.
-- Core no debe depender de tipos o reglas exclusivos del Restaurant vertical.
-- La ubicación física del código no cambia el nombre ni la propiedad lógica de
-  un dominio. La ubicación concreta de cada dominio se fija en la tabla técnica
-  de este documento.
+- Los cuatro procesos son independientes: Admin Platform Backend, Admin BFF,
+  Public BFF y Public Backend. Cada proceso tiene sus propios módulos.
+- La ubicación física de cada módulo es
+  `backend/<backend-propietario>/modules/<modulo>/`.
+- Cada módulo pertenece a un único backend y conserva su lógica, contratos,
+  persistencia, schema, rol, migraciones e historial SQLx.
+- `crates/` contiene únicamente capacidades técnicas compartidas, contratos
+  versionados y adaptadores. No aloja módulos propietarios de negocio.
+- Las reglas gastronómicas siguen perteneciendo a KITCHEN, PRODUCTION y las
+  capacidades propias del servicio de restaurante. Su propiedad lógica no
+  cambia por la nueva distribución física.
+- CATALOG conserva la propiedad de productos y agrupaciones comerciales
+  genéricas. El menú gastronómico, cursos, modificadores culinarios y reglas
+  de servicio no se trasladan a CATALOG.
+- Ningún módulo puede acceder directamente a las tablas de otro módulo.
 
 ## Arquitectura empresarial
 
@@ -2166,45 +2172,49 @@ Antes de habilitar el entorno productivo deben configurarse:
 
 ## Arquitectura técnica definitiva
 
-La siguiente tabla conserva los dominios, responsabilidades y ubicaciones de sus crates. La topología de procesos y la ubicación de migraciones son reglas físicas adicionales y no cambian la propiedad funcional de ningún módulo.
+La siguiente tabla conserva los dominios y sus responsabilidades. Todos se implementan dentro de `modules/` del único backend propietario; la tabla no asigna un dominio a un proceso concreto, porque esa distribución debe respetar la decisión de composición aprobada y no se debe inferir.
 
 ### Dominios con propietario único
 
-| Dominio canonico | Responsabilidad | Ubicacion del crate |
+| Dominio canonico | Responsabilidad | Ubicacion fisica |
 |---|---|---|
-| PLATFORM | SaaS, tenants, planes, suscripciones, limites e infraestructura | `crates/core/platform/` |
-| IDENTITY | Usuarios, membresias, RBAC, ABAC y sesiones | `crates/core/identity/` |
-| ORGANIZATION | Empresas legales, grupos, marcas, sucursales y recursos fisicos | `crates/core/organization/` |
-| CATALOG | Productos, variantes, precios y agrupaciones comerciales genericas | `crates/core/catalog/` |
-| SALES | Pedidos, cuentas y ciclo comercial generico | `crates/core/sales/` |
-| PAYMENTS | Metodos, cobros, autorizaciones, capturas, reembolsos y liquidaciones | `crates/core/payments/` |
-| CASH | Cajas, turnos, arqueos y movimientos fisicos de efectivo | `crates/core/cash/` |
-| KITCHEN | Estaciones operativas, comandas, KDS y preparacion gastronomica | `crates/verticals/restaurant/kitchen/` |
-| INVENTORY | Existencias, lotes fisicos, bodegas, movimientos y transferencias | `crates/core/inventory/` |
-| PROCUREMENT | Proveedores, cotizaciones, compras y recepciones | `crates/core/procurement/` |
-| PRODUCTION | Recetas versionadas, BOM, rendimientos, ordenes y lotes gastronomicos | `crates/verticals/restaurant/production/` |
-| BILLING | Facturacion fiscal, documentos electronicos y numeracion | `crates/core/billing/` |
-| FINANCE | Tesoreria, cuentas por cobrar/pagar y contabilidad | `crates/core/finance/` |
-| WORKFORCE | Empleados, turnos, asistencia y compensaciones | `crates/core/workforce/` |
-| CUSTOMERS | CRM, fidelizacion, consentimiento y segmentacion | `crates/core/customers/` |
-| INTEGRATIONS | API, webhooks, conectores, credenciales y hardware | `crates/core/integrations/` |
-| AUTOMATION | Flujos, disparadores, campanas, condiciones y acciones | `crates/core/automation/` |
-| ANALYTICS | KPI, tendencias, datos semanticos y dashboards | `crates/core/analytics/` |
-| AUDIT | Auditoria transversal e historial de acciones | `crates/core/audit/` |
-| REPORTING | Plantillas, generacion, exportacion y distribucion de informes | `crates/core/reporting/` |
+| PLATFORM | SaaS, tenants, planes, suscripciones, limites e infraestructura | `backend/<backend-propietario>/modules/<modulo>/` |
+| IDENTITY | Usuarios, membresias, RBAC, ABAC y sesiones | `backend/<backend-propietario>/modules/<modulo>/` |
+| ORGANIZATION | Empresas legales, grupos, marcas, sucursales y recursos fisicos | `backend/<backend-propietario>/modules/<modulo>/` |
+| CATALOG | Productos, variantes, precios y agrupaciones comerciales genericas | `backend/<backend-propietario>/modules/<modulo>/` |
+| SALES | Pedidos, cuentas y ciclo comercial generico | `backend/<backend-propietario>/modules/<modulo>/` |
+| PAYMENTS | Metodos, cobros, autorizaciones, capturas, reembolsos y liquidaciones | `backend/<backend-propietario>/modules/<modulo>/` |
+| CASH | Cajas, turnos, arqueos y movimientos fisicos de efectivo | `backend/<backend-propietario>/modules/<modulo>/` |
+| KITCHEN | Estaciones operativas, comandas, KDS y preparacion gastronomica | `backend/<backend-propietario>/modules/<modulo>/` |
+| INVENTORY | Existencias, lotes fisicos, bodegas, movimientos y transferencias | `backend/<backend-propietario>/modules/<modulo>/` |
+| PROCUREMENT | Proveedores, cotizaciones, compras y recepciones | `backend/<backend-propietario>/modules/<modulo>/` |
+| PRODUCTION | Recetas versionadas, BOM, rendimientos, ordenes y lotes gastronomicos | `backend/<backend-propietario>/modules/<modulo>/` |
+| BILLING | Facturacion fiscal, documentos electronicos y numeracion | `backend/<backend-propietario>/modules/<modulo>/` |
+| FINANCE | Tesoreria, cuentas por cobrar/pagar y contabilidad | `backend/<backend-propietario>/modules/<modulo>/` |
+| WORKFORCE | Empleados, turnos, asistencia y compensaciones | `backend/<backend-propietario>/modules/<modulo>/` |
+| CUSTOMERS | CRM, fidelizacion, consentimiento y segmentacion | `backend/<backend-propietario>/modules/<modulo>/` |
+| INTEGRATIONS | API, webhooks, conectores, credenciales y hardware | `backend/<backend-propietario>/modules/<modulo>/` |
+| AUTOMATION | Flujos, disparadores, campanas, condiciones y acciones | `backend/<backend-propietario>/modules/<modulo>/` |
+| ANALYTICS | KPI, tendencias, datos semanticos y dashboards | `backend/<backend-propietario>/modules/<modulo>/` |
+| AUDIT | Auditoria transversal e historial de acciones | `backend/<backend-propietario>/modules/<modulo>/` |
+| REPORTING | Plantillas, generacion, exportacion y distribucion de informes | `backend/<backend-propietario>/modules/<modulo>/` |
 
-Estos nombres son las identidades tecnicas canonicas; no se les asignan numeros
-de modulo. KITCHEN y PRODUCTION conservan su identidad y propiedad de dominio,
-pero su implementacion pertenece al Restaurant vertical porque sus reglas son
-gastronomicas. No deben duplicarse como crates bajo `crates/core/`.
+Estos nombres son las identidades técnicas canónicas; no se les asignan números
+de módulo. KITCHEN y PRODUCTION conservan su identidad y propiedad lógica por
+sus responsabilidades gastronómicas. No se duplican ni se convierten en
+subcarpetas de un crate compartido: cada uno vive bajo el backend que sea su
+propietario.
 
-### Topología de procesos y BFF
+### Topología de los cuatro backends
 
-- `api-server` es un proceso independiente que aloja el monolito modular de backend y expone gRPC.
-- `bff` es otro proceso independiente: consume `api-server` por gRPC y expone HTTP/OpenAPI a los frontends independientes.
-- El despliegue objetivo usa dos servicios de aplicación en Docker Compose: `api-server` y `bff`.
-- La separación del BFF no convierte cada dominio en microservicio. Los módulos dentro de `api-server` siguen comunicándose mediante puertos/contratos locales.
-- Es una topología objetivo; su implementación debe verificarse en manifiestos y no se presume activa.
+Restaurant OS se compone de cuatro procesos/binarios independientes, cada uno con sus propios módulos:
+
+1. Admin Platform Backend.
+2. Admin BFF.
+3. Public BFF.
+4. Public Backend.
+
+Los BFF son procesos separados de sus respectivos backends; no existe un único `api-server` que aloje todos los módulos ni un único BFF compartido. Cada proceso conserva sus propios módulos y responsabilidades. Entre procesos se utiliza gRPC para solicitudes/respuestas, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso usan los contratos públicos y puertos/traits locales descritos en el estándar modular; los hechos durables se gestionan mediante Outbox/Inbox. Docker Compose debe representar cuatro servicios independientes. Es una topología objetivo, no evidencia de que ya esté implementada.
 
 `AI` es una capacidad transversal, no un dominio propietario ni un módulo con schema propio en esta etapa. Se accede mediante un puerto/capacidad y utiliza herramientas autorizadas de los módulos. Cada módulo conserva los datos que necesita para su propio proceso; no se asigna a AI la propiedad de conversaciones, configuración o consumo. Esta regla está registrada en [ADR-0006](docs/adr/0006-ai-cross-cutting-capability-no-owned-schema.md). Si una necesidad futura exige persistencia centralizada o un módulo AI, deberá aprobarse mediante un ADR nuevo. La librería `tenancy`, si se conserva como soporte compartido, no es un dominio propietario: PLATFORM mantiene la propiedad del ciclo de vida de tenants.
 
@@ -2458,9 +2468,7 @@ canales digitales, automatizaciones e IA.
 - Compras pertenece a PROCUREMENT.
 - SALES posee pedidos, cuentas y ciclo comercial generico; el servicio de mesas
   y la ocupacion pertenecen a Restaurant vertical.
-- PRODUCTION y KITCHEN conservan la propiedad de sus dominios gastronomicos en
-  `crates/verticals/restaurant/`; INVENTORY posee el ledger fisico y aplica los
-  consumos solicitados por contrato.
+- PRODUCTION y KITCHEN conservan la propiedad de sus dominios gastronómicos y se implementan bajo el backend propietario; INVENTORY posee el ledger físico y aplica los consumos solicitados por contrato.
 - POS, pedidos y cuentas pertenecen a SALES; el procesamiento de pagos pertenece a PAYMENTS.
 - Caja y efectivo pertenecen a CASH; FINANCE consolida tesoreria, cuentas y contabilidad.
 - INTEGRATIONS conecta con los proveedores de pago, mientras PAYMENTS conserva sus cuentas, operaciones y estados.
@@ -4964,12 +4972,12 @@ La facturacion debe ser un componente independiente del POS.
 | Backend | Rust + Axum |
 | Monorepo Rust | Cargo workspace |
 | Persistencia Rust | PostgreSQL + SQLx |
-| API hacia frontends | HTTP + OpenAPI expuesta por el BFF |
-| Comunicación backend ↔ BFF | gRPC + Tonic + Protobuf versionado desde el inicio; llamadas entre módulos del mismo proceso mediante puertos locales |
+| API hacia frontends | HTTP + OpenAPI expuesta por Admin BFF y Public BFF |
+| Comunicación entre procesos | gRPC + Tonic + Protobuf versionado para solicitudes/respuestas; NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Los módulos dentro de un mismo backend usan puertos/traits locales |
 | Tiempo real | WebSockets |
 | Base de datos | PostgreSQL |
 | Caché | Redis |
-| Colas | RabbitMQ o NATS JetStream |
+| Mensajería | NATS Core (señales efímeras) y NATS JetStream (eventos durables) |
 | Archivos | Almacenamiento compatible con S3 |
 | Analítica inicial | PostgreSQL |
 | Analítica a escala | ClickHouse cuando el volumen lo justifique |
@@ -4982,12 +4990,12 @@ No es necesario implementar todas las tecnologias desde el primer dia.
 
 ### Criterios de seleccion
 
-- Rust permite compilar un monolito modular como un único ejecutable.
-- Cargo workspace permite separar módulos en crates y enlazarlos en apps/api-server.
+- Rust permite compilar cada backend como un binario independiente que contiene sus módulos.
+- Cargo workspace permite separar módulos en crates y enlazarlos en el binario del backend propietario.
 - SQLx permite persistencia tipada y transacciones controladas sobre PostgreSQL.
 - Hexagonal + DDD mantienen reglas de negocio independientes de transporte y persistencia.
-- Axum sirve la API HTTP del BFF; `api-server` expone los servicios gRPC mediante Tonic.
-- Tonic proporciona gRPC y HTTP/2 en la frontera `api-server` ↔ BFF desde el inicio y permite futuras extracciones de servicios.
+- Axum sirve las superficies HTTP de Admin BFF y Public BFF; Admin Platform Backend y Public Backend exponen sus contratos de backend.
+- Tonic proporciona gRPC y HTTP/2 en las fronteras entre los cuatro procesos desde el inicio y permite futuras extracciones de módulos.
 - PostgreSQL ofrece transacciones y relaciones sólidas.
 - Redis puede utilizarse para caché, sesiones y coordinación.
 - WebSockets permiten actualizar pedidos y pantallas de cocina.
@@ -5004,112 +5012,170 @@ Restaurant OS utilizara un monolito modular implementado en Rust.
 
 - El repositorio sera un Cargo workspace.
 - Los modulos se implementaran como crates de biblioteca.
-- El backend modular sera un crate ejecutable `apps/api-server`, que aloja los módulos y expone gRPC.
-- El BFF sera otro crate ejecutable independiente `apps/bff`, que expone HTTP/OpenAPI a los frontends.
+- Admin Platform Backend sera un binario/proceso independiente.
+- Admin BFF sera un binario/proceso independiente que expone HTTP/OpenAPI a los frontends administrativos.
+- Public BFF sera un binario/proceso independiente que expone HTTP/OpenAPI a los frontends públicos.
+- Public Backend sera un binario/proceso independiente.
+- Cada uno de los cuatro backends/procesos tendrá sus propios módulos y punto de composición.
 - Los modulos no deben estar acoplados a clases o tablas privadas de otros modulos.
 - Los modulos deben exponer contratos publicos, puertos y fachadas.
 - La arquitectura debe facilitar extraer modulos sin reescribir sus reglas de negocio.
 
-### Estructura inicial
+### Estructura inicial del repositorio
 
 ```text
 restaurant-os/
-├── Cargo.toml
 ├── apps/
+│   ├── admin-platform-backend/
+│   │   └── src/
+│   ├── admin-bff/
+│   │   └── src/
+│   ├── public-bff/
+│   │   └── src/
+│   ├── public-backend/
+│   │   └── src/
 │   ├── admin-web/
-│   ├── api-server/
-│   ├── bff/ # proceso independiente: HTTP/OpenAPI para los frontends
 │   ├── customer-portal/
 │   ├── kitchen-display/
 │   └── pos/
-├── crates/
-│   ├── core/
-│   │   ├── platform/
-│   │   ├── identity/
-│   │   ├── organization/
-│   │   ├── tenancy/ # soporte transversal, no dominio propietario
-│   │   ├── catalog/
-│   │   ├── sales/
-│   │   ├── payments/
-│   │   ├── cash/
-│   │   ├── inventory/
-│   │   ├── procurement/
-│   │   ├── billing/
-│   │   ├── finance/
-│   │   ├── workforce/
-│   │   ├── customers/
-│   │   ├── integrations/
-│   │   ├── automation/
-│   │   ├── analytics/
-│   │   ├── audit/
-│   │   └── reporting/
-│   ├── verticals/
-│   │   └── restaurant/
-│   │       ├── kitchen/
-│   │       └── production/
-│   ├── adapters/
-│   │   ├── local/
-│   │   ├── grpc/
-│   │   └── messaging/
-│   └── contracts/
-│       ├── proto/
-│       └── events/
-├── infrastructure/
-│   ├── database/
-│   ├── deployment/
-│   ├── docker/
-│   └── monitoring/
+│
 ├── backend/
-│   └── <backend>/
+│   ├── admin-platform-backend/
+│   │   └── modules/
+│   ├── admin-bff/
+│   │   └── modules/
+│   ├── public-bff/
+│   │   └── modules/
+│   └── public-backend/
 │       └── modules/
-│           └── <modulo>/
-│               └── migrations/ # ruta canónica por módulo
-├── migrations/ # solo ubicación histórica; no añadir migraciones nuevas aquí
+│
+├── crates/
+│   ├── shared/
+│   ├── contracts/
+│   │   ├── proto/
+│   │   └── events/
+│   └── adapters/
+│       ├── grpc/
+│       ├── messaging/
+│       └── local/
+│
 ├── packages/
 │   ├── permissions/
 │   ├── shared-types/
 │   ├── ui/
 │   ├── utilities/
 │   └── validation/
+│
+├── infrastructure/
+│   ├── docker/
+│   │   ├── admin-platform-backend/
+│   │   ├── admin-bff/
+│   │   ├── public-bff/
+│   │   └── public-backend/
+│   ├── deployment/
+│   │   ├── development/
+│   │   ├── staging/
+│   │   └── production/
+│   ├── database/
+│   │   ├── postgres/
+│   │   └── scripts/
+│   ├── nats/
+│   ├── redis/
+│   └── monitoring/
+│       ├── opentelemetry/
+│       └── dashboards/
+│
+├── docs/
+├── scripts/
+├── migrations/  # ubicación histórica; no agregar migraciones nuevas aquí
 └── rules/
 ```
 
-`crates/core/` contiene capacidades reutilizables entre verticales; `tenancy/`
-es soporte compartido y no un dominio propietario. `crates/verticals/restaurant/`
-contiene reglas gastronomicas: `kitchen/` es propietario de comandas, estaciones
-operativas, KDS y preparacion; `production/` es propietario de recetas, BOM,
-rendimientos y ordenes/lotes gastronomicos. No se deben crear copias de estos
-crates bajo `core/`.
+### Responsabilidad de cada carpeta
 
-El Restaurant vertical tambien es el lugar para reglas de mesas, reservas,
-servicio en salon, menu gastronomico, cursos y modificadores. Estas funciones
-usan ORGANIZATION para la identidad de recursos fisicos, CATALOG para productos
-base, SALES para pedidos y cuentas, e INVENTORY para existencias y movimientos.
-No duplican esos dominios compartidos. Las nuevas capacidades se agregan al
-vertical solo cuando son propias de restaurantes; no crear subcrates por
-anticipado sin una responsabilidad implementable.
+| Carpeta | Responsabilidad |
+|---|---|
+| `apps/admin-platform-backend/` | Punto de entrada del proceso independiente de administración SaaS. |
+| `apps/admin-bff/` | Punto de entrada del BFF administrativo; expone HTTP/OpenAPI y coordina contratos hacia backends. |
+| `apps/public-bff/` | Punto de entrada del BFF público; expone HTTP/OpenAPI y coordina contratos hacia backends. |
+| `apps/public-backend/` | Punto de entrada del backend público independiente. |
+| `apps/admin-web/` | Frontend de administración de plataforma. |
+| `apps/customer-portal/` | Aplicación de portal para clientes/usuarios públicos. |
+| `apps/kitchen-display/` | Interfaz de pantallas de cocina. |
+| `apps/pos/` | Aplicación de punto de venta. |
+| `backend/<backend>/modules/` | Módulos/crates que pertenecen exclusivamente al backend indicado. |
+| `crates/shared/` | Bibliotecas técnicas neutrales reutilizables; no debe apropiarse de dominios ni tablas. |
+| `crates/contracts/proto/` | Fuentes Protobuf versionadas para contratos gRPC. |
+| `crates/contracts/events/` | Esquemas versionados de eventos compartidos. |
+| `crates/adapters/local/` | Adaptadores para llamadas entre módulos que comparten proceso. |
+| `crates/adapters/grpc/` | Adaptadores gRPC para fronteras entre procesos. |
+| `crates/adapters/messaging/` | Adaptadores de NATS Core y NATS JetStream. |
+| `packages/permissions/` | Tipos y utilidades compartidas de presentación de permisos; la autorización efectiva pertenece al backend. |
+| `packages/shared-types/` | Tipos compartidos no autoritativos, preferiblemente derivados de contratos. |
+| `packages/ui/` | Componentes y sistema visual compartido de frontend. |
+| `packages/utilities/` | Utilidades técnicas compartidas de frontend. |
+| `packages/validation/` | Validaciones de presentación; no reemplazan las validaciones del dominio. |
+| `infrastructure/docker/` | Definiciones de contenedores para los cuatro procesos. |
+| `infrastructure/deployment/` | Configuración objetivo por entorno: desarrollo, staging y producción. |
+| `infrastructure/database/` | Configuración y scripts operativos de PostgreSQL; no es propietaria de migraciones de módulos. |
+| `infrastructure/nats/` | Configuración de NATS Core y JetStream. |
+| `infrastructure/redis/` | Configuración de Redis cuando corresponda. |
+| `infrastructure/monitoring/` | Configuración de OpenTelemetry y dashboards. |
+| `docs/` | Documentación de arquitectura, decisiones, ingeniería y operación. |
+| `scripts/` | Automatización reproducible de desarrollo, validación y operaciones locales. |
+| `migrations/` | Archivos históricos existentes; se conserva sin mover ni editar en esta reorganización. |
+| `rules/` | Reglas de trabajo y controles documentales del repositorio. |
 
-`AI` es una capacidad transversal accesible mediante un puerto, no un dominio propietario ni un módulo con schema propio en esta etapa. Cada módulo conserva los datos de su proceso en su schema. PLATFORM conserva el ciclo de vida de tenants; `tenancy/` aporta solo contexto y utilidades compartidas.
+### Reglas obligatorias de estructura
 
-El mismo modulo debe poder compilarse como crate independiente y como parte del binario principal.
+1. Los cuatro backends son procesos/binarios independientes; cada uno tiene su
+   propio punto de entrada y su propia composición de dependencias.
+2. Cada módulo aparece una sola vez, bajo `backend/<backend-propietario>/modules/`.
+   La responsabilidad del dominio se conserva aunque cambie la ubicación física.
+3. Cada módulo mantiene su crate, capas `domain/`, `application/`,
+   `infrastructure/` y `contracts/`, según corresponda.
+4. Cada módulo es propietario exclusivo de su schema, rol, tablas, migraciones
+   e historial SQLx. No existe historial compartido entre módulos.
+5. Ningún módulo puede leer o escribir directamente tablas de otro módulo; no
+   se permiten FKs, joins, vistas ni consultas entre schemas propietarios.
+6. Los módulos del mismo proceso se comunican mediante contratos públicos y
+   puertos/traits locales para solicitudes síncronas. Los hechos se expresan
+   mediante eventos.
+7. Entre procesos, las solicitudes/respuestas usan gRPC + Protobuf versionado.
+   NATS Core se reserva para señales efímeras y JetStream para eventos durables.
+8. Outbox/Inbox e idempotencia protegen la entrega durable. `FOR UPDATE SKIP
+   LOCKED` solo reclama filas de trabajo; no es un protocolo de comunicación.
+9. `crates/` y `packages/` no pueden convertirse en depósitos de lógica de
+   negocio ni persistencia propietaria.
+10. Los BFF no duplican reglas de dominio ni se integran dentro de los backends.
+11. No crear carpetas de módulos vacías para asignar dominios por inferencia.
+    La asignación debe respetar la matriz de responsabilidades y decisiones
+    arquitectónicas aprobadas.
+12. La estructura es objetivo documental; su presencia no demuestra que los
+    binarios, servicios Docker, NATS, generadores o despliegues estén activos.
 
 ### Estructura interna de un modulo
 
 ```text
-inventory/
-├── src/
-│   ├── domain/
-│   │   ├── entities/
-│   │   ├── value_objects/
-│   │   └── rules/
-│   ├── application/
-│   │   ├── commands/
-│   │   ├── queries/
-│   │   └── ports/
-│   ├── infrastructure/
-│   │   └── persistence/
-│   └── lib.rs
-└── Cargo.toml
+backend/
+└── <backend-propietario>/
+    └── modules/
+        └── <modulo>/
+            ├── Cargo.toml
+            ├── migrations/
+            ├── contracts/
+            └── src/
+                ├── domain/
+                │   ├── entities/
+                │   ├── value_objects/
+                │   └── rules/
+                ├── application/
+                │   ├── commands/
+                │   ├── queries/
+                │   └── ports/
+                ├── infrastructure/
+                │   └── persistence/
+                └── lib.rs
 ```
 
 Las capas deben seguir arquitectura hexagonal:
@@ -5149,8 +5215,9 @@ Las interfaces asincronas dinamicas deben utilizar async-trait.
 Mecanismos iniciales:
 
 - Contratos locales para operaciones inmediatas dentro del mismo proceso.
-- gRPC con Tonic y Protocol Buffers entre `api-server` y BFF desde el inicio, y para otros servicios cuando se extraigan.
-- Eventos asincronos para hechos publicados por otros modulos.
+- gRPC con Tonic y Protocol Buffers para solicitudes/respuestas entre los cuatro procesos independientes desde el inicio.
+- NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda.
+- Eventos asíncronos para hechos publicados por otros módulos; Outbox/Inbox mantiene la entrega durable e idempotente.
 
 gRPC no debe utilizarse para absolutamente toda comunicacion.
 
@@ -5322,18 +5389,19 @@ Independencia no significa que una venta pueda confirmarse sin comprobar inventa
 | Organizacion | Cargo Workspace |
 | Arquitectura | Hexagonal + DDD |
 | Persistencia | PostgreSQL + SQLx |
-| Comunicación backend ↔ BFF | gRPC + Tonic + Protobuf desde el inicio; gRPC entre módulos internos solo cuando crucen procesos |
+| Comunicación entre procesos | gRPC + Tonic + Protobuf para solicitudes/respuestas; NATS Core para señales efímeras y NATS JetStream para eventos durables |
 | Eventos | Outbox + broker |
 | Caché | Redis |
 | Frontend | React + TypeScript |
-| Despliegue objetivo inicial | Dos procesos/servicios de aplicación: `api-server` (módulos backend, gRPC) y `bff` (HTTP/OpenAPI), coordinados con Docker Compose |
+| Despliegue objetivo inicial | Cuatro procesos/servicios independientes: Admin Platform Backend, Admin BFF, Public BFF y Public Backend, coordinados con Docker Compose |
 
-El backend conserva un monolito modular dentro de `api-server`; el BFF es un proceso independiente desde el inicio. No se deben convertir los módulos internos en microservicios ni usar gRPC entre módulos que comparten el proceso `api-server`.
+Cada uno de los cuatro procesos contiene sus propios módulos organizados como monolito modular. Los módulos que comparten backend/proceso usan contratos y puertos locales; no se convierten automáticamente en microservicios. Los cuatro procesos se comunican mediante gRPC y NATS Core/JetStream según el tipo de interacción.
 
-- Construir el backend como monolito modular.
-- Desplegar `api-server` y `bff` como dos servicios de aplicación.
-- Usar Tonic/gRPC y Protobuf versionado entre `api-server` y BFF desde el inicio.
-- Mantener puertos locales entre módulos internos del mismo proceso.
+- Construir los cuatro backends como binarios/procesos independientes.
+- Desplegar Admin Platform Backend, Admin BFF, Public BFF y Public Backend como cuatro servicios de aplicación.
+- Usar Tonic/gRPC y Protobuf versionado en las fronteras entre procesos desde el inicio.
+- Usar NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda.
+- Mantener puertos/traits locales entre módulos que comparten el mismo backend/proceso.
 - No declarar esta topología implementada hasta verificar los manifiestos de despliegue.
 
 ## Capacidad transversal del AI Manager

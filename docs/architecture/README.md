@@ -1,16 +1,27 @@
-# Arquitectura
+# Arquitectura de Restaurant OS
 
-Fuentes normativas:
+La arquitectura del repositorio se organiza en cuatro procesos independientes,
+cada uno con módulos propios:
 
-1. [Estándar general](./engineering-standard.md): reglas base para cualquier proyecto.
-2. [Arquitectura de Restaurant OS](./restaurant-os-architecture.md): especialización del producto.
-3. [Reglas de implementación](../engineering/implementation-rules.md): desarrollo, pruebas y mantenimiento.
-4. [ADRs](../adr/README.md): decisiones y desviaciones aprobadas.
+1. Admin Platform Backend.
+2. Admin BFF.
+3. Public BFF.
+4. Public Backend.
 
-Precedencia: el estándar es el mínimo; Restaurant OS puede especializarlo o endurecerlo, nunca debilitarlo. Las reglas de implementación no contradicen los anteriores. Toda desviación requiere ADR aceptado por el propietario del producto.
+Los BFF son procesos separados de sus backends. Los módulos viven en
+`backend/<backend-propietario>/modules/<modulo>/`; `crates/` se reserva para
+capacidades técnicas neutrales, contratos versionados y adaptadores. Cada
+módulo mantiene ownership exclusivo de su schema, rol, migraciones e historial
+SQLx.
 
-Los documentos históricos sustituidos se conservan con estado `superseded`, fecha de sustitución y enlace a su fuente vigente. Las ideas de `futuro.md` son propuestas, no decisiones aprobadas.
+## Documentos vigentes
 
-La topología objetivo de Restaurant OS separa `api-server` (backend modular/gRPC) y `bff` (HTTP/OpenAPI para frontends) en dos procesos. Los módulos internos de `api-server` no se convierten por ello en microservicios.
+- [Estándar general](./engineering-standard.md): reglas obligatorias de arquitectura y estructura.
+- [Arquitectura de Restaurant OS](./restaurant-os-architecture.md): especialización de los cuatro procesos, dominios, datos y comunicación.
+- [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
+- [ADRs aceptados](../adr/README.md): decisiones arquitectónicas aprobadas.
+- [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
+- [Roadmap](../../ROADMAP.md): fases y entregables.
 
-Para configurar la exigencia efectiva de revisión por propietarios de código en GitHub, seguir [Configuración de protección de main](../engineering/github-protection-setup.md). `CODEOWNERS` por sí solo no obliga a solicitar ni aprobar revisiones.
+La presencia de carpetas o documentos no demuestra que los procesos, crates,
+infraestructura o despliegues estén implementados.

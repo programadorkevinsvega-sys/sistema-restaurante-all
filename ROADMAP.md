@@ -20,31 +20,29 @@ es la fuente de verdad para requisitos, propietarios de dominio y ubicacion de
 los crates; [promt.md](./promt.md) define el orden de trabajo por lotes. Las
 fases no cambian esos propietarios ni crean una estructura paralela.
 
-## Limite entre Core y Restaurant vertical
+## Propiedad de módulos y estructura física
 
-- `crates/core/` aloja las capacidades reutilizables entre verticales: PLATFORM,
-  IDENTITY, ORGANIZATION, CATALOG, SALES, PAYMENTS, CASH, INVENTORY,
-  PROCUREMENT, BILLING, FINANCE, WORKFORCE, CUSTOMERS, INTEGRATIONS,
-  AUTOMATION, ANALYTICS, AUDIT y REPORTING. `tenancy/` es soporte compartido,
-  no un dominio propietario.
-- `crates/verticals/restaurant/` aloja KITCHEN y PRODUCTION, ademas de mesas,
-  reservas, servicio en salon, menu gastronomico y reglas de preparacion.
-- KITCHEN y PRODUCTION siguen siendo propietarios de sus dominios; su ubicacion
-  bajo el vertical refleja que sus reglas son gastronomicas. No duplicarlos en
-  Core.
-- El vertical consume CATALOG, SALES, ORGANIZATION e INVENTORY mediante
-  contratos; no duplica el catalogo base, los pedidos, la identidad de recursos
-  fisicos ni el ledger de existencias.
+Los dominios conservan sus responsabilidades lógicas, pero su código vive bajo
+`backend/<backend-propietario>/modules/<modulo>/`. Cada uno de los cuatro
+procesos tiene módulos propios. La distribución concreta de cada dominio entre
+los procesos debe seguir la matriz de `requisitos.md` y no se debe inferir.
 
-## Topología de ejecución backend y BFF
+`crates/` contiene únicamente bibliotecas técnicas neutrales, contratos
+versionados y adaptadores. No contiene módulos propietarios de negocio.
+KITCHEN y PRODUCTION mantienen sus responsabilidades gastronómicas; CATALOG
+mantiene productos y agrupaciones comerciales genéricas. Esta separación es de
+propiedad de dominio, no una división física Core/Restaurant vertical.
 
-La topología objetivo mantiene el backend como monolito modular y separa la frontera HTTP para los frontends:
+## Topología de ejecución de los cuatro backends
 
-- `api-server`: proceso backend que aloja los módulos de Core y Restaurant vertical y expone sus contratos gRPC.
-- `bff`: proceso independiente que consume `api-server` mediante gRPC y expone HTTP/OpenAPI a los frontends independientes.
-- Docker Compose define dos servicios de aplicación (`api-server` y `bff`) en el entorno inicial.
-- Esta separación de procesos no convierte cada módulo en microservicio: los módulos internos siguen compartiendo el proceso `api-server` y se comunican mediante puertos/contratos locales.
-- La topología es una decisión de arquitectura objetivo; no debe describirse como desplegada hasta contar con manifiestos y evidencia.
+La topología de Restaurant OS está compuesta por cuatro procesos/binarios independientes; cada uno contiene sus propios módulos:
+
+- Admin Platform Backend.
+- Admin BFF.
+- Public BFF.
+- Public Backend.
+
+Los BFF son procesos independientes, no están integrados dentro de los backends ni existe un único BFF compartido. Cada proceso conserva sus responsabilidades y módulos. Entre procesos se utiliza gRPC para solicitudes/respuestas, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso se comunican mediante contratos públicos y puertos/traits locales; los eventos durables usan Outbox/Inbox. Docker Compose debe representar cuatro servicios independientes. Esta es la topología objetivo y no evidencia de que el despliegue ya esté implementado.
 
 ## Modelo SaaS
 
@@ -155,13 +153,13 @@ El sistema debe diseñarse desde el inicio como una plataforma multiempresa y mu
 Decisión inicial:
 
 - Implementar un monolito modular bien organizado en Rust.
-- Organizar el backend como Cargo workspace con crates por dominio.
-- Compilar los módulos de backend como un único proceso/ejecutable `api-server` (monolito modular).
-- Desplegar el BFF como un proceso/ejecutable independiente; no integrarlo dentro del binario `api-server`.
-- `api-server` aloja los módulos de backend y expone sus contratos gRPC; el BFF consume esos contratos gRPC y expone HTTP documentado con OpenAPI a los frontends independientes.
-- Desde el inicio, Docker Compose define dos servicios de aplicación: `api-server` y `bff`. Esta es la topología objetivo, no evidencia de que ya esté implementada.
+- Organizar el repositorio como Cargo workspace; cada módulo es un crate bajo el backend que lo posee.
+- Construir cada backend como un binario/proceso independiente con su propio conjunto de módulos.
+- Mantener Admin Platform Backend, Admin BFF, Public BFF y Public Backend como cuatro procesos separados.
+- Los dos BFF exponen sus superficies HTTP/OpenAPI a los frontends correspondientes; los backends de plataforma y público exponen sus contratos de backend.
+- Docker Compose debe definir cuatro servicios de aplicación independientes. Esta es la topología objetivo, no evidencia de que ya esté implementada.
 - Aplicar arquitectura hexagonal y DDD dentro de cada modulo.
-- Las llamadas entre módulos que comparten el proceso `api-server` pueden usar puertos/traits locales; la frontera `api-server` ↔ BFF usa gRPC desde el inicio con Tonic y Protobuf versionado.
+- Las llamadas síncronas entre módulos que comparten un mismo backend usan puertos/traits locales; las solicitudes/respuestas que cruzan procesos usan gRPC con Tonic y Protobuf versionado. NATS Core y NATS JetStream se utilizan para señales efímeras y eventos durables, respectivamente, según corresponda.
 - Utilizar Outbox y consumidores idempotentes para eventos.
 - Mantener modulos independientes por dominio y con interfaces claras.
 - Utilizar PostgreSQL como base de datos principal.
@@ -170,8 +168,7 @@ Decisión inicial:
 - Reservar bases dedicadas para clientes Enterprise.
 - Separar dominios en esquemas: platform, identity, organization y operaciones.
 - Mantener una base PostgreSQL compartida inicialmente, con propiedad por dominio.
-- Implementar los dominios reutilizables en `crates/core/` y KITCHEN/PRODUCTION
-  en `crates/verticals/restaurant/`, segun [requisitos.md](./requisitos.md).
+- Implementar cada dominio bajo `backend/<backend-propietario>/modules/<modulo>/`, respetando su responsabilidad y la distribución aprobada entre los cuatro procesos, según [requisitos.md](./requisitos.md).
 - Priorizar platform, identity, organization, catalog, sales, payments,
   inventory, billing y audit en el nucleo compartido.
 - Diseñar esquemas audit, analytics y integrations por responsabilidad.
@@ -214,17 +211,17 @@ Decisión inicial:
 - Implementar POS con React, TypeScript y PWA.
 - Evaluar Tauri para integracion nativa de escritorio.
 - Implementar backend Rust con un Cargo workspace.
-- Compilar los módulos backend como un único ejecutable `api-server`; el BFF es un proceso independiente y se comunica con `api-server` mediante gRPC.
+- Compilar cada uno de los cuatro backends como un binario independiente, con sus propios módulos; los procesos se comunican mediante gRPC y NATS Core/JetStream según el tipo de interacción.
 - Utilizar Axum, PostgreSQL y SQLx.
 - Aplicar independencia, puertos y inversion de dependencias.
 - Prohibir dependencias circulares y persistencia cruzada.
 - Probar cada modulo con implementaciones simuladas.
 - Utilizar Axum para REST y WebSockets.
-- Usar contratos y adaptadores locales entre módulos dentro de `api-server`; usar Tonic/gRPC entre `api-server` y el BFF desde el inicio, y al separar otros servicios.
+- Usar contratos y adaptadores locales entre módulos dentro de cada backend; usar Tonic/gRPC para solicitudes/respuestas entre procesos y NATS Core/JetStream para mensajería efímera/durable, según corresponda.
 - Exponer API REST documentada con OpenAPI.
 - Utilizar WebSockets para actualizacion en tiempo real.
 - Utilizar Redis para caché y coordinación cuando sea necesario.
-- Utilizar colas RabbitMQ o equivalente para procesos asincronos.
+- Utilizar NATS Core para señales efímeras y NATS JetStream para mensajería durable, según corresponda. Esta decisión no afirma que la infraestructura ya esté instalada o activa; mientras el dispatcher durable no publique a JetStream, Outbox con polling mediante `FOR UPDATE SKIP LOCKED` permite reclamar y procesar los eventos pendientes.
 - Utilizar almacenamiento compatible con S3.
 - Iniciar analitica en PostgreSQL y evaluar ClickHouse al crecer.
 - Utilizar OpenTelemetry y Grafana para observabilidad.
@@ -364,8 +361,7 @@ Entregable:
 Objetivo: disponer del flujo minimo operativo de un restaurante.
 
 CATALOG y SALES aportan las capacidades base; el menu, los modificadores y los
-flujos de servicio propios del restaurante pertenecen a
-`crates/verticals/restaurant/`.
+flujos de servicio propios del restaurante pertenecen a los módulos gastronómicos responsables dentro del backend propietario.
 
 - Categorias y productos.
 - Variantes y modificadores.
@@ -859,8 +855,7 @@ Resultado: un restaurante puede operar.
 Duracion orientativa: 5 a 8 semanas.
 
 - Inventario.
-- Recetas versionadas, ordenes y lotes bajo PRODUCTION en
-  `crates/verticals/restaurant/`.
+- Recetas versionadas, órdenes y lotes bajo la responsabilidad de PRODUCTION, dentro del backend propietario.
 - Compras.
 - Proveedores.
 - Transferencias.

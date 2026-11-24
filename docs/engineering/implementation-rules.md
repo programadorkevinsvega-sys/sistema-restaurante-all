@@ -6,6 +6,25 @@ Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni
 
 ## 1. Módulos y contratos
 
+### Ubicación y composición
+
+- Los cuatro procesos tienen puntos de entrada independientes bajo
+  `apps/<proceso>/src/`.
+- Los módulos propietarios viven exclusivamente bajo
+  `backend/<backend-propietario>/modules/<modulo>/`.
+- Cada módulo es un crate y mantiene sus capas `domain/`,
+  `application/`, `infrastructure/` y `contracts/` según corresponda.
+- `crates/shared/` se limita a utilidades técnicas neutrales;
+  `crates/contracts/` contiene Protobuf y esquemas de eventos;
+  `crates/adapters/` contiene adaptadores local, gRPC y mensajería.
+- `packages/` contiene paquetes reutilizables de frontend; nunca reemplaza
+  validaciones, autorización o reglas del backend.
+- `infrastructure/` contiene configuración de servicios e infraestructura,
+  no migraciones ni lógica de dominio.
+- La distribución concreta de dominios entre los cuatro backends debe
+  respetar `requisitos.md`; no duplicar ni asignar módulos por inferencia.
+
+
 - Depender de contratos públicos; no importar implementaciones internas ajenas.
 - DTO no exponen entidades ni modelos SQL.
 - OpenAPI describe HTTP; Protobuf describe gRPC.
@@ -40,8 +59,8 @@ FKs, joins y consultas directas solo dentro del límite de propiedad del mismo m
 
 ## 3. OpenAPI, Protobuf y generación
 
-- OpenAPI es fuente HTTP y genera tipos/clientes HTTP para frontend/BFF.
-- Protobuf es fuente gRPC y genera stubs/tipos para Rust y clientes BFF.
+- OpenAPI es fuente HTTP y genera tipos/clientes HTTP para los frontends y los dos BFF independientes (Admin BFF y Public BFF).
+- Protobuf es fuente gRPC y genera stubs/tipos para Rust en los cuatro procesos; se utiliza en las fronteras entre procesos.
 - Mantener contratos fuente versionados; no duplicar tipos derivados manualmente.
 - Fijar versiones de generadores y comandos reproducibles al incorporar tooling.
 - CI genera desde cero y falla si git diff --exit-code detecta diferencias en artefactos versionados.
@@ -56,7 +75,9 @@ No guardar sesiones, estado de usuario, colas durables ni estado de negocio solo
 
 ### Outbox
 
-El evento se persiste en la misma transacción PostgreSQL que el cambio de negocio. No publicar al broker dentro de esa transacción. Sin broker, reclamar lotes con FOR UPDATE SKIP LOCKED y leases recuperables; publicar fuera de la transacción breve. Con broker, marcar publicado tras confirmación durable. Entrega at-least-once; no exactly-once.
+El evento se persiste en la misma transacción PostgreSQL que el cambio de negocio. No publicar al broker dentro de esa transacción. Sin dispatcher durable operativo, reclamar lotes con `FOR UPDATE SKIP LOCKED` y leases recuperables; publicar fuera de la transacción breve. Con NATS JetStream, marcar publicado tras confirmación durable. Entrega at-least-once; no exactly-once.
+
+NATS Core se reserva para señales efímeras que no requieren persistencia durable. NATS JetStream se utiliza para eventos/mensajes que requieren persistencia, confirmación durable, reintentos o recuperación. `FOR UPDATE SKIP LOCKED` coordina el reclamo de filas de trabajo del Outbox entre workers; no es un protocolo de comunicación entre módulos.
 
 ### Inbox e idempotencia
 
