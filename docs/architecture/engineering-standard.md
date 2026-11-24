@@ -41,7 +41,7 @@ backend/
                 └── composition/           # cableado e inyección de dependencias
 ```
 
-**Aplicación en este repositorio:** cada módulo se implementa físicamente una sola vez en `backend/<backend-propietario>/modules/<modulo>/`. Los cuatro backends tienen sus propios conjuntos de módulos. `crates/` contiene únicamente bibliotecas técnicas neutrales, contratos versionados y adaptadores; no aloja módulos propietarios de negocio. La distribución de dominios entre los cuatro procesos debe respetar la matriz de responsabilidades de `requisitos.md` y las decisiones aprobadas; no se debe inferir ni duplicar. La ruta `backend/<backend>/modules/<modulo>/migrations/` es también la ubicación canónica de las migraciones nuevas del módulo, conforme al ADR-0001. La carpeta raíz `migrations/` se conserva como ubicación histórica.
+**Aplicación en este repositorio:** cada módulo se implementa físicamente una sola vez en `backend/<backend-propietario>/modules/<modulo>/`. PLATFORM pertenece a Admin Platform Backend; todos los demás módulos de negocio canónicos pertenecen a Public Backend, conforme a ADR-0008 y la matriz de `requisitos.md`. Admin BFF y Public BFF son procesos independientes de composición y exposición HTTP/OpenAPI, sin propiedad de dominios ni persistencia de negocio. `crates/` contiene únicamente bibliotecas técnicas neutrales, contratos versionados y adaptadores; no aloja módulos propietarios de negocio. La ruta `backend/<backend>/modules/<modulo>/migrations/` es también la ubicación canónica de las migraciones nuevas del módulo, conforme al ADR-0001. La carpeta raíz `migrations/` se conserva como ubicación histórica.
 
 
 ### 2.2 Carpetas del repositorio
