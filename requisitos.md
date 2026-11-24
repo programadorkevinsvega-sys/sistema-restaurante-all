@@ -601,9 +601,10 @@ Las modalidades deben activar o desactivar capacidades sin duplicar el nucleo.
 ## Grupo D - Productos, menu y produccion
 
 Esta agrupacion funcional no define propiedad tecnica. CATALOG es propietario
-de los productos comerciales y menus; PRODUCTION es propietario de recetas,
-formulas y ordenes de produccion; INVENTORY conserva existencias y movimientos;
-KITCHEN coordina la preparacion de pedidos de clientes.
+de productos comerciales y agrupaciones comerciales genericas; Restaurant
+vertical es propietario de menus gastronomicos y reglas de servicio; PRODUCTION
+es propietario de recetas, formulas y ordenes de produccion; INVENTORY conserva
+existencias y movimientos; KITCHEN coordina la preparacion de pedidos de clientes.
 
 ### Catalogo comercial (CATALOG)
 
@@ -615,8 +616,6 @@ KITCHEN coordina la preparacion de pedidos de clientes.
 - Adiciones.
 - Combos.
 - Promociones.
-- Menus por horario.
-- Menus por sucursal.
 - Disponibilidad.
 - Precios.
 - Impuestos por producto.
@@ -638,6 +637,13 @@ KITCHEN coordina la preparacion de pedidos de clientes.
 - Crear ordenes y lotes de produccion; registrar materiales consumidos y
   productos obtenidos mediante referencias a INVENTORY.
 
+### Menús gastronómicos y servicio (Restaurant vertical)
+
+- Componer menús gastronómicos con referencias a productos de CATALOG.
+- Configurar menús por horario, sucursal, día y temporada.
+- Configurar cursos, modificadores culinarios y reglas de servicio.
+- Configurar productos y menús para mostrador, mesa o delivery.
+
 ### Variantes por sucursal
 
 - Permitir aplicar recetas centrales o excepciones de PRODUCTION por sucursal.
@@ -649,15 +655,14 @@ KITCHEN coordina la preparacion de pedidos de clientes.
 Un producto comercial de CATALOG puede referenciar una receta efectiva de
 PRODUCTION. La formula y su version no se duplican en CATALOG.
 
-### Disponibilidad y menus
+### Disponibilidad comercial (CATALOG)
 
 - Activar o desactivar productos por sucursal.
-- Configurar disponibilidad por horario.
-- Configurar menus por dia.
-- Configurar menus por temporada.
-- Configurar productos para mostrador, mesa o delivery.
+- Configurar disponibilidad comercial por horario.
 - Configurar agotados temporales.
 - Configurar restricciones de venta.
+
+La composición y programación de menús gastronómicos corresponde a Restaurant vertical, que utiliza los productos y referencias comerciales de CATALOG.
 
 ### Requisitos por sucursal
 
@@ -5151,7 +5156,7 @@ gRPC no debe utilizarse para absolutamente toda comunicacion.
 
 ### Contratos gRPC
 
-Los contratos futuros deben definir operaciones como:
+Los contratos gRPC versionados deben definir operaciones como:
 
 ```proto
 syntax = "proto3";
