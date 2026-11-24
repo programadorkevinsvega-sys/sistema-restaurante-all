@@ -12,7 +12,7 @@ La especificación no representa implementación. No modifica SQL, migraciones, 
 
 ## 2. Alcance de identificadores
 
-La política propuesta cubre identificadores técnicos de entidades y recursos: claves primarias, referencias relacionales dentro del módulo propietario, IDs intercambiados mediante contratos entre módulos/procesos, identificadores de eventos y referencias técnicas equivalentes.
+La política aceptada cubre identificadores técnicos de entidades y recursos: claves primarias, referencias relacionales dentro del módulo propietario, IDs intercambiados mediante contratos entre módulos/procesos, identificadores de eventos y referencias técnicas equivalentes.
 
 Incluye identificadores técnicos existentes, aunque hoy sean UUIDv4 u otra versión UUID. También incluye identificadores sustitutos técnicos existentes basados en enteros cuando identifiquen entidades o recursos: su convergencia futura deberá ser planificada.
 
@@ -149,4 +149,4 @@ Antes de adoptar la política en código:
 
 ## 10. Estado
 
-**Propuesta técnica; pendiente de aprobación de ADR-0012.** No hay generación UUIDv7 implementada por este documento. No se han modificado archivos SQL, migraciones, datos, código, dependencias ni configuración de ejecución.
+**Especificación técnica aprobada conforme a ADR-0012 Accepted; implementación pendiente.** Este documento no implementa generación UUIDv7. No se han modificado archivos SQL, migraciones, datos, código, dependencias ni configuración de ejecución.
