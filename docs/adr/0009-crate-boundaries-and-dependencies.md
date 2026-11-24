@@ -1,9 +1,10 @@
 # ADR-0009: Límites de crates y dirección de dependencias
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Propuesto: 2026-11-24
+- Aceptado: 2026-11-24
+- Aprobado por: propietario del producto.
 - Complementa: ADR-0001, ADR-0002, ADR-0003, ADR-0005, ADR-0007 y ADR-0008.
-- Aprobación: pendiente del propietario del producto.
 
 ## Contexto
 
@@ -11,7 +12,7 @@ ADR-0007 y ADR-0008 fijan cuatro procesos independientes y la propiedad de los m
 
 El repositorio todavía no tiene un workspace Cargo implementado. Esta propuesta define límites y direcciones, no versiones concretas de crates externos ni un grafo de dependencias entre todos los dominios.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Unidad de módulo
 
@@ -179,4 +180,4 @@ Esta propuesta no inventa dependencias entre los 19 módulos de Public Backend. 
 
 ## Estado de implementación
 
-Propuesta documental pendiente de aceptación. No se han creado directorios de crates, manifiestos Cargo, dependencias, código, contratos Protobuf ni adaptadores. No se han modificado archivos SQL ni migraciones y no se han ejecutado migraciones.
+Decisión arquitectónica aceptada; implementación pendiente. La aceptación establece el diseño y sus límites, pero no significa que ya se hayan creado directorios de crates, manifiestos Cargo, dependencias, código, contratos Protobuf ni adaptadores. No se han modificado archivos SQL ni migraciones y no se han ejecutado migraciones.
