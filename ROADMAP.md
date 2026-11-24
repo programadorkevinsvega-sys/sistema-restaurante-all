@@ -157,7 +157,7 @@ Decisión inicial:
 
 - Implementar un monolito modular bien organizado en Rust.
 - Organizar el repositorio como Cargo workspace; cada módulo es un crate bajo el backend que lo posee.
-- Construir cada backend como un binario/proceso independiente con su propio conjunto de módulos.
+- Construir cada proceso como binario independiente. Admin Platform Backend contiene PLATFORM; Public Backend contiene los demás módulos de negocio; los BFF contienen composición y transporte, no dominios propietarios.
 - Mantener Admin Platform Backend, Admin BFF, Public BFF y Public Backend como cuatro procesos separados.
 - Los dos BFF exponen sus superficies HTTP/OpenAPI a los frontends correspondientes; los backends de plataforma y público exponen sus contratos de backend.
 - Docker Compose debe definir cuatro servicios de aplicación independientes. Esta es la topología objetivo, no evidencia de que ya esté implementada.
