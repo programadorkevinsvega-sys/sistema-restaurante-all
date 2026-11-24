@@ -11,3 +11,4 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0003: Stateless, Outbox/Inbox y coordinación de jobs](./0003-stateless-outbox-inbox-and-jobs.md)
 - [ADR-0004: W3C Trace Context en todos los contratos](./0004-w3c-trace-context.md)
 - [ADR-0005: Contratos Protobuf y gRPC desde el inicio](./0005-grpc-contracts-from-day-one.md)
+- [ADR-0006: AI como capacidad transversal sin schema propio en esta etapa](./0006-ai-cross-cutting-capability-no-owned-schema.md)
