@@ -13,3 +13,4 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0005: Contratos Protobuf y gRPC desde el inicio (topología sustituida parcialmente por ADR-0007)](./0005-grpc-contracts-from-day-one.md)
 - [ADR-0006: AI como capacidad transversal sin schema propio en esta etapa](./0006-ai-cross-cutting-capability-no-owned-schema.md)
 - [ADR-0007: Cuatro backends independientes y comunicación](./0007-four-independent-backends-and-communication.md)
+- [ADR-0008: Distribución de módulos entre los cuatro procesos](./0008-module-ownership-across-four-processes.md)
