@@ -42,7 +42,7 @@ La topología de Restaurant OS está compuesta por cuatro procesos/binarios inde
 - Public BFF.
 - Public Backend.
 
-Los BFF son procesos independientes, no están integrados dentro de los backends ni existe un único BFF compartido. Cada proceso conserva sus responsabilidades y módulos. Entre procesos se utiliza gRPC para solicitudes/respuestas, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso se comunican mediante contratos públicos y puertos/traits locales; los eventos durables usan Outbox/Inbox. Docker Compose debe representar cuatro servicios independientes. Esta es la topología objetivo y no evidencia de que el despliegue ya esté implementado.
+Los BFF son procesos independientes, no están integrados dentro de los backends ni existe un único BFF compartido. Admin Platform Backend aloja PLATFORM; Public Backend aloja los demás módulos de negocio. Admin BFF y Public BFF realizan composición y exposición HTTP/OpenAPI, sin ownership de dominios ni persistencia de negocio. Entre procesos se utiliza gRPC para solicitudes/respuestas, NATS Core para señales efímeras y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso se comunican mediante contratos públicos y puertos/traits locales; los eventos durables usan Outbox/Inbox. Docker Compose debe representar cuatro servicios independientes. Esta es la topología objetivo y no evidencia de que el despliegue ya esté implementado.
 
 ## Modelo SaaS
 
@@ -168,7 +168,7 @@ Decisión inicial:
 - Reservar bases dedicadas para clientes Enterprise.
 - Separar dominios en esquemas: platform, identity, organization y operaciones.
 - Mantener una base PostgreSQL compartida inicialmente, con propiedad por dominio.
-- Implementar cada dominio bajo `backend/<backend-propietario>/modules/<modulo>/`, respetando su responsabilidad y la distribución aprobada entre los cuatro procesos, según [requisitos.md](./requisitos.md).
+- Implementar PLATFORM bajo `backend/admin-platform-backend/modules/platform/` y los demás dominios bajo `backend/public-backend/modules/<modulo>/`, según [ADR-0008](docs/adr/0008-module-ownership-across-four-processes.md) y la matriz de [requisitos.md](./requisitos.md).
 - Priorizar platform, identity, organization, catalog, sales, payments,
   inventory, billing y audit en el nucleo compartido.
 - Diseñar esquemas audit, analytics y integrations por responsabilidad.
