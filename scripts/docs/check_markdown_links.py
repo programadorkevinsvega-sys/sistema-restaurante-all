@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate repository-local Markdown links and heading fragments in changed docs."""
+"""Check changed Markdown files for broken repository-local links and anchors."""
 
 from __future__ import annotations
 
@@ -24,12 +24,9 @@ HTML_ID_RE = re.compile(r"""\\b(?:id|name)\\s*=\\s*["']([^"']+)["']""", re.IGNOR
 def changed_markdown(base: str, head: str) -> list[Path]:
     result = subprocess.run(
         ["git", "diff", "--name-only", "--diff-filter=ACMR", f"{base}...{head}", "--", "*.md", "*.mdx"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
+        cwd=ROOT, check=True, capture_output=True, text=True,
     )
-    return [ROOT / line for line in result.stdout.splitlines() if line.strip()]
+    return [ROOT / name for name in result.stdout.splitlines() if name.strip()]
 
 
 def strip_code(text: str) -> str:
@@ -51,16 +48,15 @@ def strip_code(text: str) -> str:
 
 
 def heading_anchors(text: str) -> set[str]:
-    anchors: set[str] = set(HTML_ID_RE.findall(text))
+    anchors = set(HTML_ID_RE.findall(text))
     counts: dict[str, int] = {}
     for match in HEADING_RE.finditer(text):
         heading = re.sub(r"!?(?:\\[([^\\]]*)\\])\\([^)]*\\)", r"\\1", match.group(1))
         heading = re.sub(r"<[^>]+>", "", heading)
         heading = heading.replace(chr(96), "").replace("*", "").replace("_", "").replace("~", "")
-        heading = html.unescape(heading).strip().lower()
-        heading = unicodedata.normalize("NFKD", heading)
+        heading = unicodedata.normalize("NFKD", html.unescape(heading).strip().lower())
         heading = "".join(ch for ch in heading if not unicodedata.combining(ch))
-        slug = re.sub(r"[^\\w -]", "", heading, flags=re.UNICODE)
+        slug = re.sub(r"[^\\w -]", "", heading)
         slug = re.sub(r"\\s", "-", slug.strip())
         slug = re.sub(r"-+", "-", slug)
         count = counts.get(slug, 0)
@@ -71,19 +67,19 @@ def heading_anchors(text: str) -> set[str]:
 
 def extract_targets(text: str) -> list[str]:
     clean = strip_code(text)
-    targets = [m.group(2) for m in LINK_RE.finditer(clean)]
-    targets.extend(m.group(1) for m in REFERENCE_RE.finditer(clean))
+    targets = [match.group(2) for match in LINK_RE.finditer(clean)]
+    targets.extend(match.group(1) for match in REFERENCE_RE.finditer(clean))
     targets.extend(HTML_HREF_RE.findall(clean))
-    return [target[1:-1] if target.startswith("<") and target.endswith(">") else target for target in targets]
+    return [value[1:-1] if value.startswith("<") and value.endswith(">") else value for value in targets]
 
 
 def validate_file(path: Path) -> list[str]:
-    errors: list[str] = []
     try:
         source = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as exc:
-        return [f"{path.relative_to(ROOT)}: cannot read Markdown file: {exc}"]
+        return [f"{path.relative_to(ROOT)}: cannot read file: {exc}"]
 
+    errors: list[str] = []
     for target in extract_targets(source):
         target = html.unescape(target.strip())
         if not target or target == "#":
@@ -95,57 +91,43 @@ def validate_file(path: Path) -> list[str]:
         raw_path = unquote(parsed.path)
         candidate = (ROOT / raw_path.lstrip("/")) if raw_path.startswith("/") else (path.parent / raw_path)
         candidate = candidate.resolve()
-
         if raw_path:
             if candidate.is_dir():
-                options = [candidate / "README.md", candidate / "readme.md", candidate / "index.md"]
-                candidate = next((item for item in options if item.is_file()), candidate)
+                candidates = [candidate / "README.md", candidate / "readme.md", candidate / "index.md"]
+                candidate = next((item for item in candidates if item.is_file()), candidate)
             if not candidate.is_file():
-                errors.append(f"{path.relative_to(ROOT)}: broken local link '{target}' (target not found)")
+                errors.append(f"{path.relative_to(ROOT)}: broken local link '{target}'")
                 continue
         else:
             candidate = path
 
         fragment = unquote(parsed.fragment)
         if fragment and candidate.suffix.lower() in {".md", ".mdx"} and candidate.is_file():
-            try:
-                target_text = candidate.read_text(encoding="utf-8")
-            except (OSError, UnicodeDecodeError):
-                errors.append(f"{path.relative_to(ROOT)}: cannot read link target '{target}'")
-                continue
+            target_text = candidate.read_text(encoding="utf-8")
             if fragment not in heading_anchors(target_text):
-                errors.append(
-                    f"{path.relative_to(ROOT)}: broken anchor '{fragment}' in local link '{target}'"
-                )
+                errors.append(f"{path.relative_to(ROOT)}: broken anchor '{fragment}' in '{target}'")
     return errors
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base-ref", required=True, help="Base commit/ref for the documentation diff")
-    parser.add_argument("--head-ref", required=True, help="Head commit/ref for the documentation diff")
+    parser.add_argument("--base-ref", required=True)
+    parser.add_argument("--head-ref", required=True)
     args = parser.parse_args()
-
     try:
         files = changed_markdown(args.base_ref, args.head_ref)
     except subprocess.CalledProcessError as exc:
         print(exc.stderr or "Unable to calculate changed Markdown files.", file=sys.stderr)
         return 2
-
     if not files:
         print("No changed Markdown files; local-link validation is not applicable.")
         return 0
 
-    errors: list[str] = []
-    for path in files:
-        if path.is_file():
-            errors.extend(validate_file(path))
-
+    errors = [error for path in files if path.is_file() for error in validate_file(path)]
     if errors:
         print("\\n".join(errors), file=sys.stderr)
-        print(f"Found {len(errors)} broken local Markdown link(s)/anchor(s).", file=sys.stderr)
+        print(f"Found {len(errors)} broken local link(s)/anchor(s).", file=sys.stderr)
         return 1
-
     print(f"Validated local links and heading anchors in {len(files)} changed Markdown file(s).")
     return 0
 
