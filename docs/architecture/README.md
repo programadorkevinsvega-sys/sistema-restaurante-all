@@ -20,9 +20,9 @@ SQLx.
 
 - [Estándar general](./engineering-standard.md): reglas obligatorias de arquitectura y estructura.
 - [Arquitectura de Restaurant OS](./restaurant-os-architecture.md): especialización de los cuatro procesos, dominios, datos y comunicación.
-- [Diseño de crates y dependencias](./crate-architecture.md): propuesta técnica detallada; su aprobación normativa está pendiente en ADR-0009.
+- [Diseño de crates y dependencias](./crate-architecture.md): diseño técnico aceptado mediante ADR-0009.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
-- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008 y la propuesta ADR-0009.
+- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008 y ADR-0009 aceptado.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.
 
