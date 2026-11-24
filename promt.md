@@ -10,7 +10,7 @@ siguiente.
 ## Responsabilidad de este archivo
 
 - [requisitos.md](./requisitos.md) es la fuente de verdad para requisitos,
-  propietarios de dominio y ubicacion entre Core y verticales.
+  propietarios de dominio y ubicación física de los módulos.
 - [ROADMAP.md](./ROADMAP.md) define fases y entregables.
 - Este prompt define el orden de trabajo y las instrucciones para cada lote; no
   debe cambiar propietarios ni mover responsabilidades entre carpetas.
@@ -64,56 +64,18 @@ No existe un único `api-server` que aloje todos los módulos ni un único BFF c
 
 Entre procesos se utiliza gRPC para solicitudes y respuestas; NATS Core para señales efímeras; y NATS JetStream para eventos durables, según corresponda. Dentro de cada backend, los módulos que comparten proceso utilizan los contratos públicos y puertos/traits locales descritos en el estándar modular; los eventos durables usan Outbox/Inbox. `FOR UPDATE SKIP LOCKED` reclama filas de trabajo del Outbox cuando corresponde, no sustituye los contratos de comunicación.
 
-## Responsabilidad de Core y Restaurant vertical
+## Responsabilidad y ubicación de módulos
 
-- `crates/core/` contiene los dominios reutilizables: PLATFORM, IDENTITY,
-  ORGANIZATION, CATALOG, SALES, PAYMENTS, CASH, INVENTORY, PROCUREMENT,
-  BILLING, FINANCE, WORKFORCE, CUSTOMERS, INTEGRATIONS, AUTOMATION, ANALYTICS,
-  AUDIT y REPORTING. `tenancy/` es soporte compartido, no un dominio propietario.
-- `crates/verticals/restaurant/` contiene `KITCHEN` y `PRODUCTION`, ademas de
-  flujos gastronomicos como mesas y reservas, servicio en salon, menu por
-  horario, cursos, modificadores y preparacion.
-- `KITCHEN` y `PRODUCTION` conservan sus nombres y propiedad logica, aunque sus
-  crates se ubiquen bajo el vertical. No crear duplicados en `crates/core/`.
-- El vertical referencia productos de CATALOG, pedidos de SALES, recursos
-  fisicos de ORGANIZATION y stock/movimientos de INVENTORY mediante contratos;
-  no vuelve a crear ni escribir las entidades propietarias.
-- El código de los módulos se ubica según estas reglas. Las migraciones históricas permanecen en su ubicación actual; las nuevas migraciones se guardan en `backend/<backend>/modules/<modulo>/migrations/`. Cada módulo tiene su propio schema PostgreSQL, rol de migración y tabla de historial SQLx schema-qualified (por ejemplo, `identity._sqlx_migrations`). Nunca se comparte la tabla de historial entre módulos; las versiones son independientes por historial.
-
-**Instrucciones importantes:**
-
-- Antes de crear tablas, revisa la arquitectura completa para evitar duplicaciones.
-- Cada funcionalidad debe pertenecer a un único módulo principal.
-- Antes de implementar un lote, identifica su dominio propietario y su ruta
-  `crates/core/` o `crates/verticals/restaurant/` usando `requisitos.md`.
-- Las claves foráneas y relaciones SQL solo se permiten dentro del límite de propiedad del mismo módulo. No crear FKs, joins, vistas ni consultas directas entre schemas propietarios distintos; las referencias entre módulos usan IDs estables y contratos públicos.
-- Todo debe contemplar múltiples sucursales.
-- Las existencias, ventas, compras y movimientos deben quedar identificados por sucursal.
-- Diseña una estructura escalable y preparada para futuras funcionalidades.
-- Incluye claves primarias, claves foráneas, índices, restricciones y campos de auditoría.
-- No dupliques tablas ni funcionalidades que ya existan en otros módulos.
-- Entrega el SQL completo de cada módulo, sus relaciones y las instrucciones para ejecutarlo.
-- Revisa la compatibilidad con los módulos anteriores antes de avanzar.
-
-**Vamos a empezar únicamente por el MÓDULO 1: EMPRESA Y ESTRUCTURA MULTISUCURSAL.**
-
-No avances al siguiente módulo hasta que hayamos revisado y aprobado el SQL del actual.
-
-8. Las reglas que le impondría a tu agente
-Estas serían obligatorias desde el primer día:
-Regla	Qué debe cumplir
-Independencia	Cada módulo posee su dominio y sus casos de uso.
-Sin dependencias circulares	Ningún módulo puede generar ciclos de dependencias.
-Contratos públicos	Solo se puede interactuar con las interfaces públicas.
-Inversión de dependencias	Los módulos nunca dependen de implementaciones ajenas.
-Persistencia independiente	Cada módulo administra sus tablas, schema PostgreSQL, rol, migraciones, historial SQLx y transacciones.
-Comunicación intercambiable	Los módulos dentro de un mismo backend usan puertos/traits locales; los cuatro procesos independientes se comunican mediante gRPC y NATS Core/JetStream según corresponda.
-Eventos	Los acontecimientos se publican mediante contratos versionados.
-Idempotencia	Los comandos importantes no deben ejecutarse dos veces accidentalmente.
-Seguridad multiempresa	Toda operación debe respetar el contexto y los permisos de empresa y sucursal.
-Pruebas	Cada módulo debe poder probarse con implementaciones simuladas de sus dependencias.
-
-Un matiz fundamental: independencia no significa que ventas pueda confirmar una venta sin inventario cuando necesita comprobar existencias. Significa que ventas puede desarrollarse, probarse y mantener sus propias operaciones sin conocer la implementación de inventario. Si un servicio externo no está disponible, cada proceso deberá tener una política explícita de recuperación o rechazo.
+- Los cuatro procesos son independientes y cada uno contiene sus propios
+  módulos bajo `backend/<backend>/modules/`.
+- Cada módulo conserva su responsabilidad, contratos, schema, rol, migraciones
+  e historial SQLx exclusivos.
+- `crates/` se reserva para bibliotecas técnicas neutrales, contratos
+  versionados y adaptadores local/gRPC/messaging.
+- Las responsabilidades de CATALOG, KITCHEN, PRODUCTION y los demás dominios
+  siguen siendo las definidas en `requisitos.md`; esta organización física no
+  las fusiona ni las reasigna.
+- No crear duplicados ni asignar un módulo a un backend por inferencia.
 
 ## Arquitectura normativa
 
