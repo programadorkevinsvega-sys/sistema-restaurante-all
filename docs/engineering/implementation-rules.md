@@ -55,6 +55,7 @@ SQLx usa por defecto `_sqlx_migrations`. Cada módulo debe configurar su propia 
 - El rol de migración solo modifica su schema y tabla de historial.
 - Migraciones desde un proceso controlado de despliegue, una vez por versión; nunca desde cada réplica.
 - Cambiar el nombre de un historial usado exige migrar registros y coordinar versiones desplegadas; no hacerlo directamente en producción.
+- El repositorio usa un único Cargo workspace en la raíz, con cuatro paquetes binarios independientes y un único `Cargo.lock` compartido.
 - Antes de implementar, fijar SQLx/SQLx CLI y verificar compatibilidad contra Cargo.toml, Cargo.lock y sqlx.toml. En la raíz inspeccionada del repositorio no se encontró Cargo.toml ni Cargo.lock; no se puede afirmar una versión fijada ni compatibilidad comprobada contra una versión concreta.
 
 ### FKs y consultas
@@ -64,7 +65,7 @@ FKs, joins y consultas directas solo dentro del límite de propiedad del mismo m
 ## 3. OpenAPI, Protobuf y generación
 
 - OpenAPI es fuente HTTP y genera tipos/clientes HTTP para los frontends y los dos BFF independientes (Admin BFF y Public BFF).
-- Protobuf es fuente gRPC y genera stubs/tipos para Rust en los cuatro procesos; se utiliza en las fronteras entre procesos.
+- Protobuf es fuente gRPC y genera stubs/tipos para Rust en los cuatro procesos; las fuentes viven únicamente en `contracts/protobuf/<backend>/<modulo>/v1/` y se utilizan en las fronteras entre procesos.
 - Mantener contratos fuente versionados; no duplicar tipos derivados manualmente.
 - Fijar versiones de generadores y comandos reproducibles al incorporar tooling.
 - CI genera desde cero y falla si git diff --exit-code detecta diferencias en artefactos versionados.
