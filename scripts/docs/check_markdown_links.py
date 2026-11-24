@@ -13,12 +13,13 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
-LINK_RE = re.compile(r"!?\\[([^\\]]*)\\]\\(\\s*(<[^>]+>|[^\\s)]+)")
-REFERENCE_RE = re.compile(r"^\\s{0,3}\\[[^\\]]+\\]:\\s*(<[^>]+>|\\S+)", re.MULTILINE)
-HTML_HREF_RE = re.compile(r"""\\b(?:href|src)\\s*=\\s*["']([^"']+)["']""", re.IGNORECASE)
-INLINE_CODE_RE = re.compile("(" + chr(96) + r"+)(.*?)\\1", re.DOTALL)
-HEADING_RE = re.compile(r"^#{1,6}\\s+(.+?)\\s*#*\\s*$", re.MULTILINE)
-HTML_ID_RE = re.compile(r"""\\b(?:id|name)\\s*=\\s*["']([^"']+)["']""", re.IGNORECASE)
+BS = chr(92)
+LINK_RE = re.compile("!?"+BS+"[([^"+BS+"]*)"+BS+"]"+BS+"("+BS+"s*(<[^>]+>|[^"+BS+"s)]+)")
+REFERENCE_RE = re.compile("^"+BS+"s{0,3}"+BS+"[[^"+BS+"]+\u005d:"+BS+"s*(<[^>]+>|"+BS+"S+)", re.MULTILINE)
+HTML_HREF_RE = re.compile(r"""\b(?:href|src)\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
+INLINE_CODE_RE = re.compile("(" + chr(96) + "+)(.*?)" + BS + "1", re.DOTALL)
+HEADING_RE = re.compile("^#{1,6}"+BS+"s+(.+?)"+BS+"s*#*"+BS+"s*$", re.MULTILINE)
+HTML_ID_RE = re.compile(r"""\b(?:id|name)\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
 
 
 def changed_markdown(base: str, head: str) -> list[Path]:
@@ -30,11 +31,11 @@ def changed_markdown(base: str, head: str) -> list[Path]:
 
 
 def strip_code(text: str) -> str:
-    kept: list[str] = []
-    fence_char: str | None = None
+    kept = []
+    fence_char = None
     fence_size = 0
     for line in text.splitlines():
-        match = re.match(r"^\\s{0,3}(" + chr(96) + r"{3,}|~{3,})", line)
+        match = re.match("^"+BS+"s{0,3}("+chr(96)+"{3,}|~{3,})", line)
         if match:
             token = match.group(1)
             if fence_char is None:
@@ -44,21 +45,22 @@ def strip_code(text: str) -> str:
             continue
         if fence_char is None:
             kept.append(line)
-    return INLINE_CODE_RE.sub("", "\\n".join(kept))
+    return INLINE_CODE_RE.sub("", chr(10).join(kept))
 
 
 def heading_anchors(text: str) -> set[str]:
     anchors = set(HTML_ID_RE.findall(text))
-    counts: dict[str, int] = {}
+    counts = {}
+    image_or_link = re.compile("!?"+BS+"[([^"+BS+"]*)"+BS+"]"+BS+"([^)]*)")
     for match in HEADING_RE.finditer(text):
-        heading = re.sub(r"!?(?:\\[([^\\]]*)\\])\\([^)]*\\)", r"\\1", match.group(1))
-        heading = re.sub(r"<[^>]+>", "", heading)
+        heading = image_or_link.sub(lambda item: item.group(1), match.group(1))
+        heading = re.sub("<[^>]+>", "", heading)
         heading = heading.replace(chr(96), "").replace("*", "").replace("_", "").replace("~", "")
         heading = unicodedata.normalize("NFKD", html.unescape(heading).strip().lower())
         heading = "".join(ch for ch in heading if not unicodedata.combining(ch))
-        slug = re.sub(r"[^\\w -]", "", heading)
-        slug = re.sub(r"\\s", "-", slug.strip())
-        slug = re.sub(r"-+", "-", slug)
+        slug = re.sub("[^\\w -]", "", heading)
+        slug = re.sub(BS+"s", "-", slug.strip())
+        slug = re.sub("-+", "-", slug)
         count = counts.get(slug, 0)
         counts[slug] = count + 1
         anchors.add(slug if count == 0 else f"{slug}-{count}")
@@ -79,7 +81,7 @@ def validate_file(path: Path) -> list[str]:
     except (OSError, UnicodeDecodeError) as exc:
         return [f"{path.relative_to(ROOT)}: cannot read file: {exc}"]
 
-    errors: list[str] = []
+    errors = []
     for target in extract_targets(source):
         target = html.unescape(target.strip())
         if not target or target == "#":
@@ -87,24 +89,21 @@ def validate_file(path: Path) -> list[str]:
         parsed = urlsplit(target)
         if parsed.scheme or parsed.netloc or target.startswith("//"):
             continue
-
         raw_path = unquote(parsed.path)
         candidate = (ROOT / raw_path.lstrip("/")) if raw_path.startswith("/") else (path.parent / raw_path)
         candidate = candidate.resolve()
         if raw_path:
             if candidate.is_dir():
-                candidates = [candidate / "README.md", candidate / "readme.md", candidate / "index.md"]
-                candidate = next((item for item in candidates if item.is_file()), candidate)
+                options = [candidate / "README.md", candidate / "readme.md", candidate / "index.md"]
+                candidate = next((item for item in options if item.is_file()), candidate)
             if not candidate.is_file():
                 errors.append(f"{path.relative_to(ROOT)}: broken local link '{target}'")
                 continue
         else:
             candidate = path
-
         fragment = unquote(parsed.fragment)
         if fragment and candidate.suffix.lower() in {".md", ".mdx"} and candidate.is_file():
-            target_text = candidate.read_text(encoding="utf-8")
-            if fragment not in heading_anchors(target_text):
+            if fragment not in heading_anchors(candidate.read_text(encoding="utf-8")):
                 errors.append(f"{path.relative_to(ROOT)}: broken anchor '{fragment}' in '{target}'")
     return errors
 
@@ -122,10 +121,9 @@ def main() -> int:
     if not files:
         print("No changed Markdown files; local-link validation is not applicable.")
         return 0
-
     errors = [error for path in files if path.is_file() for error in validate_file(path)]
     if errors:
-        print("\\n".join(errors), file=sys.stderr)
+        print(chr(10).join(errors), file=sys.stderr)
         print(f"Found {len(errors)} broken local link(s)/anchor(s).", file=sys.stderr)
         return 1
     print(f"Validated local links and heading anchors in {len(files)} changed Markdown file(s).")
