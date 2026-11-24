@@ -214,7 +214,7 @@ Decisión inicial:
 - Implementar POS con React, TypeScript y PWA.
 - Evaluar Tauri para integracion nativa de escritorio.
 - Implementar backend Rust con un Cargo workspace.
-- Compilar cada uno de los cuatro backends como un binario independiente, con sus propios módulos; los procesos se comunican mediante gRPC y NATS Core/JetStream según el tipo de interacción.
+- Compilar los cuatro procesos como binarios independientes: Admin Platform Backend con PLATFORM, Public Backend con los demás módulos de negocio y los dos BFF como procesos de composición. Se comunican mediante gRPC y NATS Core/JetStream según el tipo de interacción.
 - Utilizar Axum, PostgreSQL y SQLx.
 - Aplicar independencia, puertos y inversion de dependencias.
 - Prohibir dependencias circulares y persistencia cruzada.
