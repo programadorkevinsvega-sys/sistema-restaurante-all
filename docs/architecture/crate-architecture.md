@@ -68,72 +68,106 @@ backend/
         contracts/{Cargo.toml,src/lib.rs}
         migrations/
       catalog/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       sales/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       payments/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       cash/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       kitchen/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       inventory/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       procurement/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       production/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       billing/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       finance/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       workforce/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       customers/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       integrations/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       automation/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       analytics/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       audit/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
       reporting/
-        contracts/
-        implementation/
+        Cargo.toml
+        sqlx.toml
+        src/{lib.rs,domain/,application/,adapters/,infrastructure/}
+        contracts/{Cargo.toml,src/lib.rs}
         migrations/
 
   admin-bff/                    # módulos técnicos de transporte/composición
@@ -204,7 +238,7 @@ Las capas pueden organizarse en módulos Rust dentro del crate de implementació
 ### 5.2 Entre módulos del mismo backend
 
 - El consumidor depende exclusivamente de `<provider>-contracts`.
-- Las consultas y comandos síncronos se invocan mediante traits/puertos locales.
+- Las consultas y comandos síncronos se invocan mediante traits/puertos públicos del contrato; `crates/adapters/local` los implementa para módulos que comparten proceso.
 - Los eventos se consumen mediante contratos versionados; los durables usan Outbox/Inbox e idempotencia.
 - No se permite importar implementación, repositorios, modelos SQL ni migraciones del proveedor.
 - No se accede directamente a tablas de otro módulo.
@@ -227,13 +261,13 @@ Los BFF contienen composición de endpoints, autenticación/autorización de bor
 | Ubicación | Contenido permitido | Contenido prohibido |
 |---|---|---|
 | `crates/shared` | Configuración base, contexto W3C, observabilidad, utilidades técnicas pequeñas y neutrales | Entidades, reglas, enums de negocio, repositorios, tablas o DTO específicos de dominios |
-| `crates/contracts/proto` | Fuentes Protobuf versionadas por proceso/módulo | Código generado editado manualmente o contratos que mezclen dominios |
+| `contracts/protobuf` | Fuentes Protobuf versionadas por proceso/módulo; única ubicación canónica | Código generado editado manualmente o contratos que mezclen dominios |
 | `crates/contracts/events` | Esquemas de eventos versionados con owner explícito | Eventos sin propietario o modelos internos de persistencia |
 | `crates/adapters/grpc` | Infraestructura genérica cliente/servidor, interceptores, propagación de contexto | Reglas de negocio o mapeos específicos de dominio |
 | `crates/adapters/messaging` | Conexión NATS Core/JetStream, publicación/consumo genérico, manejo técnico de ACK | Tablas Outbox/Inbox ajenas, políticas de negocio o definición de ownership |
 | `crates/adapters/local` | Adaptador local obligatorio desde el día uno para implementar los puertos públicos entre módulos que comparten proceso; usa los mismos puertos que implementa el adaptador gRPC y puede sustituirse al extraer un módulo | Un crate por pareja de módulos, un bus global que oculte dependencias o acceso a internos/tablas ajenas |
 
-La persistencia SQLx es específica de cada módulo y permanece en su implementación. La tabla Outbox/Inbox, cuando exista, es propiedad del módulo/consumidor correspondiente; el adaptador de mensajería no la convierte en tabla compartida.
+Los adaptadores local y gRPC implementan los mismos puertos públicos; el primero conecta módulos del mismo proceso y el segundo cruza procesos. La persistencia SQLx es específica de cada módulo y permanece en su implementación. La tabla Outbox/Inbox, cuando exista, es propiedad del módulo/consumidor correspondiente; el adaptador de mensajería no la convierte en tabla compartida.
 
 ## 7. Mapa de contratos Protobuf
 
