@@ -1,9 +1,9 @@
 # Diseño de crates y dependencias
 
-**Estado:** propuesta técnica para revisión. La decisión normativa permanece pendiente en [ADR-0009](../adr/0009-crate-boundaries-and-dependencies.md).  
+**Estado:** diseño técnico aprobado y vigente, vinculado a [ADR-0009 Accepted](../adr/0009-crate-boundaries-and-dependencies.md).  
 **Base arquitectónica:** ADR-0001 a ADR-0008, en especial ADR-0007 y ADR-0008.
 
-Este documento concreta el layout y las reglas de dependencias que deberán aplicarse al crear el workspace Rust. No declara implementados los crates, los binarios ni las herramientas.
+Este documento concreta el layout y las reglas de dependencias aprobadas que se aplicarán al crear el workspace Rust. No declara implementados los crates, los binarios ni las herramientas.
 
 ## 1. Resultado de diseño
 
@@ -16,7 +16,7 @@ La solución se compone de cuatro binarios independientes, módulos de negocio c
 - Los BFF dependen de clientes de transporte, no de implementaciones de negocio.
 - Los adaptadores PostgreSQL permanecen dentro del módulo dueño de las tablas.
 
-## 2. Layout propuesto
+## 2. Layout aprobado
 
 ```text
 Cargo.toml                      # único Cargo workspace raíz
@@ -300,7 +300,7 @@ No fijar versiones de Tokio, SQLx, Tonic, Prost, NATS, OpenTelemetry ni generado
 
 ## 10. Orden de implementación posterior
 
-1. Confirmar/aceptar ADR-0009 y el layout.
+1. Aplicar el diseño y los límites aprobados en ADR-0009.
 2. Definir toolchain, workspace y convenciones de nombres.
 3. Crear los cuatro paquetes binarios independientes dentro del workspace raíz y los crates técnicos definidos, incluido `crates/adapters/local`.
 4. Crear primero los contratos públicos y la implementación del primer módulo vertical seleccionado, sin inventar dependencias.
@@ -313,4 +313,4 @@ El orden funcional de dominios continúa siendo el de `ROADMAP.md` y `requisitos
 
 ## 11. Límites de este cambio
 
-Esta propuesta no crea crates, `Cargo.toml`, `Cargo.lock`, dependencias, código Rust, archivos `.proto`, esquemas de eventos, workflows ni infraestructura. No modifica SQL ni migraciones, no ejecuta migraciones y no cambia la propiedad ni las responsabilidades de ningún módulo.
+Este diseño aprobado no crea crates, `Cargo.toml`, `Cargo.lock`, dependencias, código Rust, archivos `.proto`, esquemas de eventos, workflows ni infraestructura. No modifica SQL ni migraciones, no ejecuta migraciones y no cambia la propiedad ni las responsabilidades de ningún módulo.
