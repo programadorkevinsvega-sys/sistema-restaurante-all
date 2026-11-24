@@ -11,7 +11,7 @@ dos BFF son procesos de composición sin propiedad de dominios ni datos.
 4. Public Backend.
 
 Los BFF son procesos separados de sus backends. Los módulos viven en
-backend/<backend-propietario>/modules/<modulo>/; crates/ se reserva para
+`backend/<backend-propietario>/modules/<modulo>/`; `crates/` se reserva para
 capacidades técnicas neutrales, contratos versionados y adaptadores. Cada
 módulo mantiene ownership exclusivo de su schema, rol, migraciones e historial
 SQLx.
