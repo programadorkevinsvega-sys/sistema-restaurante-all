@@ -4,7 +4,7 @@
 
 Estas reglas operacionalizan arquitectura; no redefinen propiedad de dominios ni debilitan decisiones.
 
-> **Propuesta pendiente:** el [Diseño de crates y dependencias](../architecture/crate-architecture.md), asociado a [ADR-0009](../adr/0009-crate-boundaries-and-dependencies.md), concreta la estructura prevista de paquetes y dependencias. ADR-0009 permanece Proposed; sus detalles no se consideran norma aceptada hasta aprobación explícita.
+> **Decisión aceptada:** el [Diseño de crates y dependencias](../architecture/crate-architecture.md), establecido por [ADR-0009](../adr/0009-crate-boundaries-and-dependencies.md), define la estructura de paquetes y dependencias que debe seguir la implementación.
 
 ## 1. Módulos y contratos
 
