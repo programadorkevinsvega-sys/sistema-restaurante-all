@@ -6,7 +6,7 @@
 
 ## 1. Objetivo
 
-Definir cómo debe entenderse y aplicarse la política propuesta de identificadores técnicos UUIDv7, qué beneficios se esperan, qué información puede revelar y qué condiciones deben cumplirse antes de migrar identificadores existentes.
+Definir cómo debe entenderse y aplicarse la política aceptada de identificadores técnicos UUIDv7, qué beneficios se esperan, qué información puede revelar y qué condiciones deben cumplirse antes de migrar identificadores existentes.
 
 La especificación no representa implementación. No modifica SQL, migraciones, datos, código, dependencias ni contratos ejecutables.
 
