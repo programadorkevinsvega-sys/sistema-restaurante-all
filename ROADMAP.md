@@ -225,7 +225,7 @@ Decisión inicial:
 - Exponer API REST documentada con OpenAPI.
 - Utilizar WebSockets para actualizacion en tiempo real.
 - Utilizar Redis para caché y coordinación cuando sea necesario.
-- Utilizar NATS con JetStream como tecnología de mensajería durable cuando se incorpore el broker. No se afirma que esté instalado o activo; mientras tanto, Outbox con polling mediante `FOR UPDATE SKIP LOCKED` permite iniciar sin broker.
+- Utilizar NATS Core para señales efímeras y NATS JetStream para mensajería durable, según corresponda. Esta decisión no afirma que la infraestructura ya esté instalada o activa; mientras el dispatcher durable no publique a JetStream, Outbox con polling mediante `FOR UPDATE SKIP LOCKED` permite reclamar y procesar los eventos pendientes.
 - Utilizar almacenamiento compatible con S3.
 - Iniciar analitica en PostgreSQL y evaluar ClickHouse al crecer.
 - Utilizar OpenTelemetry y Grafana para observabilidad.
