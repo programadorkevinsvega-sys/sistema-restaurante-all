@@ -118,6 +118,18 @@ Para cada escenario, el revisor debe responder y registrar:
 
 **Resultado actual:** escenarios y respuestas esperadas documentados. El walkthrough formal por el propietario, con fecha, decisiones y acciones aceptadas, permanece pendiente. No se declara tabletop ejecutado ni prueba técnica superada.
 
+### Registro de ejecución
+
+#### TT-01 — Dispositivo POS perdido o robado
+
+- **Estado del walkthrough:** revisado y decisión aprobada por el propietario.
+- **Fecha de revisión:** 2026-11-25.
+- **Decisiones aprobadas:** marcar el dispositivo como perdido/robado; revocar su identidad y credenciales desde el servidor; bloquear nuevas sincronizaciones; registrar el incidente y preservar auditoría; exigir autorización para enrolar un dispositivo sustituto; rechazar la aceptación automática de operaciones pendientes.
+- **Limitación aceptada:** la revocación remota no alcanza inmediatamente a un dispositivo desconectado. Se requieren cifrado local y protección/minimización de credenciales y datos.
+- **Resultado:** respuesta operativa aprobada para el escenario. Los controles siguen siendo requisitos de diseño hasta que se implementen y prueben en las fases correspondientes.
+- **Acciones relacionadas:** TA-02 permanece pendiente de implementación; TA-07 permanece pendiente para pruebas negativas en CI.
+
+
 ## 4. Registro de acciones del ejercicio
 
 | ID | Acción pendiente | Responsable | Fase | Estado |
