@@ -66,6 +66,10 @@ SQLx.
 - [Matriz de alertas](../engineering/alert-matrix.md): alertas con severidad, señal, umbral, propietario y runbook; entregable de subfase 0.8.
 - [Runbooks de respuesta a incidentes](../engineering/incident-response-runbooks.md): procedimientos INC-01 a INC-SEC-02 para incidentes operativos y de seguridad; entregable de subfase 0.8.
 - [Plan de respuesta y ejercicios](../engineering/incident-response-plan.md): ciclo de respuesta, severidades, responsables y ejercicios antes de producción; entregable de subfase 0.8.
+- [Diseño NATS Core y JetStream](./nats-design.md): topología, cuentas, subjects, streams, consumers, DLQ y cuarentena; entregable de subfase 0.9.
+- [Diseño Redis Cluster y caché](./redis-design.md): topología, ACL, formato de clave, cache-aside, invalidación durable y fallback; entregable de subfase 0.9.
+- [Diseño object storage y archivos](./object-storage-design.md): buckets por módulo, metadata, URLs presignadas, pipeline de validación y cuarentena; entregable de subfase 0.9.
+- [Contratos de eventos y fallback](./event-contracts.md): envelope estándar, versionado, catálogo inicial y política de fallback seguro; entregable de subfase 0.9.
 
 ## ADR de seguridad aceptados
 
