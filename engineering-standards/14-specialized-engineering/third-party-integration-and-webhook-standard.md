@@ -44,3 +44,20 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Amenazas y escenarios de fallo específicos
+
+Evaluar spoofing de proveedor, replay, SSRF mediante callbacks, rotación fallida de secretos, payload malicioso, reintentos explosivos, pérdida/duplicación/desorden de eventos, indisponibilidad prolongada, cambio incompatible de API y dependencia sin salida viable.
+
+## 9. Pruebas de aceptación mínimas
+
+- Rechazar firma inválida, timestamp fuera de ventana y evento repetido; aceptar rotación de claves sin interrupción.
+- Probar payload inválido, campos desconocidos, tamaños extremos y contenido malicioso.
+- Simular 429, 5xx, timeout, DNS/TLS fallido, proveedor lento y caída prolongada; verificar backoff, límites y circuit breaking.
+- Verificar recepción rápida con procesamiento durable y deduplicación incluso tras reinicio.
+- Reconciliar eventos recibidos con estado del proveedor para detectar huecos.
+- Probar revocación de credenciales, exportación y procedimiento manual de continuidad/salida.
+
+## 10. Operación y evidencias
+
+Conservar inventario de proveedores, contratos/versiones, scopes de credenciales, pruebas de firma/replay, métricas de errores/lag, reconciliaciones, runbooks y ejercicios de salida.
