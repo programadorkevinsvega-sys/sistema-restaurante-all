@@ -23,6 +23,11 @@ SQLx.
 - [Diseño de crates y dependencias](./crate-architecture.md): diseño técnico aceptado mediante ADR-0009.
 - [Matriz de ownership, contratos y dependencias](./module-ownership-contracts-and-dependencies.md): catálogo de los 20 módulos, sus procesos propietarios, schemas históricos, rutas de contratos y reglas de dependencias para la subfase 0.1.
 - [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](./identifier-strategy.md): política vigente de UUIDv7 vinculada a ADR-0012 Accepted; no significa que la generación o migración esté implementada.
+- [Diseño de PostgreSQL HA y réplicas](./postgresql-ha-design.md): topología, schemas, roles, RLS y routing; entregable de subfase 0.6.
+- [Presupuesto de conexiones](./connection-budget.md): estructura de pools por proceso/módulo/réplica y parámetros a dimensionar; entregable de subfase 0.6.
+- [Estrategia UUIDv7 y transición](./uuid-strategy.md): reglas de generación, usos prohibidos y plan de transición por módulo; entregable de subfase 0.6.
+- [Diseño Outbox/Inbox/Saga](./outbox-inbox-saga-design.md): esquemas de tablas, dispatcher, estados de Saga y flujo de referencia; entregable de subfase 0.6.
+- [Plan backup/restore/PITR](./backup-restore-plan.md): estrategia de backup, PITR, runbooks y verificación periódica; entregable de subfase 0.6.
 - [PostgreSQL HA y réplicas de lectura](./postgresql-ha-and-read-replicas.md): especificación operativa vigente conforme a ADR-0012 Accepted; no representa infraestructura desplegada.
 - [Redis Cluster, TLS y operación de caché distribuida](./redis-cache-operations.md): especificación vigente conforme a ADR-0016 Accepted; no representa infraestructura desplegada.
 - [NATS Core y JetStream en clúster](./nats-core-jetstream-cluster.md): especificación vigente conforme a ADR-0017 Accepted; no representa infraestructura desplegada.
