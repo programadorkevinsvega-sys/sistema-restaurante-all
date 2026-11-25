@@ -61,10 +61,13 @@ La ubicación de cada crate de contrato y de cada fuente Protobuf se obtiene apl
 
 Cada módulo es propietario de su contrato público y de los eventos que publica. Los consumidores dependen únicamente de contratos públicos; nunca importan implementaciones internas, entidades de dominio ni modelos SQL de otro módulo.
 
+Conforme a ADR-0005, ADR-0009 y el estándar de ingeniería, cada uno de los 20 módulos mantiene desde el inicio un crate público Rust `<modulo>-contracts` y un contrato Protobuf versionado equivalente a su interfaz pública, aunque la primera implementación sea local. Esto no obliga a transportar por gRPC las llamadas entre módulos del mismo backend: esas llamadas usan puertos/traits y el adaptador local. gRPC se utiliza en las fronteras entre procesos, conforme a ADR-0007. OpenAPI es la fuente de verdad de las superficies HTTP expuestas por los BFF; los BFF componen y traducen contratos, pero no adquieren ownership de los módulos ni de sus datos.
+
 | Tipo de interacción | Mecanismo autorizado | Condición |
 |---|---|---|
 | Consulta/comando entre módulos del mismo backend | Puerto/trait del contrato público y adaptador local | DTO públicos; sin imports internos ni acceso a tablas ajenas |
 | Solicitud/respuesta entre procesos | gRPC con Protobuf versionado | La frontera y el contrato pertenecen al proceso/módulo propietario |
+| Superficie HTTP de BFF | OpenAPI versionado | OpenAPI es la fuente de verdad HTTP; el BFF no adquiere ownership de dominio ni persistencia |
 | Señal efímera entre procesos | NATS Core | No se usa cuando se requiere durabilidad |
 | Evento durable entre procesos | NATS JetStream | Outbox/Inbox, ACK, reintentos y consumidor idempotente según ADR aplicables |
 
