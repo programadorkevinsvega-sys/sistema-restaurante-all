@@ -85,6 +85,11 @@ Los roles `platform_*` nunca se aceptan como roles de tenant ni son asignables d
 | `tenant_id` | UUIDv7 | Condicional | Solo si la tarea está acotada a un tenant y su procedencia fue validada |
 | `issuer`, `audience`, `issued_at`, `not_before`, `expires_at`, `kid`, `jti` | según envoltura | Sí | Procedencia, destino y vigencia |
 
+Para un contexto de servicio, `issuer` identifica al proceso/worker propietario de esa
+identidad. La firma usa una clave KMS asignada a ese workload y entorno; IAM permite invocar
+solo la clave y operación correspondientes. IDENTITY y PLATFORM no emiten permisos de servicio
+en nombre de workloads ajenos.
+
 La identidad de servicio no equivale a permiso universal. El certificado mTLS identifica el
 workload que conecta; la aserción firmada identifica el actor y el alcance autorizado. Ambos
 deben corresponder a identidades permitidas para la comunicación.
