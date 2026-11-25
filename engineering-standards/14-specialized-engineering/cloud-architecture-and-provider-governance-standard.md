@@ -43,3 +43,16 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## Amenazas y escenarios de fallo específicos
+Evaluar compromiso de cuenta raíz/administrativa, exposición pública por configuración, región equivocada, dependencia de servicio gestionado, suspensión de cuenta, outage regional, cambios unilaterales de proveedor, egress costoso y pérdida de portabilidad.
+
+## Pruebas de aceptación mínimas
+- Revisar IAM federado/MFA, cuentas de emergencia, límites administrativos y separación de entornos.
+- Escanear exposición pública, egress, cifrado, logging, regiones y políticas de red.
+- Ejecutar restauración/exportación independiente y simulacro de salida del proveedor.
+- Probar caída regional/servicio gestionado y validar RTO/RPO, límites y procedimiento alternativo.
+- Revisar contrato, subprocesadores, ubicación, SLA, notificación de incidentes y fin de vida.
+
+## Operación y evidencias
+Conservar mapa de responsabilidad compartida, inventario de cuentas/servicios/regiones, matriz de proveedores, auditorías IAM, costos, pruebas de salida/recuperación y runbooks.
