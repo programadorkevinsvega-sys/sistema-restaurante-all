@@ -24,6 +24,10 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0016: Redis Cluster, TLS y caché distribuida de consultas](./0016-redis-cluster-tls-and-query-caching.md)
 - [ADR-0017: NATS Core y JetStream en clúster de alta disponibilidad](./0017-nats-core-jetstream-ha-cluster.md)
 
+## Decisiones propuestas
+
+- [ADR-0018: Privacidad, retención de datos, términos legales y consentimiento de cookies](./0018-privacy-data-retention-legal-terms-and-cookie-consent.md) — define el paquete legal y de privacidad como puerta obligatoria de la fase final de lanzamiento, sin aplazar los controles de privacidad que deben existir desde el diseño.
+
 El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). La estrategia técnica de UUIDv7 está en [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](../architecture/identifier-strategy.md), y la operación de alta disponibilidad y réplicas está en [PostgreSQL HA y réplicas de lectura](../architecture/postgresql-ha-and-read-replicas.md). La estrategia técnica de consistencia distribuida está en [Estrategia técnica de consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md). La estrategia técnica de observabilidad está en [Estrategia técnica de observabilidad integral](../architecture/observability-strategy.md). La operación de caché está en [Redis Cluster, TLS y operación de caché distribuida](../architecture/redis-cache-operations.md). La operación de mensajería está en [NATS Core y JetStream en clúster](../architecture/nats-core-jetstream-cluster.md).
 
 Los ADR aceptados son decisiones arquitectónicas aprobadas; los ADR propuestos requieren aprobación explícita. La aceptación de un ADR no significa que sus componentes, controles, infraestructura, migraciones o código estén implementados.
