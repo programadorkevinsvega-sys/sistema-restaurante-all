@@ -41,6 +41,7 @@ Se necesita una política uniforme y verificable que determine dónde se valida 
 ### 2. Clases de validación
 
 Se distinguen:
+
 1. **Estructural:** presencia, nulabilidad, tipo, forma, cardinalidad, campos permitidos y profundidad.
 2. **Sintáctica:** formato y representación, como UUID, fecha, correo, teléfono o decimal.
 3. **Semántica:** coherencia entre campos, rangos y combinaciones.
