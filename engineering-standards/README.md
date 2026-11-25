@@ -1,7 +1,7 @@
 # Engineering Standards Library
 
-**Versión:** 0.2.0  
-**Estado:** Borrador ampliado para revisión  
+**Versión:** 0.3.0  
+**Estado:** Draft ampliado para revisión  
 **Idioma principal:** español  
 **Propósito:** marco de estándares de ingeniería reutilizable entre proyectos.
 
@@ -9,7 +9,7 @@
 
 Esta biblioteca reúne estándares independientes de un producto concreto para diseñar, construir, probar, desplegar, operar y evolucionar sistemas de software. No es una arquitectura única ni una receta tecnológica universal.
 
-**Antes de iniciar cualquier diseño comprometido o implementación, todo agente DEBE ejecutar el [Protocolo obligatorio de consulta y adopción](./AGENT-STANDARDS-ADOPTION-PROTOCOL.md), recorrer el [Catálogo maestro](./MASTER-STANDARDS-CATALOG.md) completo y crear el [Registro de adopción del proyecto](./PROJECT-STANDARDS-ADOPTION-REGISTER.md).** No se permite omitir estándares sin registrar estado y justificación.
+**Antes de iniciar cualquier diseño comprometido o implementación, todo agente DEBE ejecutar el [Protocolo obligatorio de consulta y adopción](./AGENT-STANDARDS-ADOPTION-PROTOCOL.md), recorrer el [Catálogo maestro](./MASTER-STANDARDS-CATALOG.md), el [inventario exhaustivo y matriz de cobertura](./STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md) completo y crear el [Registro de adopción del proyecto](./PROJECT-STANDARDS-ADOPTION-REGISTER.md).** No se permite omitir estándares sin registrar estado y justificación.
 
 ## Principios
 
@@ -42,11 +42,11 @@ Esta biblioteca reúne estándares independientes de un producto concreto para d
 | 13-project-adaptation | Perfil, adopción y conformidad. |
 | 14-specialized-engineering | Frontend, móvil, accesibilidad, IA/ML, IoT, cloud, SRE, FinOps y especialidades. |
 
-La taxonomía completa, incluidos temas todavía no cubiertos por un documento especializado, está en el [Catálogo maestro](./MASTER-STANDARDS-CATALOG.md). Una brecha debe declararse; no se presume cobertura.
+La taxonomía completa, los IDs estables, el inventario de documentos y la matriz inicial de cobertura están en el [inventario exhaustivo](./STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md) y el [Catálogo maestro](./MASTER-STANDARDS-CATALOG.md). Una referencia relacionada no demuestra cobertura suficiente; una brecha debe declararse.
 
 ## Inicio obligatorio de un proyecto
 
-1. Leer catálogo y protocolo.
+1. Leer catálogo, inventario exhaustivo y protocolo.
 2. Completar el [perfil de proyecto](./13-project-adaptation/project-profile-template.md).
 3. Recorrer cada familia y estándar, sin saltos.
 4. Crear el [registro de adopción](./PROJECT-STANDARDS-ADOPTION-REGISTER.md).
@@ -57,6 +57,8 @@ La taxonomía completa, incluidos temas todavía no cubiertos por un documento e
 ## Navegación principal
 
 - [Catálogo maestro de estándares](./MASTER-STANDARDS-CATALOG.md)
+- [Inventario exhaustivo y matriz de cobertura](./STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md)
+- [Criterios de calidad y revisión de estándares](./STANDARD-DOCUMENT-QUALITY-AND-REVIEW-CHECKLIST.md)
 - [Protocolo obligatorio para agentes](./AGENT-STANDARDS-ADOPTION-PROTOCOL.md)
 - [Registro de adopción por proyecto](./PROJECT-STANDARDS-ADOPTION-REGISTER.md)
 - [Gobernanza](./GOVERNANCE.md)
