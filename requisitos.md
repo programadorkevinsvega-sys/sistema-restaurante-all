@@ -5055,10 +5055,13 @@ restaurant-os/
 │   └── public-backend/
 │       └── modules/
 │
+├── contracts/
+│   └── protobuf/
+│       └── <backend>/<modulo>/v1/*.proto
+│
 ├── crates/
 │   ├── shared/
 │   ├── contracts/
-│   │   ├── proto/
 │   │   └── events/
 │   └── adapters/
 │       ├── grpc/
