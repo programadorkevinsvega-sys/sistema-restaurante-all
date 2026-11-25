@@ -158,7 +158,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Mantener secretos fuera de repositorio, logs, imágenes y artefactos.
 
 **Dependencias:** 0.1.  
-**Documentos/ADR:** ADR-0020, ADR-0024; documentation-quality-and-security-standard.md; implementation-rules.md.  
+**Documentos/ADR:** ADR-0020, ADR-0024; [Gobernanza del repositorio y contribución segura](../engineering/repository-governance-and-secure-contribution.md); [Configuración de protección de main](../engineering/github-protection-setup.md); [Estándar de calidad documental](../engineering/documentation-quality-and-security-standard.md); [Reglas de implementación](../engineering/implementation-rules.md).  
 
 #### Entregables
 
