@@ -819,7 +819,7 @@ orden SQL, que se define por dependencias de datos.
 
 ## Plan maestro de desarrollo
 
-Estimacion orientativa para un equipo pequeño y experimentado: 28 a 45 semanas. Las fases pueden solaparse con equipos paralelos.
+Estimacion orientativa para un equipo pequeño y experimentado: 28 a 45 semanas para las fases funcionales y de desarrollo descritas. Las fases pueden solaparse con equipos paralelos. La Fase 6 de preparación legal y privacidad es una puerta de lanzamiento adicional; su duración depende de las jurisdicciones, los proveedores y la revisión jurídica, por lo que no se estima sin esos datos.
 
 ### Fase 0 - Arquitectura y fundamentos
 
@@ -917,6 +917,30 @@ Duracion orientativa: 5 a 8 semanas.
 
 Resultado: ecosistema empresarial.
 
+### Fase 6 - Preparación legal, privacidad y salida a producción
+
+**Última fase del plan maestro: puerta obligatoria antes de habilitar producción para usuarios reales.**
+
+Esta fase se ejecuta cuando las capacidades que se van a comercializar están definidas y los flujos reales de datos, proveedores, integraciones y canales pueden inspeccionarse. No significa que la privacidad se posponga: minimización, aislamiento, seguridad, control de acceso y privacidad por diseño aplican desde el inicio y durante todas las fases anteriores.
+
+- Confirmar países/jurisdicciones iniciales, entidades legales operadoras, mercados, idiomas, tipos de usuarios y canales que se habilitarán.
+- Inventariar y clasificar datos personales, finalidades, responsables/encargados, proveedores, subencargados, ubicaciones y transferencias.
+- Elaborar y aprobar la matriz de retención por categoría, módulo y jurisdicción; incluir eventos de inicio, eliminación/anonimización, restricciones, excepciones legales, backups y proveedores.
+- Redactar, revisar jurídicamente, versionar y publicar la política de privacidad y los avisos específicos.
+- Redactar, revisar jurídicamente, versionar y publicar términos SaaS B2B, DPA/encargo y términos de usuario final cuando correspondan.
+- Inventariar cookies y tecnologías similares realmente presentes en cada superficie web.
+- Implementar y probar el banner y centro de preferencias; bloquear técnicamente tecnologías no esenciales antes del consentimiento cuando corresponda.
+- Implementar y probar registro, consulta, revocación y propagación de consentimientos y preferencias.
+- Probar los procedimientos de acceso, rectificación, exportación, oposición, restricción y eliminación, respetando ADR-0014 y la retención legal.
+- Aprobar procedimientos de incidentes y notificación, gestión de solicitudes, reclamaciones y contacto de privacidad.
+- Revisar contratos de proveedores, subencargados, transferencias internacionales y mecanismos de salida/eliminación.
+- Completar pruebas de aislamiento multi-tenant, minimización, redacción de telemetría, retención, eliminación y restauración de backups.
+- Obtener aprobación documentada de responsables legal/privacidad y del propietario del producto.
+
+**Criterio de salida:** no se habilita producción para usuarios reales hasta cerrar y evidenciar todos los requisitos legales, contractuales, técnicos y operativos aplicables a las jurisdicciones y funcionalidades del lanzamiento. Los plazos y textos legales no se inventan: requieren análisis de la jurisdicción real y revisión profesional competente.
+
+Resultado: lanzamiento autorizado con documentos vigentes, controles verificables, responsables asignados y procesos de privacidad operables.
+
 ### Validaciones antes del lanzamiento
 
 - Dos empresas no pueden acceder a datos de la otra.
@@ -932,6 +956,11 @@ Resultado: ecosistema empresarial.
 - Varias terminales pueden operar simultaneamente.
 - Las copias de seguridad pueden restaurarse.
 - Se completan pruebas de carga, seguridad, recuperacion y concurrencia.
+- Se aprueban y publican política de privacidad, términos contractuales y avisos aplicables.
+- La matriz de retención está aprobada y sus procesos de eliminación/restricción fueron probados.
+- El banner y centro de preferencias bloquean las tecnologías no esenciales hasta obtener consentimiento cuando corresponda.
+- Los procedimientos de derechos de las personas, incidentes, proveedores y transferencias están operativos.
+- Existe aprobación legal/privacidad y autorización formal de go-live.
 
 Las certificaciones, homologaciones, demoras de proveedores y estabilizacion comercial pueden adicionar tiempo.
 
