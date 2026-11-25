@@ -2,7 +2,7 @@
 
 **Fase:** 0.3 — Modelo de amenazas y requisitos de seguridad  
 **Estado:** walkthrough documental completado; TT-01 a TT-08 revisados y aprobados por el propietario del producto  
-**Versión:** 1.0  
+**Versión:** 1.1  
 **Fecha:** 2026-11-25  
 **Alcance:** ejercicio de escritorio basado en arquitectura y ADR. No es una prueba de penetración, simulación sobre infraestructura, auditoría independiente ni evidencia de controles desplegados.  
 **Participantes previstos:** propietario del producto / único mantenedor. No se presupone un equipo de respuesta todavía existente.
