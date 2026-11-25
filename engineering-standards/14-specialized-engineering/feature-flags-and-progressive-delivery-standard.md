@@ -20,3 +20,16 @@ Flags sin dueño/expiración, usar flags como permisos, targeting con datos sens
 
 ## Verificación
 Inventario de flags, auditoría de cambios, pruebas de estados, evidencia de canary/rollback y reporte de flags vencidos.
+
+## Amenazas y escenarios de fallo específicos
+Evaluar exposición de funcionalidades por targeting incorrecto, filtración entre tenants, flag de seguridad manipulado, caída o latencia del proveedor, caché divergente, combinaciones incompatibles, canary sesgado y rollback que no revierte migraciones/datos.
+
+## Pruebas de aceptación mínimas
+- Verificar autorización independiente del flag en cada API/operación.
+- Probar reglas de targeting, límites de cohortes, atributos sensibles y aislamiento entre tenants.
+- Simular proveedor de flags no disponible, respuesta stale, caché inconsistente y valor por defecto seguro.
+- Ensayar canary, umbral automático de aborto y rollback con métricas.
+- Detectar flags vencidos, sin owner, sin propósito o con combinaciones no probadas.
+
+## Operación y evidencias
+Mantener inventario con owner, clasificación, fecha de expiración, targeting, valor por defecto, historial de cambios, alertas y reporte periódico de deuda de flags.
