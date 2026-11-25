@@ -9,28 +9,43 @@ Aplica a documentación de arquitectura, APIs, operación, contribución y onboa
 ## 2. Principios
 
 - Definir requisitos por resultados, riesgo y contexto; no por preferencia tecnológica.
+
 - Mantener responsabilidades, límites de confianza y propiedad explícitos.
+
 - Aplicar mínimo privilegio, privacidad, accesibilidad y seguridad desde el diseño cuando correspondan.
+
 - Documentar decisiones, supuestos, dependencias y riesgos residuales.
 
 ## 3. Requisitos
 
 - Mantener documentación cerca del artefacto responsable y definir dueño, audiencia, estado y fecha de revisión.
+
 - Distinguir normativa, guía, tutorial, referencia, decisión, especificación y material histórico.
+
 - Documentar quickstart reproducible, prerequisitos, configuración, pruebas y solución de problemas.
+
 - Mantener diagramas como código o fuentes editables cuando sea viable; evitar diagramas obsoletos.
+
 - Generar referencias API desde contratos cuando proceda y evitar duplicación manual divergente.
+
 - Incluir ejemplos seguros, no usar secretos ni datos reales; marcar placeholders claramente.
+
 - Probar enlaces, snippets y pasos críticos en CI o revisiones periódicas.
+
 - Definir onboarding, estándares de contribución, ownership y proceso de actualización.
+
 - Archivar o marcar contenido obsoleto sin borrarlo silenciosamente si conserva valor histórico.
 
 ## 4. Antipatrones
 
 - Adoptar herramientas sin requisitos ni evaluación de operación.
+
 - Confiar en controles exclusivamente del cliente cuando el servidor debe hacer cumplir la regla.
+
 - Registrar datos sensibles innecesarios o exponerlos en logs/telemetría.
+
 - Ignorar fallos parciales, cambios de versión, límites de capacidad o dependencias externas.
+
 - Considerar la existencia de documentación como prueba de implementación.
 
 ## 5. Verificación y evidencia
@@ -52,10 +67,15 @@ Evaluar documentación desactualizada, ejemplos inseguros, instrucciones no repr
 ## 9. Pruebas de aceptación mínimas
 
 - Ejecutar quickstarts y snippets en entorno limpio y versión soportada.
+
 - Validar enlaces relativos, anchors, referencias cruzadas y navegación en CI.
+
 - Comparar ejemplos de configuración con esquemas actuales y escanear secretos.
+
 - Comprobar que cada documento normativo tenga owner, estado, versión y fecha de revisión.
+
 - Revisar que diagramas y contratos se generen o validen contra fuentes autoritativas cuando sea viable.
+
 - Hacer prueba de onboarding con un colaborador que no conozca el sistema.
 
 ## 10. Operación y evidencias
