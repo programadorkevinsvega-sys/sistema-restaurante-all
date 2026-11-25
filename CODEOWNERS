@@ -1,10 +1,13 @@
-# La propiedad documental debe exigir revisión cuando se active el control correspondiente en GitHub Rulesets.
-# CODEOWNERS identifica responsables; no activa por sí solo la obligatoriedad.
-docs/architecture/ @programadorkevinsvega-sys
-docs/adr/ @programadorkevinsvega-sys
-docs/engineering/ @programadorkevinsvega-sys
-docs/security/ @programadorkevinsvega-sys
-PROMPT_MAESTRO.md @programadorkevinsvega-sys
-ROADMAP.md @programadorkevinsvega-sys
-requisitos.md @programadorkevinsvega-sys
-README.md @programadorkevinsvega-sys
+# CODEOWNERS identifica responsables; Rulesets debe exigir las revisiones para que exista enforcement.
+/.github/ @programadorkevinsvega-sys
+/CODEOWNERS @programadorkevinsvega-sys
+/docs/architecture/ @programadorkevinsvega-sys
+/docs/adr/ @programadorkevinsvega-sys
+/docs/engineering/ @programadorkevinsvega-sys
+/docs/security/ @programadorkevinsvega-sys
+/scripts/ @programadorkevinsvega-sys
+/infrastructure/ @programadorkevinsvega-sys
+/PROMPT_MAESTRO.md @programadorkevinsvega-sys
+/ROADMAP.md @programadorkevinsvega-sys
+/requisitos.md @programadorkevinsvega-sys
+/README.md @programadorkevinsvega-sys
