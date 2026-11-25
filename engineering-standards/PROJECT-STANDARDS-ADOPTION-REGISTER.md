@@ -29,7 +29,7 @@
 
 ## 3. Registro exhaustivo obligatorio
 
-**No construir esta tabla a mano desde memoria.** Copiar todas las filas STD-* y TOP-* de [STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md](./STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md). Debe existir una fila por cada ID, sin omisiones, duplicados ni IDs inventados. La versión 0.3.0 del inventario contiene 67 estándares documentales y 91 temas: 158 elementos que requieren evaluación. Si cambia el inventario, usar el conteo de la versión fijada.
+**No construir esta tabla a mano desde memoria.** Copiar todas las filas STD-* y TOP-* de [STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md](./STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md). Debe existir una fila por cada ID, sin omisiones, duplicados ni IDs inventados. La versión 0.3.0 del inventario contiene 66 estándares documentales y 92 temas: 158 elementos que requieren evaluación. Si cambia el inventario, usar el conteo de la versión fijada.
 
 | ID | Elemento | Versión | Aplicabilidad | Disparador/evidencia | Estado de adopción | Justificación/impacto | Responsable | ADR/acción/evidencia | Fecha objetivo/revisión |
 |---|---|---|---|---|---|---|---|---|---|
@@ -82,3 +82,4 @@ Referenciar el registro formal de excepciones con alcance, aprobación, compensa
 |---|---|---|---|
 | 0.1 | | Creación | |
 | 0.2 | | Inventario exhaustivo e IDs estables; separación de dimensiones | |
+| 0.3 | | Corrección del conteo del inventario y criterios de cobertura | |
