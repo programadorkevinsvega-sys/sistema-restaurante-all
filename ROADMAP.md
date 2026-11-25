@@ -199,7 +199,7 @@ Decisión inicial:
 - Validar tenant en todas las relaciones de dominio.
 - Modelar relaciones empresariales, comerciales y operativas por dominio.
 - Mantener movimientos de inventario como libro inmutable.
-- Utilizar UUID como clave primaria principal.
+- Utilizar UUIDv7 como identificador técnico global, conforme a ADR-0012; los identificadores existentes también forman parte de la estrategia de transición documentada.
 - Aplicar claves foraneas compuestas por tenant.
 - Configurar restricciones de unicidad y valores por dominio.
 - Separar pedidos, pagos, comprobantes y documentos fiscales.
@@ -223,7 +223,7 @@ Decisión inicial:
 - Usar contratos y adaptadores locales entre módulos dentro de cada backend; usar Tonic/gRPC para solicitudes/respuestas entre procesos y NATS Core/JetStream para mensajería efímera/durable, según corresponda.
 - Exponer API REST documentada con OpenAPI.
 - Utilizar WebSockets para actualizacion en tiempo real.
-- Utilizar Redis para caché y coordinación cuando sea necesario.
+- Utilizar Redis Cluster como caché distribuida para consultas elegibles, conforme a ADR-0016. Redis no es broker, cola durable ni mecanismo de coordinación de jobs o locks de negocio.
 - Utilizar NATS Core para señales efímeras y NATS JetStream para mensajería durable, según corresponda. Esta decisión no afirma que la infraestructura ya esté instalada o activa; mientras el dispatcher durable no publique a JetStream, Outbox con polling mediante `FOR UPDATE SKIP LOCKED` permite reclamar y procesar los eventos pendientes.
 - Utilizar almacenamiento compatible con S3.
 - Iniciar analitica en PostgreSQL y evaluar ClickHouse al crecer.
@@ -784,6 +784,16 @@ Objetivo: operar de forma continua con mayor volumen y disponibilidad.
 Entregable:
 
 - Plataforma preparada para crecimiento multi-sucursal.
+
+## Cómo interpretar las secuencias del roadmap
+
+Este documento contiene tres vistas distintas y complementarias; no son tres calendarios que compitan entre sí:
+
+1. **Fases funcionales del producto (Fases 0-10):** agrupan capacidades y resultados funcionales que se entregan al producto. Son la referencia para saber qué capacidades pertenecen a cada etapa.
+2. **Orden recomendado de construcción funcional (lotes 0-11):** organiza dependencias funcionales y el orden sugerido de los grandes dominios/capacidades. El lote 0 establece PLATFORM y los lotes 1-11 recorren capacidades empresariales y operativas. No define crates, schemas ni orden de migraciones.
+3. **Plan maestro de desarrollo (Fases 0-...):** agrupa trabajo de ingeniería, infraestructura y entrega en una secuencia de ejecución orientativa. Puede solaparse con las fases funcionales y no sustituye sus criterios de aceptación.
+
+La numeración de una vista no debe interpretarse como numeración de otra. Para planificar una tarea concreta se identifica su fase funcional, lote y dependencias de implementación; no se crea una cuarta secuencia ni se cambia el ownership definido por ADR-0008 y `requisitos.md`.
 
 ## Orden recomendado de construccion funcional
 
