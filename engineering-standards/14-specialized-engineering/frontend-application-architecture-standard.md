@@ -43,3 +43,17 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## Amenazas y escenarios de fallo específicos
+Evaluar XSS/DOM injection, CSRF, clickjacking, dependencias comprometidas, secretos expuestos en bundles/source maps, session fixation, race conditions de estado, caché de datos privados, hydration mismatch y abuso de APIs desde clientes modificados.
+
+## Pruebas de aceptación mínimas
+- Inspeccionar bundles, source maps y variables públicas para detectar secretos.
+- Probar CSP, cookies, CORS/CSRF, XSS, navegación y expiración de sesión.
+- Verificar que reglas de negocio y autorización se aplican en servidor, no solo en UI.
+- Medir Core Web Vitals/latencia y tamaño de bundle en rutas críticas si aplica.
+- Probar accesibilidad de formularios, foco, errores, teclado, lectores de pantalla y zoom.
+- Verificar estados loading/empty/error/offline, cancelación de solicitudes y doble envío.
+
+## Operación y evidencias
+Conservar arquitectura de rutas/estado, inventario de dependencias, política de navegadores, resultados de accesibilidad/seguridad/performance y telemetría minimizada.
