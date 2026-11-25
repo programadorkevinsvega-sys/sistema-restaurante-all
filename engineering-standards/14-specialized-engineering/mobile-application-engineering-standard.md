@@ -44,3 +44,19 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Amenazas y escenarios de fallo específicos
+
+Evaluar pérdida o robo del dispositivo, rooting/jailbreak, extracción de datos de almacenamiento, abuso de permisos, deep links maliciosos, overlays, backups inseguros, hooking, downgrade, apps clonadas y SDK de terceros comprometidos. La clasificación depende del modelo de amenaza y no presupone que el cliente sea confiable.
+
+## 9. Pruebas de aceptación mínimas
+
+- Inspeccionar almacenamiento, backups, logs, caché y capturas para comprobar que secretos/datos sensibles no se filtran.
+- Verificar permisos concedidos, denegados, revocados y limitados; la app debe degradarse de forma segura.
+- Probar enlaces externos/IPC manipulados, sesión expirada, certificado inválido, cambio de cuenta y dispositivo comprometido cuando aplique.
+- Probar interrupción del proceso, falta de memoria, modo avión, cambio de red, actualización y migración de datos locales.
+- Verificar matriz de SO/dispositivos soportados, accesibilidad y firma/distribución.
+
+## 10. Operación y evidencias
+
+Conservar inventario de SDK y versiones, análisis de dependencias, configuración de firma, pruebas de almacenamiento/IPC, matriz de compatibilidad, política de soporte, reportes de crash saneados y procedimiento de revocación/actualización urgente.
