@@ -1,12 +1,11 @@
 # Diseño de aislamiento por módulo y proceso
 
 **Estado:** diseño aprobado — subfase 0.4
-**Versión:** 1.0
+**Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.4
-**Autoridad:** ADR-0001, ADR-0008, ADR-0010, ADR-0021
+**Autoridad:** ADR-0001, ADR-0008, ADR-0010, ADR-0021, ADR-0028
 **Documentos relacionados:**
-
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Contrato de contexto autenticado](./authenticated-context-contract.md)
 
@@ -14,10 +13,10 @@
 
 ## 1. Propósito
 
-Define cómo se implementa el aislamiento multi-tenant y entre módulos en PostgreSQL, en los
-procesos y en la mensajería. Es un diseño; no crea tablas, roles, políticas RLS ni código.
-
----
+Define el aislamiento multi-tenant y entre módulos en PostgreSQL, procesos y mensajería.
+Los SQL históricos existentes son la base de datos diseñada para cada módulo y contienen
+estructuras que deberán trasladarse a las rutas canónicas y corregirse cuando corresponda.
+Este documento no crea ni modifica tablas, roles, políticas RLS, SQL ni código.
 
 ## 2. Aislamiento en PostgreSQL
 
@@ -49,8 +48,14 @@ tablas de otro módulo.
 | AUDIT | `audit` | Public Backend |
 | REPORTING | `reporting` | Public Backend |
 
-**Prohibido:** FKs entre schemas de módulos distintos, vistas que cruzan schemas propietarios,
-joins directos entre schemas en consultas de aplicación.
+**Regla arquitectónica:** no se permiten FKs entre schemas de módulos distintos, vistas que
+cruzan schemas propietarios ni joins directos entre schemas en consultas de aplicación.
+
+**Nota de auditoría de SQL histórico:** la inspección read-only identificó referencias entre
+schemas/módulos en el SQL histórico de IDENTITY. Son incompatibles con ADR-0001 y deben
+inventariarse y corregirse al preparar la distribución canónica de migraciones. No se modifican
+ni reescriben ahora los archivos históricos; cualquier corrección futura debe conservar
+trazabilidad y considerar si el SQL ya fue aplicado en algún entorno.
 
 ### 2.2 Roles PostgreSQL por módulo
 
@@ -59,124 +64,87 @@ Cada módulo tiene dos roles separados:
 | Rol | Permisos | Uso |
 |---|---|---|
 | `<modulo>_migrator` | CREATE, ALTER, DROP sobre su schema; sin acceso a schemas ajenos | Solo durante migraciones |
-| `<modulo>_runtime` | SELECT, INSERT, UPDATE, DELETE sobre tablas de su schema; sin DDL | Conexiones de aplicación en ejecución normal |
+| `<modulo>_runtime` | SELECT, INSERT, UPDATE, DELETE sobre tablas de su schema; sin DDL | Aplicación normal |
 
-Adicionalmente, roles de sistema:
-
-| Rol | Permisos | Uso |
-|---|---|---|
-| `backup_reader` | SELECT sobre todos los schemas | Solo para backup lógico |
-| `monitoring_reader` | SELECT sobre pg\_stat\_* y schemas de observabilidad | Solo para monitoreo |
-
-Los nombres exactos y el script de provisión se definen en la subfase 0.6
-(Fundamentos de datos, PostgreSQL y consistencia). Este documento exige la separación; no la declara implementada.
+Los roles de sistema `backup_reader` y `monitoring_reader` tienen alcance separado y mínimo.
+Los nombres exactos y el script de provisión se definen en 0.6. La documentación no demuestra
+que esos roles existan en una instancia PostgreSQL.
 
 ### 2.3 Row-Level Security (RLS)
 
-Todas las tablas que contienen datos de tenant aplican RLS. La política base es:
+Todas las tablas que contienen datos de tenant deben aplicar RLS. Los SQL históricos ya
+contienen DDL RLS en determinados módulos/tablas; la cobertura completa debe auditarse contra
+el inventario real de tablas y columnas tenant-scoped. La presencia de DDL en Git no acredita
+que se haya ejecutado ni que proteja una base desplegada.
+
+Patrón de política:
 
 ```sql
--- Patrón de política RLS por tenant (diseño; no ejecutar)
 CREATE POLICY tenant_isolation ON <schema>.<tabla>
   USING (tenant_id = current_setting('app.tenant_id')::uuid);
 ```
 
-El `tenant_id` del contexto lo establece la capa de aplicación antes de ejecutar cualquier
-consulta, usando `SET LOCAL app.tenant_id = $1` dentro de la transacción. Nunca viene
-del payload del cliente.
+El `tenant_id` lo establece el módulo propietario a partir del contexto autenticado validado,
+usando `SET LOCAL app.tenant_id` dentro de la transacción. Nunca procede del payload del cliente.
 
-**Reglas de RLS:**
+Reglas:
+- RLS activo y forzado cuando corresponda en todas las tablas tenant-scoped.
+- `SET LOCAL` por transacción; nunca `SET SESSION` para el tenant.
+- Roles migrator con `BYPASSRLS` solo en ventanas controladas y sin credenciales runtime.
+- El acceso excepcional de plataforma a datos de negocio requiere autorización explícita del
+  módulo propietario y trazabilidad en AUDIT; no se concede por el rol PostgreSQL de PLATFORM.
 
-- RLS activo en todas las tablas con columna `tenant_id`.
-- El valor de `app.tenant_id` lo establece el módulo propietario a partir del contexto
-  autenticado validado, antes de cualquier consulta de la transacción.
-- Nunca se usa `SET SESSION` para el tenant; siempre `SET LOCAL` dentro de la transacción
-  para que el valor no persista entre transacciones del mismo pool.
-- Los roles de migración (`*_migrator`) tienen `BYPASSRLS` solo durante la ejecución de
-  migraciones en ventanas controladas; se revoca después.
-- Para operaciones de plataforma que requieren acceso a múltiples tenants (reportes de
-  plataforma, baja de tenant), se usa el rol de plataforma con permisos explícitos y
-  trazabilidad completa en AUDIT.
+### 2.4 Pools separados
 
-### 2.4 Pools de conexiones separados
-
-Cada módulo tiene su propio pool de conexiones, configurado con el rol `*_runtime`
-correspondiente. No existe un pool compartido entre módulos.
-
-Esto se desarrolla en detalle en la subfase 0.6 con el presupuesto de conexiones.
-
----
+Cada módulo tiene su propio pool configurado con su rol `*_runtime`. El presupuesto y la
+configuración se desarrollan en 0.6.
 
 ## 3. Aislamiento entre procesos
 
-### 3.1 Sin acceso compartido a PostgreSQL entre procesos
+Admin Platform Backend y Public Backend tienen credenciales PostgreSQL separadas. Los BFF no
+tienen acceso a PostgreSQL de negocio.
 
-Admin Platform Backend y Public Backend tienen credenciales PostgreSQL separadas.
-Admin BFF y Public BFF no tienen acceso a PostgreSQL de negocio en ningún caso.
-
-| Proceso | Acceso a PostgreSQL |
+| Proceso | Acceso |
 |---|---|
-| Admin Platform Backend | Solo schema `platform` vía rol `platform_runtime` |
-| Public Backend | Schemas de los 19 módulos de negocio, cada uno con su rol `*_runtime` |
+| Admin Platform Backend | Solo schema `platform` |
+| Public Backend | Schemas de los 19 módulos de negocio, cada uno con rol `*_runtime` |
 | Admin BFF | Ninguno |
 | Public BFF | Ninguno |
 
-### 3.2 Comunicación entre procesos
+Toda comunicación entre procesos usa gRPC con mTLS y contexto autenticado firmado conforme
+al contrato de contexto y ADR-0028. No hay conexiones PostgreSQL cruzadas entre backends.
 
-Toda comunicación entre procesos usa gRPC con mTLS. No existen conexiones directas a
-PostgreSQL cruzadas entre Admin Platform Backend y Public Backend.
+## 4. Secretos por proceso y entorno
 
-Señales efímeras: NATS Core. Eventos durables: NATS JetStream con Outbox/Inbox.
+Cada proceso tiene credenciales propias y separadas por entorno. Conforme a ADR-0028:
+AWS Secrets Manager administra secretos operativos que deban existir; AWS KMS custodia claves
+privadas de firma; AWS IAM concede permisos mínimos a workloads. No se instalará Vault
+autogestionado. La plataforma de ejecución y gestión concreta de certificados mTLS se define
+en 0.7.
 
-### 3.3 Secretos por proceso y entorno
+## 5. Mensajería y workers
 
-Cada proceso tiene credenciales propias: DSN de PostgreSQL, subjects NATS autorizados,
-claves de API de proveedores y certificados TLS. No se comparten secretos entre procesos
-ni entre entornos. El gestor de secretos y la rotación se diseñan en la subfase 0.7.
+Cada módulo publica solo en sus subjects autorizados. Outbox/Inbox son propiedad de cada
+módulo. Cada worker usa identidad propia y ACL NATS limitadas; no hereda la sesión humana
+originadora ni obtiene permisos globales.
 
----
-
-## 4. Aislamiento en mensajería
-
-### 4.1 Subjects NATS por módulo
-
-Cada módulo publica en subjects con prefijo de su propiedad:
-`<backend>.<modulo>.<evento>.<version>` — ej. `public.sales.order_created.v1`.
-
-Un módulo no publica en subjects de otro módulo. Los consumidores se suscriben solo a los
-subjects que les corresponden según su contrato explícito.
-
-### 4.2 Outbox/Inbox por módulo
-
-Cada módulo tiene su propia tabla Outbox e Inbox dentro de su schema. No existe una tabla
-Outbox compartida entre módulos.
-
-El dispatcher del Outbox lee solo del schema del módulo que lo posee.
-
-### 4.3 Identidad de worker en NATS
-
-Cada worker tiene credenciales NATS propias con permisos de publish/subscribe acotados
-a los subjects que necesita. No existe una cuenta NATS con acceso total para workers.
-
----
-
-## 5. Verificación de aislamiento
-
-Antes de cualquier despliegue productivo, se ejecutarán las siguientes pruebas:
+## 6. Verificación de aislamiento
 
 | Prueba | Tipo | Fase |
 |---|---|---|
-| Consulta directa entre schemas de módulos distintos debe fallar | Integración | 0.6 |
-| `SET LOCAL app.tenant_id` aísla correctamente filas entre tenants | Integración | 0.6 |
-| `SET SESSION` no persiste el tenant entre transacciones del pool | Integración | 0.6 |
-| Worker sin `tenant_id` no puede ejecutar operación de negocio | Seguridad | 0.4/0.6 |
-| BFF sin acceso a PostgreSQL de negocio (error de conexión esperado) | Integración | 0.7 |
-| Subject NATS de un módulo no admite publicación de otro módulo | Integración | 0.9 |
+| Consulta entre schemas propietarios distintos debe fallar | Integración | 0.6 |
+| `SET LOCAL app.tenant_id` aísla filas entre tenants | Integración | 0.6 |
+| `SET SESSION` no persiste tenant entre transacciones del pool | Integración | 0.6 |
+| Worker sin tenant/contexto válido no ejecuta operación | Seguridad | 0.4/0.6 |
+| BFF sin acceso a PostgreSQL de negocio | Integración | 0.7 |
+| Subject NATS de otro módulo no permite publicar | Integración | 0.9 |
+| Firma, audiencia, emisor y mTLS se validan entre procesos | Seguridad | 0.4/0.7 |
 
----
+## 7. Estado de diseño e implementación
 
-## 6. Estado de implementación
-
-Diseño aprobado. No existen roles PostgreSQL, políticas RLS, configuración de pools, credenciales
-NATS ni código de aislamiento. La implementación comienza en las subfases 0.6 (PostgreSQL) y 0.9
-(mensajería y caché).
+Los SQL históricos contienen tablas y DDL de seguridad/RLS para determinados módulos, pero
+no se ha acreditado aquí su aplicación en una instancia ni la provisión de roles runtime/
+migrator, pools, credenciales NATS o controles de aplicación. La cobertura RLS y las
+referencias cruzadas entre schemas requieren auditoría completa en 0.6. No se modifican SQL
+históricos en esta subfase documental. La implementación y verificación se realizan en 0.6,
+0.7 y 0.9 según el control.
