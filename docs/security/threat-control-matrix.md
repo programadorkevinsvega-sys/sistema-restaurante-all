@@ -135,7 +135,7 @@ Los siguientes criterios completan la dimensión de prueba de la matriz. Son esp
 | T-01, T-02, E-03 | Payload de inyección, precio/descuento manipulado y campos internos/tenant/rol desconocidos: consulta segura, recálculo en backend y rechazo de mass assignment. |
 | T-04, DS-03, D-09 | Archivo con MIME falso, contenido no permitido, traversal, tamaño excesivo y URL no autorizada: cuarentena/rechazo; descarga sin autorización denegada. |
 | T-05, D-05, E-05 | Secreto de prueba detectado bloquea CI; workflow no obtiene permisos no declarados; no se expone secreto productivo a PR. La protección de despliegue se valida cuando exista workflow/environment real. |
-| T-06, R-04 | Modificar, borrar, reordenar o repetir una operación local: integridad/secuencia detectada; servidor deduplica y deja evidencia de conflicto/gap sin aplicar dos veces el efecto. |
+| T-06, R-04, DOM-06 | Modificar, borrar, reordenar o repetir una operación local/venta: integridad y secuencia detectadas; servidor deduplica, reconcilia precio/impuesto/stock/pago según reglas explícitas y deja evidencia de conflicto/gap sin aplicar dos veces el efecto. |
 | T-07 | Solicitar recurso cacheado con tenant, usuario o permiso distinto: no se devuelve dato ajeno; cambio de permisos/versiones invalida o evita reutilización de entrada obsoleta. |
 | T-08, D-10, DS-07 | Alterar copia/snapshot o usar credencial runtime para borrar/leer backup: operación denegada o integridad detectada; restauración de prueba cumple RPO/RTO aprobado y reconciliación. |
 | R-01, R-02, R-03 | Operación financiera, cambio de tenant y acceso excepcional: actor, motivo, tiempo y resultado trazables; actor no autorizado no puede modificar auditoría. |
