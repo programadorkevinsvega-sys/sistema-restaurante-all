@@ -222,10 +222,10 @@ explícita del propietario del producto.
 | T-01, T-02, E-03, D-07 | RR-003 |
 | D-05 | RR-004 y RR-013 |
 | R-01, R-02, R-03, R-04, D-03 | RR-005; RR-008 para auditoría offline |
-| DS-01, DS-04 | RR-006; RR-010 para herramientas IA; RR-008 para sync |
+| D-04, DS-01, DS-04 | RR-006; RR-010 para herramientas IA; RR-008 para sync |
 | S-02, S-04, S-05, T-03, DS-05 | RR-012 |
 | S-06, T-06, R-04, D-08, DS-06, E-08, DOM-06, DOM-07 | RR-008 |
-| T-04, T-08, D-09, D-10, DS-07 | RR-009 |
+| T-04, DS-03, T-08, D-09, D-10, DS-07 | RR-009 |
 | D-11, E-09 | RR-010 |
 | T-07 | RR-011 |
 | T-05, E-05 técnico | RR-013 |
