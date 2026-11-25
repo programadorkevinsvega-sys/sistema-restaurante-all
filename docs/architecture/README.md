@@ -31,11 +31,11 @@ SQLx.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md): especificación técnica vinculada a ADR-0011 Accepted; no representa implementación.
-- [ADRs](../adr/README.md): índice de decisiones aceptadas y propuestas. ADR-0018 está Accepted; ADR-0019 se encuentra en PR #26 abierto; ADR-0020 a ADR-0027 son propuestas de seguridad pendientes de aprobación.
+- [ADRs](../adr/README.md): índice de decisiones aceptadas y propuestas. ADR-0001 a ADR-0018 y ADR-0020 a ADR-0027 están Accepted; ADR-0019 se encuentra en PR #26 abierto.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.
 
-## ADR de seguridad propuestos
+## ADR de seguridad aceptados
 
 - [ADR-0020: Marco integral de seguridad y defensa en profundidad](../adr/0020-integral-security-and-defense-in-depth.md).
 - [ADR-0021: Autorización, RBAC/ABAC y aislamiento multi-tenant](../adr/0021-authorization-rbac-abac-and-tenant-isolation.md).
