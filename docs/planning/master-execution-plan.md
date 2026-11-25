@@ -113,8 +113,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Identificar dependencias funcionales entre módulos sin inventar un grafo: cada dependencia futura debe justificarse por caso de uso y contrato.
 - Definir el proceso de revisión de cambios de arquitectura y desviaciones.
 
-**Dependencias técnicas/funcionales:** ADR-0001, ADR-0002, ADR-0005 a ADR-0009; requisitos.md y promt.md.  
-**Documentos/ADR:** ADR-0001, 0002, 0007, 0008, 0009; engineering-standard.md; restaurant-os-architecture.md; crate-architecture.md.  
+**Dependencias técnicas/funcionales:** ADR-0001, ADR-0002, ADR-0005, ADR-0007, ADR-0008 y ADR-0009; requisitos.md y promt.md. ADR-0005 conserva las reglas de contratos gRPC que siguen vigentes; la topología de cuatro procesos y la comunicación actual se rigen por ADR-0007.  
+**Documentos/ADR:** ADR-0001, 0002, 0005, 0007, 0008 y 0009; engineering-standard.md; restaurant-os-architecture.md; crate-architecture.md.  
 **Entregables**
 - Matriz de ownership validada.
 - Mapa de procesos y fronteras.
@@ -392,7 +392,9 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Tareas**
 - Implementar identidad global de usuario y membresías por tenant sin duplicación.
 - Implementar registro, invitaciones, activación y recuperación de cuenta.
-- Aplicar hash de contraseñas conforme ADR-0011.
+- Aplicar exclusivamente Argon2id para nuevas contraseñas locales, con salt aleatorio único generado por la biblioteca, formato PHC y parámetros mínimos aprobados en ADR-0011.
+- Definir actualización de parámetros de hash y migración gradual al autenticar cuando un hash requiera rehash; no crear algoritmos alternativos.
+- Excluir contraseñas, hashes, salts y secretos de logs, eventos, trazas y contratos públicos.
 - Implementar MFA donde corresponda, sesiones, rotación, expiración y revocación.
 - Gestionar dispositivos y sesiones activas.
 - Aplicar cookies seguras, CSRF, protección XSS, CSP, CORS y cabeceras.
@@ -430,9 +432,11 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Configurar datos fiscales y numeraciones por entidad/sucursal.
 - Configurar moneda, impuestos, idioma y zona horaria.
 - Configurar cajas, bodegas, cocinas, mesas, impresoras y terminales.
-- Configurar métodos de pago y parámetros de notificación.
-- Definir configuración central con excepciones controladas por sucursal.
-- Registrar dispositivos POS y asignar rangos fiscales autorizados sin solapamiento.
+- Configurar métodos de pago, horarios, canales, notificaciones, idiomas y formatos por empresa y sucursal.
+- Administrar plantillas versionadas de facturas, tickets, pedidos, cotizaciones y recepciones.
+- Aplicar cambios centrales a toda la empresa o a sucursales seleccionadas, mostrando origen, excepciones locales, previsualización, activación programada y reversión autorizada.
+- Registrar dispositivos POS, impresoras, lectores, cajones, pantallas de cocina y terminales de pago; mantener estado, sucursal y caja asociados.
+- Asignar rangos fiscales autorizados y no solapados a sucursal, punto de venta y dispositivo cuando corresponda.
 
 **Dependencias:** 1.2 y 1.4; los módulos propietarios correspondientes deben exponer sus contratos.  
 **Documentos/ADR:** ADR-0008, 0019, 0020, 0021, 0025, 0026.  
@@ -547,13 +551,18 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Reintentar con idempotencia tras reconexión y reinicio.
 - Limitar métodos de pago y operaciones fiscales offline a los autorizados.
 - Bloquear emisión fiscal si el dispositivo carece de rango vigente asignado.
+- Permitir crear clientes básicos offline cuando la política de operación lo autorice.
+- Permitir devoluciones offline únicamente bajo reglas, permisos y datos locales disponibles; dejar constancia de su estado pendiente cuando requiera conciliación.
+- Permitir impresión local de comprobantes no fiscales y documentos fiscales solo cuando exista numeración válida y vigente asignada.
+- Mantener sincronización automática y manual, cola durable local, errores visibles, bloqueo local en operaciones críticas y recuperación tras recarga/reinicio.
+- Resolver conflictos mediante reglas deterministas y revisión humana cuando afecten datos financieros.
 - Limpiar datos privados ante logout, revocación o cambio de tenant.
 
 **Dependencias:** 0.10, 2.2, 2.3, 2.4 y 2.5.  
 **Documentos/ADR:** ADR-0003, 0012, 0013, 0018, 0019, 0021, 0022, 0025.  
 **Entregables:** sincronización local; recuperación tras reinicio; política offline por operación.  
-**Pruebas:** unitarias de deduplicación; integración de reconexión y reintentos; seguridad de almacenamiento local; E2E offline/online, dos terminales y conflicto.  
-**Criterios:** cero duplicados en ventas/pagos/movimientos durante pruebas; recuperación completa de cola; ninguna operación offline no autorizada.  
+**Pruebas:** unitarias de deduplicación/estados; integración de recarga, reinicio, cola durable, impresión y reconexión; seguridad de almacenamiento local y aislamiento por sucursal/tenant; E2E de venta, caja, cliente básico, devolución autorizada, dos terminales, conflicto y sincronización manual/automática.  
+**Criterios:** cero duplicados en ventas/pagos/movimientos/devoluciones durante pruebas; recuperación completa de cola; ninguna operación offline no autorizada; no se emiten documentos fiscales sin numeración válida.  
 **Puerta:** pruebas de desconexión prolongada y reconexión sin pérdida ni duplicación.
 
 **Salida de Fase 2:** una sucursal puede registrar pedidos, cobrar, operar caja y recuperar operaciones offline autorizadas.
@@ -819,7 +828,9 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Tareas**
 - Gestionar horarios, turnos, asignaciones y asistencia.
 - Gestionar horas extra, descansos, ausencias, permisos y vacaciones.
-- Gestionar propinas y comisiones conforme a reglas aprobadas.
+- Registrar las condiciones contractuales de remuneración y entregar a FINANCE los datos autorizados de turnos, asistencia, ausencias y variables laborales.
+- Gestionar propinas y comisiones como datos de origen y métricas laborales, sin calcular ni pagar nómina desde WORKFORCE.
+- Mantener FINANCE como propietario del cálculo y pago de nómina, propinas, comisiones y bonificaciones; no crear un módulo PAYROLL independiente.
 - Registrar correcciones con motivo, actor y evidencia.
 - Definir reportes con datos mínimos necesarios.
 
@@ -898,16 +909,20 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Tareas**
 - Definir plan contable, centros de costo y reglas de contabilización.
 - Registrar asientos balanceados y reversos.
-- Gestionar periodos, bloqueos y cierres.
+- Gestionar ingresos, egresos, cuentas por pagar, cuentas por cobrar, flujo de caja, costos operativos, impuestos y rentabilidad por sucursal/empresa legal.
+- Gestionar plan contable, centros de costo, gastos directos/indirectos, prorrateos corporativos y trazabilidad de asignaciones.
+- Calcular y pagar nómina, propinas, comisiones y bonificaciones a partir de las condiciones contractuales y datos laborales proporcionados por WORKFORCE; FINANCE conserva el ownership de los cálculos y pagos.
+- Gestionar periodos diarios, mensuales, anuales y fiscales configurados; bloquear cierres y permitir reapertura únicamente mediante proceso autorizado, justificado y auditado.
+- Importar movimientos bancarios, conciliar bancos, caja, tesorería y liquidaciones de PAYMENTS; identificar pendientes y ajustes autorizados.
 - Separar operación financiera de documentos fiscales.
 - Mantener referencias de origen y trazabilidad.
 - No modificar históricos cerrados mediante edición destructiva.
 
-**Dependencias:** 2.3, 2.4, 4.1, 5.3 y 7.1.  
-**Documentos/ADR:** ADR-0001, 0013, 0015, 0019, 0020, 0021, 0026.  
+**Dependencias:** 2.3, 2.4, 4.1, 5.3, 6.1, 6.2 y 7.1.  
+**Documentos/ADR:** ADR-0001, 0013, 0015, 0018, 0019, 0020, 0021, 0026.  
 **Entregables:** libro contable; plan de cuentas; centros de costo; cierres y reversos.  
 **Pruebas:** unitarias de balance; integración de transacciones; seguridad de aprobación/cierre; E2E asiento desde venta y reverso.  
-**Criterios:** asientos balanceados; reversos trazables; periodos cerrados no se alteran silenciosamente.  
+**Criterios:** asientos balanceados; reversos trazables; periodos cerrados no se alteran silenciosamente; nómina y compensaciones son reproducibles y conciliables; reaperturas y prorrateos conservan motivo, aprobación y evidencia.  
 **Puerta:** conciliación y cierre reproducibles.
 
 ### 7.3 — CASH y tesorería: conciliaciones
@@ -942,6 +957,26 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Pruebas:** unitarias de agregación; integración de consistencia; seguridad de exportación masiva; E2E reportes por rol y entidad legal.  
 **Criterios:** cifras reproducibles desde datos fuente; el usuario no consulta ámbitos fuera de permiso; exportaciones quedan auditadas.  
 **Puerta:** conciliación entre reportes y fuentes contables aprobada.
+
+### 7.5 — Cumplimiento fiscal colombiano y DIAN
+
+**Tareas**
+- Implementar en BILLING el ciclo de documentos fiscales exigidos para Colombia: factura electrónica de venta, documento equivalente electrónico tipo POS cuando corresponda, notas crédito, notas de ajuste y registro de documentos anulados.
+- Registrar respuestas de validación, aceptación/rechazo, transmisión, reenvíos controlados y acuses de la DIAN/proveedor autorizado, conservando documento original y trazabilidad.
+- Gestionar NIT, responsabilidades tributarias y configuración fiscal de empresa legal, sucursal y punto de venta.
+- Aplicar impuestos por producto/servicio y reglas versionadas para IVA e impuesto nacional al consumo cuando corresponda; no asumir tratamiento fiscal uniforme para todos los productos.
+- Gestionar resoluciones, rangos autorizados, vigencia, alertas de agotamiento, numeración emitida/anulada/pendiente y bloqueo al exceder o carecer de autorización.
+- Separar el componente fiscal del POS: SALES entrega ventas validadas; BILLING es propietario del documento y su estado; INTEGRATIONS transporta mensajes con DIAN/proveedores sin crear un libro fiscal paralelo.
+- Generar reportes fiscales por sucursal y empresa legal, separando ventas gravadas/excluidas/exentas, IVA, impuesto nacional al consumo, notas y ajustes; exportar datos contables/tributarios.
+- Aplicar contingencia offline únicamente con rangos previamente asignados, válidos, vigentes y no solapados; marcar pendientes de transmisión y conciliar sin duplicar ni alterar consecutivos.
+- Mantener revisión normativa/profesional por jurisdicción antes de habilitar emisión productiva.
+
+**Dependencias:** 1.2, 1.5, 2.2, 2.3, 2.6, 7.1, 7.2 y 9.2.  
+**Documentos/ADR:** requisitos.md (Requisitos particulares — Operación en Colombia); ADR-0003, 0013, 0018, 0019, 0020, 0021, 0023, 0025, 0026 y 0027.  
+**Entregables:** matriz fiscal colombiana versionada; integración DIAN/proveedor; ciclo documental completo; control de resoluciones y rangos; reportes fiscales; procedimiento de contingencia.  
+**Pruebas:** unitarias de impuestos/numeración/estados; integración con sandbox y respuestas aceptadas/rechazadas; seguridad de firma, replay, credenciales y archivos; E2E factura/documento POS/nota crédito/nota de ajuste/anulación, rechazo, reenvío y operación offline con sincronización; conciliación de reportes.  
+**Criterios:** no se emite sin numeración y autorización vigentes; los estados DIAN son trazables; los reintentos no duplican documentos; los reportes reconcilian con documentos fuente; el recibo impreso no se considera sustituto de una obligación fiscal electrónica.  
+**Puerta:** validación normativa y pruebas fiscales completas aprobadas para Colombia antes de habilitar el mercado.
 
 **Salida de Fase 7:** ciclo financiero y fiscal trazable, conciliable y protegido.
 
@@ -1021,6 +1056,43 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Criterios:** IA no elude permisos, no obtiene acceso global por ser interna y no ejecuta acciones de alto impacto sin aprobación.  
 **Puerta:** revisión de seguridad y pruebas adversariales aprobadas.
 
+### 8.5 — REPORTING: informes, plantillas y distribución
+
+**Tareas**
+- Implementar REPORTING como propietario de solicitudes, definiciones de informes, plantillas, versiones publicadas inmutables, ejecuciones, artefactos y entregas.
+- Generar PDF, XLSX y CSV, además de formatos estructurados autorizados.
+- Permitir informes configurables por usuario, empresa y sucursal, con filtros, campos, agrupaciones y comparaciones.
+- Programar informes diarios, semanales, mensuales y trimestrales respetando zona horaria y permisos vigentes al ejecutar y entregar.
+- Distribuir informes por canales autorizados mediante INTEGRATIONS; REPORTING no almacena credenciales externas.
+- Mantener historial de solicitudes, ejecuciones, artefactos y entregas; no guardar archivos binarios en PostgreSQL.
+- Exigir permisos y aprobaciones para informes financieros/confidenciales; aplicar límites de tamaño, filas, frecuencia y exportación.
+- Registrar en AUDIT solicitudes, accesos, generaciones, exportaciones y descargas; conservar referencias y metadatos sin duplicar el historial propio de REPORTING.
+
+**Dependencias:** 8.1, 8.2, 0.4, 0.8, 9.2 y almacenamiento de objetos de 0.9.  
+**Documentos/ADR:** requisitos.md (Grupo J y responsabilidad de Reporting); ADR-0001, 0003, 0015, 0018, 0019, 0020, 0021, 0025, 0026 y 0027.  
+**Entregables:** servicio REPORTING; catálogo y plantillas versionadas; programador; artefactos y entregas; matriz de permisos y aprobaciones.  
+**Pruebas:** unitarias de plantillas/filtros; integración de generación y almacenamiento; seguridad de exportación, aislamiento y descargas; E2E de programación, entrega, revocación y descarga auditada.  
+**Criterios:** artefactos reproducibles, protegidos y versionados; el usuario solo recibe informes dentro de su alcance; las entregas respetan consentimiento y canal autorizado; las descargas quedan auditadas.  
+**Puerta:** generación, autorización, retención y distribución demostradas de extremo a extremo.
+
+### 8.6 — AUDIT: auditoría de accesos y evidencias
+
+**Tareas**
+- Implementar AUDIT como propietario de los registros de auditoría de seguridad y de los eventos de acceso/consulta/generación/exportación/descarga que le correspondan por contrato.
+- Mantener separados auditoría, logs operativos, métricas/trazas e historial de negocio.
+- Recibir eventos mediante contratos versionados y entrega durable/idempotente; no consultar directamente schemas ajenos.
+- Conservar actor/identidad de servicio, acción, recurso, tenant/sucursal cuando aplique, resultado, instante, motivo y correlación mínima necesaria.
+- Proteger integridad, acceso, búsqueda, retención y exportación de evidencias.
+- Mantener el historial de cada módulo bajo su propio ownership; AUDIT no crea una tabla compartida que sustituya los historiales de los módulos ni permite escrituras directas ajenas.
+- Correlacionar eventos con W3C Trace Context sin confundir trace_id con actor, evidencia o causalidad.
+
+**Dependencias:** 0.4, 0.8, Outbox/Inbox, 8.5 y contratos de todos los módulos productores.  
+**Documentos/ADR:** requisitos.md (AUDIT y Grupo J); ADR-0001, 0003, 0004, 0014, 0015, 0018, 0020, 0021 y 0026.  
+**Entregables:** contratos de auditoría; registro de eventos de seguridad y accesos; políticas de integridad/retención; consultas y exportación controlada; runbooks de investigación.  
+**Pruebas:** unitarias de clasificación/redacción; integración de entrega durable, deduplicación e integridad; seguridad de acceso y manipulación; E2E reconstrucción de una acción sensible y descarga de evidencia.  
+**Criterios:** cada acción sensible puede reconstruirse; no se almacenan secretos ni payloads sensibles innecesarios; AUDIT no sustituye el historial propio de cada módulo.  
+**Puerta:** trazabilidad y consulta restringida verificadas sin crear persistencia compartida.
+
 **Salida de Fase 8:** dashboards y análisis reproducibles, con IA limitada por permisos y supervisión.
 
 ---
@@ -1072,7 +1144,11 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Publicar APIs versionadas y documentación.
 - Definir autenticación, scopes, cuotas y límites por cliente.
 - Firmar y proteger webhooks, reintentos y replay.
-- Gestionar pedidos web, delivery, reservas y canales externos cuando aplique.
+- Recibir pedidos desde web, aplicación propia, WhatsApp Business y plataformas/marketplaces externos; normalizar canal, sucursal y cliente en el contrato de SALES y deduplicar reintentos.
+- Gestionar domicilios: repartidores internos/externos, asignación manual y automática por disponibilidad/zona, cobertura, tarifas por sucursal/zona, direcciones, referencias y notas.
+- Mantener estados e historial de entrega: recibido, confirmado, preparación, listo, asignado, recogido, en camino, entregado, cancelado/rechazado e incidencias.
+- Registrar marcas de tiempo de recepción, confirmación, salida de cocina, asignación, salida del repartidor y entrega; calcular tiempos y alertas de retraso.
+- Respetar disponibilidad, precios, promociones e inventario de la sucursal; asignar la sucursal por zona o selección autorizada.
 - Proteger exportación de datos y endpoints de alto costo.
 - Aplicar controles anti-bot y DDoS en el borde y límites internos.
 
@@ -1086,7 +1162,11 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 ### 9.4 — Pagos, fiscalidad, mensajería y proveedores externos
 
 **Tareas**
-- Completar integraciones de pasarelas, fiscalidad, correo, SMS, mensajería, mapas y delivery según alcance.
+- Implementar conectores concretos habilitados por mercado y contrato: pasarelas de pago, DIAN/proveedores de facturación, WhatsApp Business, correo, SMS, Google Maps, plataformas/marketplaces de delivery, reservas, sistemas contables, analítica externa y automatizadores externos.
+- Para WhatsApp, cubrir recepción/confirmación de pedidos, notificaciones, estados de domicilio y atención al cliente, respetando consentimiento y asociación autorizada con cliente/pedido.
+- Para mapas, cubrir validación de direcciones, distancias, tiempos estimados, zonas de cobertura, tarifas y ubicación de domicilios.
+- Para plataformas externas, sincronizar catálogo/precios/promociones autorizados, normalizar pedidos, devolver estados y conservar estado original del canal.
+- Mantener la separación de ownership: PAYMENTS posee operaciones financieras; BILLING posee documentos fiscales y su ciclo de vida; INTEGRATIONS implementa transporte, credenciales, callbacks y normalización externa; SALES conserva pedidos y su estado comercial.
 - Revisar contrato, finalidad, datos, ubicación, retención y subencargados.
 - Definir fallback y reconciliación por proveedor.
 - Limitar consumo/costos y proteger credenciales.
@@ -1096,8 +1176,26 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Documentos/ADR:** ADR-0015, 0018, 0019, 0020, 0023, 0025, 0026, 0027.  
 **Entregables:** integraciones productivas aprobadas; fichas de proveedor; procedimientos de contingencia.  
 **Pruebas:** integración/sandbox; seguridad de callbacks y archivos; carga y límites; E2E de contingencia.  
-**Criterios:** no se habilita proveedor sin evaluación de seguridad/privacidad/contrato; fallos no provocan duplicación o pérdida silenciosa.  
+**Criterios:** no se habilita proveedor sin evaluación de seguridad/privacidad/contrato; fallos no provocan duplicación o pérdida silenciosa; cada integración tiene propietario funcional, credenciales y alcance por tenant/sucursal, consentimiento cuando aplique y reconciliación verificable.  
 **Puerta:** aprobación por proveedor y evidencia de pruebas.
+
+### 9.5 — Hardware, dispositivos y periféricos operativos
+
+**Tareas**
+- Integrar dispositivos POS, impresoras de tickets/documentos, impresoras de cocina, lectores de códigos, cajones de dinero, pantallas KDS y terminales de pago.
+- Registrar y provisionar cada dispositivo por tenant, sucursal, caja y función; permitir activación, desactivación, revocación y reasignación autorizada.
+- Mantener estado de conexión, compatibilidad, salud, última comunicación y alertas de desconexión.
+- Configurar impresoras por tipo de documento/estación y mantener plantillas/versiones de impresión.
+- Coordinar terminales de pago con PAYMENTS e INTEGRATIONS sin almacenar datos sensibles de tarjeta ni convertir el hardware en fuente de verdad financiera.
+- Permitir impresión local offline conforme a la política de 0.10/2.6 y distinguir comprobantes locales de documentos fiscales válidos.
+- Aislar comandos y control de dispositivos por sucursal, usuario y permiso; no exponer interfaces de administración de hardware públicamente.
+
+**Dependencias:** 1.2, 1.5, 2.5, 2.6, 3.3, 7.1, 9.2 y 0.7.  
+**Documentos/ADR:** requisitos.md (Grupo L — Hardware y configuración de dispositivos); ADR-0008, 0019, 0020, 0021, 0022, 0023, 0025, 0026 y 0027 cuando procese documentos.  
+**Entregables:** inventario/provisionamiento de dispositivos; adaptadores de periféricos; configuración de impresión; estado y alertas; procedimientos de reemplazo/revocación.  
+**Pruebas:** unitarias de estados y permisos; integración con simuladores y hardware representativo; seguridad de emparejamiento, comandos y aislamiento; E2E impresión de ticket/comanda, lectura de código, apertura autorizada de cajón y operación degradada.  
+**Criterios:** un dispositivo no puede operar en otra sucursal sin autorización; desconexiones son visibles; los comandos no duplican cobros ni operaciones; la impresión no altera el estado fiscal.  
+**Puerta:** periféricos críticos probados en escenarios normales, desconexión y recuperación.
 
 **Salida de Fase 9:** automatizaciones e integraciones operan con límites, permisos, idempotencia y trazabilidad.
 
@@ -1214,6 +1312,26 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Salida de Fase 10:** plataforma escalable, recuperable, medida y sometida a pruebas de seguridad avanzadas.
 
 ---
+
+### 10.7 — Modalidades de infraestructura y migración de tenants
+
+**Tareas**
+- Habilitar el modelo de despliegue por tenant definido en requisitos.md: Shared Cloud (aplicación y base compartidas con aislamiento tenant), Dedicated Database (aplicación compartida y base independiente) y Dedicated Environment (aplicación, base y recursos dedicados).
+- Mantener en PLATFORM únicamente el control de modalidad, región, estado y referencias seguras de infraestructura; no almacenar contraseñas ni secretos, solo referencias al gestor de secretos.
+- Definir el ciclo de aprovisionamiento, validación, suspensión, cambio de modalidad y retiro de cada despliegue.
+- Diseñar migración de tenant entre modalidades sin reconstruir sus datos: compatibilidad de esquema, preparación de destino, migración por módulo propietario, sincronización inicial e incremental, ventana de corte, sincronización final, cambio de destino y reversión controlada.
+- Preservar usuarios, empresas, sucursales, catálogo, recetas, pedidos, inventario, documentos, auditoría, suscripciones y configuración, conforme a sus respectivos módulos propietarios.
+- Verificar conteos, totales financieros, existencias, pedidos, pagos, documentos fiscales, archivos/metadatos, auditoría, suscripciones y configuración antes de habilitar destino.
+- Mantener las mismas versiones/modelos de dominio y migraciones por módulo; cada módulo conserva schema, rol e historial SQLx independiente también en bases dedicadas.
+- No compartir `_sqlx_migrations`, no mover ownership a PLATFORM y no ejecutar consultas/escrituras cruzadas entre schemas como atajo de migración.
+- Definir estrategia de rollback, reconciliación y tratamiento de operaciones concurrentes durante el corte.
+
+**Dependencias:** 0.1, 0.6, 0.7, 0.8, 1.1 y módulos propietarios; requiere que los flujos de datos y backups estén operativos.  
+**Documentos/ADR:** requisitos.md (Infraestructura compartida y dedicada); ADR-0001, 0007, 0008, 0010, 0012, 0014, 0015, 0023, 0024, 0026 y 0027.  
+**Entregables:** catálogo de modalidades; control de despliegues; runbook de migración; herramienta/procedimiento por módulo; matriz de integridad; procedimiento de rollback y evidencias.  
+**Pruebas:** integración de aprovisionamiento; ensayo completo de migración entre las tres modalidades; comparación de datos y totales; seguridad de credenciales/red/archivos; carga y concurrencia durante corte; E2E tenant migrado y verificación de acceso/operación.  
+**Criterios:** no se activa destino con diferencias sin resolver; ninguna credencial queda en datos de control; ownership y aislamiento se mantienen; rollback es ejecutable y probado.  
+**Puerta:** migración ensayada y conciliada antes de ofrecer modalidades dedicadas a clientes.
 
 ## 14. Fase final — Privacidad, cumplimiento legal y lanzamiento a producción
 
@@ -1337,11 +1455,11 @@ Los ADR siguientes no se ejecutan como un proyecto aislado al final. Sus control
 | ADR-0020 | Marco integral y defensa en profundidad | 0.3–0.9; todas las fases; 10.5; F.6 | Modelo de amenazas, controles por frontera, riesgos y pruebas |
 | ADR-0021 | RBAC/ABAC y aislamiento multi-tenant | 0.4; 1.2–1.5; todas las operaciones; 10.5 | Matriz de permisos, pruebas BOLA/IDOR y tenant cruzado |
 | ADR-0022 | Frontend, navegador, sesiones y APIs de borde | 1.3; 2.5–2.6; 6.4; 9.3; 10.1; F.4 | Pruebas CSRF/XSS/CSP/CORS/sesiones y consentimiento |
-| ADR-0023 | Infraestructura, redes, secretos y criptografía | 0.7; 0.9; despliegues de todas las fases; 10.3–10.5 | Flujos de red, TLS, rotación, hardening, backup cifrado |
+| ADR-0023 | Infraestructura, redes, secretos y criptografía | 0.7; 0.9; despliegues de todas las fases; 10.3–10.5; 10.7 | Flujos de red, TLS, rotación, hardening, backup cifrado |
 | ADR-0024 | Desarrollo seguro, CI/CD y supply chain | 0.2; todos los PR/build/release; 10.5; F.6 | Rulesets, CI, SCA, SBOM, procedencia y artefactos verificados |
-| ADR-0025 | Abuso de APIs, bots, DDoS y exfiltración | 0.5; 1.4; 2.5; todas las APIs; 8.2–8.4; 9.1–9.3; 10.4–10.5 | Rate limits, cuotas, backpressure, límites de exportación y pruebas |
-| ADR-0026 | Auditoría, detección y respuesta a incidentes | 0.8; operaciones sensibles en todas las fases; 10.6; F.5–F.6 | Eventos de auditoría, alertas, runbooks, ejercicios y evidencias |
-| ADR-0027 | Archivos, documentos y object storage | 0.9; 2.1; 5.1; 6.1; 7.1; 9.4; 10.3; F.1–F.5 | Validación, cuarentena, autorización, integridad, retención y descarga segura |
+| ADR-0025 | Abuso de APIs, bots, DDoS y exfiltración | 0.5; 1.4; 2.5; todas las APIs; 8.2–8.6; 9.1–9.5; 10.4–10.7 | Rate limits, cuotas, backpressure, límites de exportación y pruebas |
+| ADR-0026 | Auditoría, detección y respuesta a incidentes | 0.8; operaciones sensibles en todas las fases; 8.6; 10.6–10.7; F.5–F.6 | Eventos de auditoría, alertas, runbooks, ejercicios y evidencias |
+| ADR-0027 | Archivos, documentos y object storage | 0.9; 2.1; 5.1; 6.1; 7.1; 8.5; 9.4; 10.3; 10.7; F.1–F.5 | Validación, cuarentena, autorización, integridad, retención y descarga segura |
 
 ### 15.1 Controles que nunca se aplazan
 
@@ -1397,9 +1515,10 @@ Cada fase debe seleccionar y ejecutar las pruebas que correspondan a su superfic
 | BILLING | SALES/PAYMENTS, datos fiscales, jurisdicción | numeración y trazabilidad |
 | FINANCE | fuentes financieras, BILLING/CASH/PROCUREMENT | asientos y reversos |
 | ANALYTICS | eventos y datos de módulos propietarios | definición/linaje y permisos |
-| REPORTING | métricas, autorización y límites de exportación | consistencia y seguridad de datos |
+| REPORTING | métricas, autorización y límites de exportación | consistencia y seguridad de datos; 8.5 define plantillas, artefactos, programación y distribución |
+| AUDIT | eventos de acceso/seguridad y evidencia propia | ownership, integridad, retención y consulta restringida; 0.8 y 8.6 |
 | AUTOMATION | eventos, contratos, autorización e idempotencia | límites y recuperación |
-| INTEGRATIONS | secretos, contratos externos, anti-SSRF | evaluación de proveedor |
+| INTEGRATIONS | secretos, contratos externos, anti-SSRF y conectividad de hardware | evaluación de proveedor y dispositivos por sucursal |
 | AUDIT | ownership de eventos, integridad y acceso restringido | evidencia y retención |
 
 Esta tabla indica dependencias de capacidad, no autoriza a inventar dependencias crate-a-crate ni consultas directas. Toda dependencia de implementación se justifica por caso de uso y contrato.
@@ -1430,6 +1549,11 @@ Antes de considerar el producto listo para lanzamiento deben verificarse, como m
 18. Los procedimientos de incidentes, derechos y retención están probados.
 19. El paquete legal y de consentimiento está aprobado por mercado.
 20. El artefacto lanzado es el mismo artefacto probado y cuenta con rollback.
+21. La facturación colombiana cubre documentos DIAN/POS aplicables, notas, anulaciones, impuestos, rangos autorizados, respuestas y contingencia offline.
+22. Los pedidos digitales y domicilios conservan canal, sucursal, repartidor, zonas/tarifas, estados, tiempos, incidencias y deduplicación.
+23. Nómina y compensaciones son calculadas/pagadas por FINANCE a partir de datos laborales de WORKFORCE, sin crear un módulo PAYROLL adicional.
+24. REPORTING genera, programa, distribuye y protege PDF/XLSX/CSV; AUDIT registra accesos, solicitudes, generaciones y descargas sin sustituir historiales propios.
+25. Los periféricos POS y las tres modalidades de infraestructura están provisionados, aislados y probados; migraciones dedicadas se concilian y tienen rollback.
 
 ---
 
@@ -1495,4 +1619,105 @@ Las estimaciones temporales del ROADMAP.md son orientativas y deben recalcularse
 
 ---
 
-**Estado final:** plan detallado propuesto como documento de ejecución. Las decisiones arquitectónicas citadas permanecen en sus estados ADR vigentes. La existencia de este plan no significa que las subfases estén implementadas ni que una fase haya sido aceptada como terminada.
+## 21. Matriz de trazabilidad de requisitos de requisitos.md
+
+Esta matriz relaciona los apartados normativos de `requisitos.md` con las subfases que los convierten en tareas, entregables y pruebas. No reemplaza el texto funcional fuente ni autoriza a reducir sus requisitos. Cuando una capacidad aparezca en más de un apartado, se conserva la cobertura en todos los contextos aplicables.
+
+| Apartado de `requisitos.md` | Cobertura en el plan | Evidencia mínima exigida |
+|---|---|---|
+| Visión del producto y modelo SaaS multiempresa | 0.1; 1.1–1.5; 10.7 | tenant, multiempresa, multimarca, sucursales y capacidades opcionales probadas |
+| Arquitectura vertical configurable (Core/Restaurant Pack/Optional) | 0.1; 2.1; 3.1–3.3; 4.2–4.4 | pruebas de activación por ámbito y ausencia de dependencias gastronómicas obligatorias en Core |
+| Arquitectura empresarial y jerarquía (tenant, grupo, empresa legal, marca, sucursal, área, estación, bodega, caja, terminal) | 1.2; 1.5; 0.4 | invariantes jerárquicos, relaciones válidas, aislamiento y configuración heredada/excepciones |
+| Grupo A — Administración SaaS / PLATFORM | 1.1; 0.4; 0.8; 10.7 | ciclo de vida, planes, suscripciones, capacidades, límites, uso, soporte temporal y baja segura |
+| Grupo B — Administración empresarial | 1.2; 1.4; 1.5; 8.2 | configuración central/local, responsables, permisos, comparación y consolidación por entidades autorizadas |
+| Grupo C — Operación del restaurante | 2.2–2.6; 3.1–3.4; 9.3; 9.5 | venta, servicio, cocina, delivery, canales y periféricos en flujos E2E |
+| Grupo D — Productos, menú y producción | 2.1; 3.2; 4.2–4.4 | catálogo comercial separado de menú gastronómico y recetas versionadas |
+| Grupo E — Inventario y logística | 4.1; 4.3–4.4; 5.4 | ledger reconstruible, lotes, vencimientos, consumo, mermas, conteos y transferencias |
+| Grupo F — Compras y proveedores | 5.1–5.4; 7.3 | proveedor, cotización, orden, recepción parcial, conciliación, cuentas por pagar y documentos |
+| Grupo G — Clientes, fidelización y marketing | 6.3–6.4; 10.1; F.1–F.5 | perfil/historial, segmentación, puntos, campañas, preferencias y revocación |
+| Grupo H — Personal y recursos humanos | 6.1–6.2; 7.2; 8.2 | empleados, contratos, turnos, asistencia, ausencias, compensaciones, nómina y rendimiento |
+| Grupo I — Finanzas y contabilidad | 2.3–2.4; 5.3; 7.1–7.5 | caja, tesorería, cuentas por pagar/cobrar, bancos, plan contable, asientos, periodos, impuestos y conciliación |
+| Grupo J — Reportes y Business Intelligence | 7.4; 8.1–8.5; 8.6 | dashboards, KPI, reportes por ámbito, filtros, exportaciones, programación, trazabilidad y auditoría |
+| Grupo K — Automatización e inteligencia artificial | 8.3–8.4; 9.1 | predicciones, agentes, constructor visual, disparadores, condiciones, acciones, aprobaciones, límites y recuperación |
+| Grupo L — Integraciones y tecnología | 0.7; 0.9; 9.2–9.5; 10.3 | credenciales, conectores, webhooks, hardware, seguridad, reintentos, sincronización y recuperación |
+| Diseño de base de datos, relaciones, integridad, precisión y concurrencia | 0.1; 0.4; 0.6; 4.1–4.4; 7.1–7.3 | schema/rol/migración/historial por módulo, invariantes, precisión decimal, transacciones locales, concurrencia y restauración |
+| Infraestructura compartida y dedicada; migración entre modalidades | 0.6–0.7; 10.3; 10.7 | Shared Cloud, Dedicated Database y Dedicated Environment; ensayo de migración, conciliación y rollback |
+| Preparación de PostgreSQL, roles, RLS, secretos y respaldos | 0.6–0.7; 10.3 | pruebas RLS, mínimo privilegio, backups, WAL, PITR y restore |
+| Arquitectura técnica, cuatro procesos, crates, contratos y comunicación | 0.1; 0.2; 0.6; 0.9; 10.3 | cuatro binarios independientes, BFF separados, contratos, adaptadores local/gRPC/messaging y CI de contratos |
+| Transacciones, Outbox/Inbox, Saga, eventos y coordinación | 0.6; 0.8–0.9; 1.1; 2.2–2.6; 3.3; 5.3–5.4; 9.1; 10.2 | atomicidad local, entrega durable, idempotencia, compensación, reconciliación y pruebas de fallos parciales |
+| Sistema RBAC + ABAC, permisos específicos y doble aprobación | 0.4; 1.3–1.4; todas las subfases operativas; 10.5 | pruebas por tenant/empresa/marca/sucursal/área/caja/terminal, importe, horario, estado y separación de funciones |
+| Módulos funcionales heredados 1–17 | 1.1–1.5; 2.1–2.6; 3.1–3.4; 4.1–4.4; 5.1–5.4; 6.1–6.4; 7.1–7.5; 8.1–8.6; 9.1–9.5; 10.1–10.7 | trazabilidad por dominio y flujos E2E entre módulos propietarios |
+| Capacidades transversales A — Usuarios, roles y permisos | 0.4; 1.3–1.4 | autenticación, membresías, permisos y pruebas negativas |
+| Capacidades transversales B — Configuración general | 1.2; 1.5 | configuración empresarial/sucursal, plantillas, dispositivos, herencia, previsualización, programación y reversión |
+| Capacidades transversales C — Integraciones externas | 9.2–9.5 | API, webhooks, WhatsApp, mapas, DIAN, pagos, contabilidad, delivery y hardware |
+| Operación offline-first | 0.10; 2.6; 10.2; 7.5 | almacenamiento local seguro, cola durable, numeración, impresión, cobros autorizados, conflictos, reintentos y cero duplicados |
+| Requisitos particulares de Colombia | 1.5; 2.6; 7.1; 7.5; 9.2; 9.4 | DIAN, documentos POS, notas, IVA/INC, resoluciones, reportes y contingencia fiscal |
+| Stack, Rust modular, contratos, persistencia y extracción futura | 0.1; 0.6; 0.9; 10.3 | cumplimiento de arquitectura aceptada, sin implementar dependencias antes de la fase autorizada |
+| AI Manager y agentes especializados | 8.1–8.4 | herramientas autorizadas, fuentes, periodo, supuestos, confianza, aprobación humana y ausencia de schema propio |
+| Motor de eventos y automatizaciones | 0.6; 0.8–0.9; 9.1 | reglas versionadas, ejecuciones, aprobaciones, reintentos, límites, auditoría y recuperación |
+| Criterios de calidad, validación antes de lanzamiento y aceptación por dominio | 2.1–2.6; 3.1–3.4; 4.1–4.4; 5.1–5.4; 6.1–6.4; 7.1–7.5; 8.1–8.6; 9.1–9.5; 10.1–10.7; F.1–F.6 | evidencia verificable para cada criterio y Go/No-Go por mercado |
+
+### 21.1 Trazabilidad explícita de los 20 módulos canónicos
+
+| Módulo | Proceso propietario | Subfases principales | Límite que debe probarse |
+|---|---|---|---|
+| PLATFORM | Admin Platform Backend | 1.1; 10.7 | solo ciclo de vida SaaS y referencias de despliegue; no borra ni posee datos de negocio |
+| IDENTITY | Public Backend | 1.3–1.4 | identidad global única; credenciales y membresías bajo su ownership |
+| ORGANIZATION | Public Backend | 1.2; 1.5 | jerarquía empresarial y recursos organizacionales |
+| CATALOG | Public Backend | 2.1 | productos y agrupaciones comerciales genéricas; no es dueño de menús gastronómicos |
+| SALES | Public Backend | 2.2; 9.3 | pedidos/cuentas/canales y estados comerciales |
+| PAYMENTS | Public Backend | 2.3; 7.3 | operaciones financieras, cobros, devoluciones y conciliación de liquidaciones |
+| CASH | Public Backend | 2.4; 7.3 | caja física, arqueos, movimientos y cierres |
+| KITCHEN | Public Backend | 3.3–3.4 | comandas, estaciones y preparación; no órdenes/lotes de producción |
+| INVENTORY | Public Backend | 4.1; 4.3–4.4; 5.4 | ledger, existencias, lotes, movimientos y transferencias |
+| PROCUREMENT | Public Backend | 5.1–5.4 | proveedores, abastecimiento, órdenes, recepciones y conciliación |
+| PRODUCTION | Public Backend | 4.2–4.4 | recetas, subrecetas, rendimientos y órdenes/lotes de producción |
+| BILLING | Public Backend | 7.1; 7.5 | documentos fiscales, numeración, respuestas y trazabilidad |
+| FINANCE | Public Backend | 7.2–7.4 | contabilidad, tesorería, nómina y compensaciones; sin módulo PAYROLL adicional |
+| WORKFORCE | Public Backend | 6.1–6.2 | datos laborales, contratos, horarios, turnos y asistencia; no autoriza usuarios |
+| CUSTOMERS | Public Backend | 6.3–6.4; 10.1 | perfiles, historial, fidelización, preferencias y derechos |
+| INTEGRATIONS | Public Backend | 9.2; 9.4–9.5 | transporte técnico externo, credenciales, callbacks y hardware; no duplica libros de PAYMENTS/BILLING |
+| AUTOMATION | Public Backend | 9.1 | reglas y flujos; ejecuta mediante contratos de módulos propietarios |
+| ANALYTICS | Public Backend | 8.1–8.3 | KPI, tendencias, anomalías y datasets semánticos |
+| AUDIT | Public Backend | 0.8; 8.6 | auditoría de seguridad/accesos bajo su ownership; no reemplaza historiales de cada módulo |
+| REPORTING | Public Backend | 8.5 | generación, plantillas, programación, artefactos y distribución de informes |
+
+Los BFF no son propietarios de estos módulos ni de sus schemas. La matriz no crea módulos nuevos ni altera la distribución aprobada por ADR-0008.
+
+## 22. Matriz integral de trazabilidad de ADR aceptados
+
+Cada ADR debe reflejarse en diseño, implementación, pruebas y evidencia de las subfases indicadas. Las menciones de esta tabla no significan que el control esté implementado; funcionan como criterios obligatorios de planificación y cierre.
+
+| ADR | Decisión aceptada | Subfases donde se materializa | Evidencia exigida |
+|---|---|---|---|
+| ADR-0001 | Ownership PostgreSQL y migraciones por módulo | 0.1; 0.6; todas las subfases con persistencia; 10.7 | schema, rol, migraciones e historial SQLx independientes; no acceso cruzado |
+| ADR-0002 | OpenAPI, Protobuf y código generado | 0.1; 0.5; todas las APIs HTTP/gRPC | contratos fuente, generación reproducible, lint y compatibilidad |
+| ADR-0003 | Stateless, Outbox/Inbox y coordinación de jobs | 0.6; 0.9; todos los flujos durables; 9.1; 10.2 | entrega at-least-once, deduplicación, leases, checkpoints e idempotencia |
+| ADR-0004 | W3C Trace Context | 0.8; 0.9; todos los contratos y workers | propagación HTTP/gRPC/eventos, continuidad y redacción |
+| ADR-0005 | Contratos Protobuf/gRPC desde el inicio | 0.1; 0.9; comunicación entre procesos | contratos versionados; su topología histórica se interpreta junto con ADR-0007 |
+| ADR-0006 | AI transversal sin schema propio | 8.1–8.4 | herramientas por contrato, datos bajo ownership de módulos y ausencia de schema/tablas AI |
+| ADR-0007 | Cuatro procesos independientes y comunicación | 0.1; 0.2; 0.9; despliegue y pruebas de todas las fronteras | cuatro binarios/procesos, dos BFF separados, gRPC y NATS según semántica |
+| ADR-0008 | Distribución de módulos entre procesos | 0.1; todas las fases funcionales; 10.7 | PLATFORM único en Admin Platform; los otros 19 en Public Backend; BFF sin ownership |
+| ADR-0009 | Límites de crates y dependencias | 0.1; 0.2; 0.5; 0.9; todos los módulos | crates de contratos, implementación, adaptadores local/gRPC/messaging y dependencias permitidas |
+| ADR-0010 | Pooling y gestión de conexiones PostgreSQL | 0.6; 10.3–10.4; cada módulo con persistencia | pools por módulo/runtime, presupuesto global, límites, routing read/write y backpressure |
+| ADR-0011 | Hash de contraseñas y autenticación | 1.3; 10.5 | Argon2id, salt único, formato PHC, parámetros aprobados, rehash y pruebas de credenciales |
+| ADR-0012 | UUIDv7 global y PostgreSQL HA/read replicas | 0.6; 4.1–4.4; 7.1; 10.3–10.4; 10.7 | UUIDv7 y transición futura, primario/standbys, failover, consistencia de lectura, backups/PITR |
+| ADR-0013 | Consistencia distribuida y Sagas | 0.6; 1.1; 2.2–2.4; 3.3; 4.3; 5.3–5.4; 7.1–7.3; 9.1 | transacciones locales, propietario de Saga, compensaciones, reintentos y reconciliación |
+| ADR-0014 | Baja de tenants y conservación de datos de clientes | 1.1; 6.3; F.2; 10.7 | baja por módulo, preservación de perfiles/historial/facturas, aislamiento y eliminación individual separada |
+| ADR-0015 | Observabilidad integral | 0.8; 0.9; todas las fases; 10.3–10.6 | métricas, logs, trazas, alertas, dashboards, redacción y runbooks |
+| ADR-0016 | Redis Cluster, TLS y caché distribuida | 0.9; consultas elegibles; 10.3–10.4 | Cluster, TLS/ACL, cache-aside, invalidación durable, fallback y ausencia de dependencia de corrección |
+| ADR-0017 | NATS Core y JetStream HA | 0.9; todos los flujos de eventos; 10.3–10.4 | clúster, quorum, Core efímero, JetStream durable, ACK, replicación, DLQ y recuperación |
+| ADR-0018 | Privacidad, retención, términos y cookies | 0.3; 0.5; 6.4; 8.4–8.6; F.1–F.6 | minimización desde diseño y paquete legal/consentimiento final por jurisdicción |
+| ADR-0019 | Validación de entradas y contratos de datos | 0.5; todas las fronteras, módulos, workers e integraciones | validación por campo/frontera, pruebas negativas, fuzzing y errores seguros |
+| ADR-0020 | Defensa en profundidad | 0.3–0.9; todas las fases; 10.5; F.6 | modelo de amenazas, controles por frontera y riesgos residuales |
+| ADR-0021 | RBAC/ABAC y aislamiento multi-tenant | 0.4; 1.2–1.5; todas las operaciones; 10.5 | matriz de permisos, BOLA/IDOR y pruebas tenant/sucursal cruzados |
+| ADR-0022 | Seguridad frontend, navegador, sesiones y APIs de borde | 1.3; 2.5–2.6; 6.4; 9.3; 9.5; 10.1; F.4 | CSRF/XSS/CSP/CORS, cookies, sesiones, caché local y dispositivos |
+| ADR-0023 | Infraestructura, redes, secretos y criptografía | 0.7; 0.9; despliegues de todas las fases; 10.3–10.7 | red, TLS, secretos, rotación, hardening y backup cifrado |
+| ADR-0024 | Desarrollo seguro, CI/CD y supply chain | 0.2; cada PR/build/release; 10.5; F.6 | Rulesets, CI, SCA, SBOM, procedencia y artefactos verificados |
+| ADR-0025 | Abuso de APIs, bots, DDoS y exfiltración | 0.5; 1.4; 2.5; todas las APIs; 8.2–8.6; 9.1–9.5; 10.4–10.5 | rate limits, cuotas, backpressure, exportación limitada y pruebas |
+| ADR-0026 | Auditoría, detección y respuesta a incidentes | 0.8; operaciones sensibles en todas las fases; 8.6; 10.6–10.7; F.5–F.6 | eventos, alertas, runbooks, ejercicios, integridad y evidencias |
+| ADR-0027 | Archivos, documentos y object storage | 0.9; 2.1; 5.1; 6.1; 7.1; 8.5; 9.4; 10.3; 10.7; F.1–F.5 | validación, cuarentena, autorización, integridad, retención y descarga segura |
+
+**Regla de cierre:** ninguna subfase se considera completa hasta que cada requisito funcional aplicable y cada decisión ADR relacionada tenga una referencia verificable a su implementación, pruebas ejecutadas y evidencia. Una fila de esta matriz no sustituye los criterios específicos de aceptación de la subfase.
+
+**Estado final:** plan detallado propuesto como documento de ejecución.**Estado final:** plan detallado propuesto como documento de ejecución. Las decisiones arquitectónicas citadas permanecen en sus estados ADR vigentes. La existencia de este plan no significa que las subfases estén implementadas ni que una fase haya sido aceptada como terminada.
