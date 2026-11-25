@@ -129,7 +129,6 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Resultado:** respuesta operativa aprobada para el escenario. Los controles siguen siendo requisitos de diseño hasta que se implementen y prueben en las fases correspondientes.
 - **Acciones relacionadas:** TA-02 permanece pendiente de implementación; TA-07 permanece pendiente para pruebas negativas en CI.
 
-
 #### TT-02 — Cola offline manipulada, duplicada o reordenada
 
 - **Estado del walkthrough:** revisado y siete medidas aprobadas por el propietario.
