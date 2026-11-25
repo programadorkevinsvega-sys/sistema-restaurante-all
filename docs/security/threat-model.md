@@ -1,7 +1,7 @@
 # Modelo de amenazas — Restaurant OS
 
 **Estado:** vigente
-**Versión:** 1.0
+**Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.3
 **Ámbito:** cuatro procesos, módulos, navegador, APIs, workers, mensajería, almacenamiento, proveedores y operación.
@@ -42,6 +42,11 @@ un escáner automático.
 | Configuración de sucursales y operación | Medio | ORGANIZATION |
 | Catálogo de productos y precios | Medio | CATALOG |
 | Secretos de infraestructura (DSN, claves API, certificados) | Crítico | Infraestructura |
+| Datos locales de POS: ventas pendientes, catálogos, configuración y colas offline | Alto/Crítico según dato | Módulo propietario / dispositivo |
+| Identidades, certificados y claves por dispositivo POS | Crítico | IDENTITY / Infraestructura |
+| Backups, WAL, snapshots y claves de recuperación | Crítico | Infraestructura / módulo propietario |
+| Objetos, documentos, exportaciones y URLs temporales | Alto/Crítico según contenido | Módulo propietario |
+| Entradas, salidas, contexto y credenciales de herramientas de IA | Alto/Crítico según dato | Módulo propietario / proveedor
 
 ### 2.2 Procesos
 
@@ -83,6 +88,9 @@ un escáner automático.
 - Proveedor comprometido: callback, webhook o respuesta de API manipulada.
 - Insider: empleado o colaborador con acceso legítimo que abusa de él.
 - Atacante de supply chain: dependencia, imagen de contenedor o workflow comprometido.
+- Atacante con acceso físico a un dispositivo POS perdido, robado o desatendido.
+- Dispositivo POS comprometido, clonado o fuera de inventario que intenta sincronizar.
+- Proveedor de IA, extensión o herramienta externa comprometida o con permisos excesivos.
 
 ---
 
@@ -123,6 +131,7 @@ Un control en la frontera 1 no sustituye los controles en la frontera 2.
 | S-03 | Credenciales de usuario comprometidas (phishing, fuerza bruta) | Frontera pública | Alta |
 | S-04 | Callback de proveedor externo falsificado (PSP, webhook) | Frontera proveedores | Alta |
 | S-05 | Worker con identidad no verificada procesando mensajes | NATS/Outbox | Media |
+| S-06 | Dispositivo POS clonado, revocado o no enrolado que suplanta un dispositivo autorizado al sincronizar | POS / identidad de dispositivo | Alta |
 
 ### 5.2 Manipulación (Tampering)
 
@@ -133,6 +142,9 @@ Un control en la frontera 1 no sustituye los controles en la frontera 2.
 | T-03 | Modificación de eventos en tránsito o replay de mensajes | NATS JetStream | Alta |
 | T-04 | Alteración de archivos subidos (documentos, imágenes) | Almacenamiento objetos | Media |
 | T-05 | Modificación de dependencias o artefactos en CI/CD | Pipeline | Alta |
+| T-06 | Alteración, borrado, reordenamiento o replay de la cola local de operaciones offline | POS / almacenamiento local / sincronización | Crítica |
+| T-07 | Envenenamiento o contaminación de caché con datos de otro tenant, usuario o versión de permisos | Redis / caché de aplicación | Alta |
+| T-08 | Alteración, sustitución o restauración maliciosa de backups, WAL o snapshots | Backups / recuperación | Crítica |
 
 ### 5.3 Repudio (Repudiation)
 
@@ -141,6 +153,7 @@ Un control en la frontera 1 no sustituye los controles en la frontera 2.
 | R-01 | Operaciones financieras sin trazabilidad de actor | PAYMENTS / CASH | Alta |
 | R-02 | Cambios de configuración de tenant sin registro | PLATFORM | Alta |
 | R-03 | Acceso excepcional de soporte sin auditoría | Todos los módulos | Alta |
+| R-04 | Operaciones offline ejecutadas, descartadas o sincronizadas sin secuencia y trazabilidad reconciliable | POS / AUDIT / sincronización | Alta |
 
 ### 5.4 Divulgación de información (Information Disclosure)
 
@@ -153,6 +166,10 @@ Un control en la frontera 1 no sustituye los controles en la frontera 2.
 | D-05 | Secretos expuestos en código, logs o artefactos | CI/CD / Repositorio | Crítica |
 | D-06 | Datos de pago completos fuera de flujo PCI | PAYMENTS | Crítica |
 | D-07 | SSRF desde URLs o importaciones controladas por usuario | Public Backend / BFF | Alta |
+| D-08 | Exposición de datos locales al perderse, robarse o compartirse un dispositivo POS | POS / almacenamiento local | Alta |
+| D-09 | Bucket, objeto o URL de descarga expuestos sin autorización o con alcance excesivo | Object storage | Alta |
+| D-10 | Exfiltración de backups, WAL, snapshots o exportaciones de recuperación | Backups / almacenamiento | Crítica |
+| D-11 | Envío de datos personales, financieros, secretos o información multi-tenant a proveedor/modelo de IA sin base y control aprobados | Integración IA / proveedor | Alta |
 
 ### 5.5 Denegación de servicio (Denial of Service)
 
@@ -163,6 +180,8 @@ Un control en la frontera 1 no sustituye los controles en la frontera 2.
 | DS-03 | Bomba de descompresión o payload excesivo en upload | Almacenamiento / BFF | Media |
 | DS-04 | Abuso de endpoints costosos (reportes, exportaciones, IA) | Public BFF / ANALYTICS | Media |
 | DS-05 | Flood de mensajes en NATS que satura workers | NATS → Workers | Media |
+| DS-06 | Sincronización offline masiva, repetida o malformada que agota API, broker, workers o base de datos | POS / BFF / NATS / workers | Alta |
+| DS-07 | Ransomware, borrado o fallo de restauración que impide recuperar datos y servicio | Backups / almacenamiento / operación | Crítica |
 
 ### 5.6 Elevación de privilegios (Elevation of Privilege)
 
@@ -175,6 +194,8 @@ Un control en la frontera 1 no sustituye los controles en la frontera 2.
 | E-05 | Workflow CI/CD con permisos excesivos modifica producción | CI/CD | Alta |
 | E-06 | XSS que eleva privilegios mediante token robado en navegador | Frontera pública | Alta |
 | E-07 | CSRF en operaciones de estado sobre APIs no protegidas | BFF público | Media |
+| E-08 | Enrolamiento, reasignación o elevación de privilegios de un dispositivo POS sin autorización administrativa | Gestión de dispositivos | Alta |
+| E-09 | Agente, modelo o herramienta de IA ejecuta acciones fuera de su alcance o sin confirmación requerida | Integración IA / herramientas | Alta |
 
 ---
 
@@ -187,6 +208,8 @@ Un control en la frontera 1 no sustituye los controles en la frontera 2.
 | DOM-03 | Anulación o modificación de pagos ya confirmados | PAYMENTS / CASH | Crítica |
 | DOM-04 | Acceso cruzado entre sucursales del mismo tenant | ORGANIZATION / módulos | Alta |
 | DOM-05 | Receta de producción modificada sin trazabilidad de versión | PRODUCTION | Media |
+| DOM-06 | Venta offline duplicada, perdida o aplicada con precios, impuestos, inventario o estado de pago inconsistentes al reconciliar | POS / SALES / CASH / INVENTORY | Crítica |
+| DOM-07 | Sincronización de operación offline atribuida a tenant o sucursal distintos de la asignación vigente del dispositivo | POS / identidad / multi-tenant | Crítica |
 
 ---
 
@@ -199,7 +222,9 @@ Este modelo de amenazas es un documento vivo. Se actualiza cuando:
 - Una prueba de seguridad revela una amenaza no considerada.
 - Se cierra o acepta formalmente un riesgo residual.
 
-Cada amenaza tiene controles asignados en [threat-control-matrix.md](./threat-control-matrix.md).
+Las amenazas específicas de operación offline incluyen seguridad del dispositivo, almacenamiento local, identidad enrolada, secuencia, idempotencia, reconciliación y revocación. El dispositivo puede conservar una cola temporal, pero no se convierte en autoridad para permisos, tenant, precios vigentes ni estado final de negocio.
+
+Cada amenaza tiene controles asignados en [threat-control-matrix.md](./threat-control-matrix.md), incluidos criterios de prueba y evidencia requerida.
 Los riesgos sin control implementado se registran en [residual-risk-register.md](./residual-risk-register.md).
 La línea base de controles por proceso está en [security-baseline-per-process.md](./security-baseline-per-process.md).
 
