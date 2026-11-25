@@ -1720,4 +1720,4 @@ Cada ADR debe reflejarse en diseño, implementación, pruebas y evidencia de las
 
 **Regla de cierre:** ninguna subfase se considera completa hasta que cada requisito funcional aplicable y cada decisión ADR relacionada tenga una referencia verificable a su implementación, pruebas ejecutadas y evidencia. Una fila de esta matriz no sustituye los criterios específicos de aceptación de la subfase.
 
-**Estado final:** plan detallado propuesto como documento de ejecución.**Estado final:** plan detallado propuesto como documento de ejecución. Las decisiones arquitectónicas citadas permanecen en sus estados ADR vigentes. La existencia de este plan no significa que las subfases estén implementadas ni que una fase haya sido aceptada como terminada.
+**Estado final:** plan detallado propuesto como documento de ejecución. Las decisiones arquitectónicas citadas permanecen en sus estados ADR vigentes. La existencia de este plan no significa que las subfases estén implementadas ni que una fase haya sido aceptada como terminada.
