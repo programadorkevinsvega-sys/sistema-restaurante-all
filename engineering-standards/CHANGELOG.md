@@ -2,6 +2,21 @@
 
 Todos los cambios relevantes de la biblioteca se registran aquí. El formato sigue una adaptación de Keep a Changelog y versionado semántico.
 
+## [0.3.0] - 2026-11-25
+
+### Added
+- Inventario exhaustivo con IDs estables para los 66 estándares documentales y los 92 temas de descubrimiento (158 filas evaluables).
+- Matriz inicial de cobertura que identifica documentos relacionados y brechas conocidas sin equiparar referencias con cobertura suficiente.
+- Criterios mínimos de profundidad técnica, evidencias, referencias y revisión especializada para estándares.
+
+### Changed
+- Separación estricta entre aplicabilidad y estado de adopción; corrección de la plantilla de perfil, registro y matriz de conformidad.
+- Protocolo de agentes reforzado para exigir una fila por cada ID, revisión completa, ausencia de omisiones y tratamiento explícito de brechas.
+- README y navegación actualizados para incluir el inventario y los criterios de calidad.
+
+### Notes
+- Todos los documentos siguen en Draft; estas mejoras no equivalen a aprobación ni conformidad.
+
 ## [0.2.0] - 2026-11-25
 
 ### Added
