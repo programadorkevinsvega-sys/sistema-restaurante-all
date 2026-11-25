@@ -98,6 +98,7 @@ Si el backend obtiene contenido desde una URL suministrada, aplica anti-SSRF: es
 ## 10. Errores
 
 Formato conceptual, no DTO implementado:
+
 - code: código estable, por ejemplo validation.required.
 - message: mensaje general seguro/localizable.
 - field_errors: lista acotada de ruta y código.
