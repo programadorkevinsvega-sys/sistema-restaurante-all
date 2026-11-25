@@ -68,7 +68,7 @@ Como mínimo, comprueba los siguientes ámbitos y sus ADR vigentes:
 - ADR-0017: NATS Core y JetStream en clúster de alta disponibilidad.
 
 Comprueba el estado actual de cada ADR en su archivo y en el índice. Un ADR Accepted es vinculante. Si un ADR posterior complementa o sustituye parcialmente a uno anterior, aplica únicamente el alcance explícito de esa sustitución; no descartes el resto del ADR anterior. Los ADR Proposed requieren aprobación explícita y no se tratan como decisiones aceptadas. Para autenticación, credenciales, MFA, sesiones o recuperación, revisa también [la especificación técnica de seguridad](docs/security/password-and-authentication.md). La aceptación documental no demuestra que la implementación, infraestructura, configuración o migraciones existan.
- 
+
 ### 2.3 Requisitos y documentación específica de la tarea
 
 Después de la lectura general:
