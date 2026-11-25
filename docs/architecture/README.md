@@ -42,6 +42,11 @@ SQLx.
 - [Diseño de aislamiento por módulo y proceso](../security/isolation-design.md): schemas PostgreSQL, roles, RLS, pools, mensajería y verificación; entregable de subfase 0.4.
 - [Casos negativos de autorización](../security/authorization-negative-cases.md): escenarios de rechazo obligatorios para todo endpoint y operación protegida; entregable de subfase 0.4.
 - [Validación de entradas y contratos de datos](./input-validation-and-data-contracts.md): especificación técnica vigente conforme a ADR-0019 Accepted; no representa validadores ni middleware implementados.
+- [Catálogo de reglas y formatos de validación](../engineering/validation-rules-catalog.md): reglas mínimas por tipo de dato; entregable de subfase 0.5.
+- [Plantilla de contrato de entrada](../engineering/input-contract-template.md): estructura mínima por operación antes de implementar; entregable de subfase 0.5.
+- [Catálogo de errores públicos](../engineering/public-error-catalog.md): códigos estables HTTP/gRPC para todas las fronteras; entregable de subfase 0.5.
+- [Checklist de revisión de validación](../engineering/validation-review-checklist.md): ítems obligatorios antes de aprobar cualquier PR con fronteras de entrada; entregable de subfase 0.5.
+- [Matriz de pruebas negativas y fuzzing](../engineering/validation-negative-test-matrix.md): 54 casos negativos mínimos y áreas de fuzz testing; entregable de subfase 0.5.
 - [ADRs](../adr/README.md): índice de decisiones aceptadas. ADR-0001 a ADR-0027 están Accepted; la aceptación no implica implementación.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases funcionales y entregables generales.
