@@ -23,10 +23,19 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0015: Observabilidad integral de aplicaciones e infraestructura](./0015-integrated-observability-platform.md)
 - [ADR-0016: Redis Cluster, TLS y caché distribuida de consultas](./0016-redis-cluster-tls-and-query-caching.md)
 - [ADR-0017: NATS Core y JetStream en clúster de alta disponibilidad](./0017-nats-core-jetstream-ha-cluster.md)
+- [ADR-0018: Privacidad, retención de datos, términos legales y consentimiento de cookies](./0018-privacy-data-retention-legal-terms-and-cookie-consent.md)
 
 ## Decisiones propuestas
 
-- [ADR-0018: Privacidad, retención de datos, términos legales y consentimiento de cookies](./0018-privacy-data-retention-legal-terms-and-cookie-consent.md) — define el paquete legal y de privacidad como puerta obligatoria de la fase final de lanzamiento, sin aplazar los controles de privacidad que deben existir desde el diseño.
+- **ADR-0019:** Validación de entradas y contratos de datos. Su propuesta está en [PR #26](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/26), que permanece abierto y sin fusionar; el archivo aún no forma parte de main.
+- [ADR-0020: Marco integral de seguridad y defensa en profundidad](./0020-integral-security-and-defense-in-depth.md)
+- [ADR-0021: Autorización, RBAC/ABAC y aislamiento multi-tenant](./0021-authorization-rbac-abac-and-tenant-isolation.md)
+- [ADR-0022: Seguridad del frontend, navegador, sesiones y APIs de borde](./0022-frontend-browser-session-and-api-security.md)
+- [ADR-0023: Seguridad de infraestructura, redes, secretos y criptografía](./0023-infrastructure-network-secrets-and-cryptography-security.md)
+- [ADR-0024: Desarrollo seguro, CI/CD y cadena de suministro de software](./0024-secure-development-cicd-and-software-supply-chain.md)
+- [ADR-0025: Protección contra abuso de APIs, bots, DDoS y extracción de datos](./0025-api-abuse-bots-ddos-and-data-exfiltration-protection.md)
+- [ADR-0026: Auditoría de seguridad, detección y respuesta a incidentes](./0026-security-audit-detection-and-incident-response.md)
+- [ADR-0027: Seguridad de archivos, documentos y almacenamiento de objetos](./0027-secure-file-document-and-object-storage-handling.md)
 
 El diseño técnico de crates y dependencias está en [Diseño de crates y dependencias](../architecture/crate-architecture.md). La estrategia técnica de UUIDv7 está en [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](../architecture/identifier-strategy.md), y la operación de alta disponibilidad y réplicas está en [PostgreSQL HA y réplicas de lectura](../architecture/postgresql-ha-and-read-replicas.md). La estrategia técnica de consistencia distribuida está en [Estrategia técnica de consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md). La estrategia técnica de observabilidad está en [Estrategia técnica de observabilidad integral](../architecture/observability-strategy.md). La operación de caché está en [Redis Cluster, TLS y operación de caché distribuida](../architecture/redis-cache-operations.md). La operación de mensajería está en [NATS Core y JetStream en clúster](../architecture/nats-core-jetstream-cluster.md).
 
