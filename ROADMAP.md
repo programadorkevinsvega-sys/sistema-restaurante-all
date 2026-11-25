@@ -917,6 +917,41 @@ Duracion orientativa: 5 a 8 semanas.
 
 Resultado: ecosistema empresarial.
 
+### Fase final - Privacidad, cumplimiento legal y lanzamiento a producción
+
+Esta es la última fase del plan maestro y se ejecuta inmediatamente antes de
+habilitar producción y comercializar el servicio en cada mercado. Su alcance
+se rige por [ADR-0018](docs/adr/0018-privacy-data-retention-legal-terms-and-cookie-consent.md).
+No cambia las fases funcionales 0-10 ni los lotes de construcción.
+
+- Confirmar jurisdicciones, mercados, tipos de cliente y superficies habilitadas.
+- Completar inventario de tratamientos, categorías de datos, finalidades,
+  proveedores, subencargados, transferencias y cookies/SDKs reales.
+- Aprobar la matriz de retención y eliminación por categoría, finalidad y
+  jurisdicción, incluidas excepciones legales y respaldos.
+- Preparar, revisar jurídicamente, versionar y publicar la política de
+  privacidad, política de retención, términos y condiciones, DPA cuando
+  corresponda y política de cookies.
+- Habilitar y probar banner y centro de preferencias para las tecnologías no
+  esenciales cuando sea exigible; comprobar aceptación, rechazo granular y
+  revocación.
+- Verificar los flujos de derechos, consentimientos, comunicaciones,
+  eliminación individual, baja de tenant y legal hold.
+- Revisar contratos y controles de proveedores y subencargados.
+- Obtener aprobación jurídica para cada jurisdicción y aprobación de negocio.
+- Completar el checklist Go/No-Go y conservar evidencias de revisión y pruebas.
+
+**Puerta de lanzamiento:** no se habilita producción para un mercado si falta
+alguno de los documentos, controles o aprobaciones que le resulten aplicables.
+La duración y el costo de esta fase se estimarán cuando estén definidos los
+mercados, proveedores y alcance real; no están incluidos en la estimación
+orientativa de las fases de construcción.
+
+Los fundamentos técnicos de privacidad, minimización, aislamiento, seguridad,
+auditoría y trazabilidad de consentimientos se construyen y prueban desde las
+fases anteriores. Esta fase finaliza y valida el paquete legal y su activación;
+no introduce privacidad por primera vez.
+
 ### Validaciones antes del lanzamiento
 
 - Dos empresas no pueden acceder a datos de la otra.
