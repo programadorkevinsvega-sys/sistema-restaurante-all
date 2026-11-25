@@ -53,7 +53,7 @@ explícita del propietario del producto.
 | Controles compensatorios | No hay base de datos en producción ni datos reales expuestos en esta etapa. |
 | Fase de cierre | Diseño: 0.4. SQL/roles/RLS y pruebas: 0.6 y fases funcionales correspondientes. |
 | Propietario | @programadorkevinsvega-sys |
-| Condición de revisión | Si se crean tablas o se exponen datos antes de completar 0.4 y 0.6 |
+| Condición de revisión | Antes de trasladar/corregir SQL, aplicar migraciones, provisionar roles o exponer datos; revisar cambios en tablas tenant-scoped |
 
 ### RR-003 — Validación de entradas en fronteras (T-01, T-02, E-03, D-07)
 
