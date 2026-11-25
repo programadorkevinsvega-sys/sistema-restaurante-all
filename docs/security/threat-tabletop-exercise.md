@@ -168,7 +168,6 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Resultado:** respuesta operativa aprobada para el escenario. La gestión de secretos, permisos, aislamiento de workflows, procedencia y validación de artefactos debe implementarse y verificarse en las fases correspondientes.
 - **Acciones relacionadas:** TA-04 y TA-07 permanecen pendientes de implementación y pruebas.
 
-
 #### TT-06 — Ransomware, borrado o corrupción de backups
 
 - **Estado del walkthrough:** revisado y ocho medidas aprobadas por el propietario.
@@ -179,7 +178,6 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Resultado:** respuesta operativa aprobada para el escenario. La arquitectura de backup, la protección de credenciales, las pruebas de restauración y los procedimientos de reconciliación deben implementarse y verificarse en las fases correspondientes.
 - **Acciones relacionadas:** TA-04 permanece pendiente de implementación y pruebas; TA-07 permanece pendiente para incorporar pruebas negativas y validaciones automatizadas a CI.
 
-
 #### TT-07 — Prompt injection o herramienta de IA con permisos excesivos
 
 - **Estado del walkthrough:** revisado y diez medidas aprobadas por el propietario.
@@ -189,7 +187,6 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Limitación aceptada:** no hay proveedor ni integración IA aprobada. Las decisiones son requisitos previos y no evidencia de controles implementados o probados. Toda futura integración debe pasar evaluación de seguridad y pruebas antes de habilitarse.
 - **Resultado:** respuesta operativa aprobada para el escenario. La política de IA, el catálogo y permisos de herramientas, las confirmaciones, la minimización de contexto y las pruebas deben definirse e implementarse antes de integrar IA.
 - **Acciones relacionadas:** TA-06 permanece pendiente hasta definir política de proveedores IA; TA-07 permanece pendiente para incorporar pruebas negativas y validaciones automatizadas a CI.
-
 
 #### TT-08 — Abuso de API y saturación de sincronización
 
