@@ -4,7 +4,7 @@
 **Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.4
-**Autoridad:** ADR-0001, ADR-0008, ADR-0010, ADR-0021
+**Autoridad:** ADR-0001, ADR-0008, ADR-0010, ADR-0021, ADR-0023
 **Documentos relacionados:**
 
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
