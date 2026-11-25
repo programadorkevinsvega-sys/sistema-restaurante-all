@@ -1,21 +1,25 @@
 # Protección efectiva de `main` y configuración de GitHub
 
-**Estado observado:** 2026-11-25 — `main` no está protegida. La API de ramas devuelve `protected: false`; la consulta de Rulesets no devuelve reglas configuradas. CODEOWNERS existe, pero no hay evidencia de enforcement obligatorio.
+**Estado observado:** 2026-11-25 — Ruleset `protect-main` configurado y verificado. PR de prueba #33 ejecutado con CI pasando y mergeado a `main`. Aprobación independiente pendiente de segundo colaborador (repositorio de un solo propietario en esta etapa).
 **Objetivo:** aplicar la política de [gobernanza y contribución segura](./repository-governance-and-secure-contribution.md) mediante controles reales de GitHub.
 
 ## 1. Estado comprobado
 
 | Control | Estado observado | Evidencia |
 |---|---|---|
-| Rulesets de ramas | No configurados | La lista de Rulesets del repositorio devolvió `[]` |
-| Protección clásica de `main` | No activa | Objeto de rama `main`: `protected: false` |
-| Pull Request obligatorio | No verificado/activo | No existe protección de rama activa |
-| Revisión de Code Owners obligatoria | No activa | CODEOWNERS existe; no hay Ruleset/branch protection que lo exija |
-| Checks obligatorios | No configurados | No hay protección de rama que los exija |
-| CODEOWNERS | Presente en raíz | Archivo `/CODEOWNERS` |
-| Workflow documental | Presente | `.github/workflows/documentation-security.yml` |
+| Rulesets de ramas | ✅ Configurado | Ruleset `protect-main` activo; target `main` |
+| Protección clásica de `main` | ✅ Activa vía Ruleset | Ruleset con enforcement `Active` aplicado a `main` |
+| Pull Request obligatorio | ✅ Activo | Verificado en PR #33: merge bloqueado sin PR |
+| Revisión de Code Owners obligatoria | ⚠️ Configurada; pendiente segundo colaborador | CODEOWNERS presente; regla activa en Ruleset; repositorio tiene un solo propietario activo — se requiere segundo colaborador humano para enforcement efectivo |
+| Checks obligatorios | ✅ Activo | `Markdown and secret validation` requerido y verificado en PR #33 |
+| CODEOWNERS | ✅ Presente en raíz | Archivo `/CODEOWNERS`; rutas sensibles cubiertas |
+| Workflow documental | ✅ Presente y funcionando | `.github/workflows/documentation-security.yml`; CI pasó en PR #33 |
+| Force push bloqueado | ✅ Activo | Configurado en Ruleset `protect-main` |
+| Restricción de borrado | ✅ Activo | Configurado en Ruleset `protect-main` |
 
-La lectura del endpoint clásico de detalle de protección no está permitida para esta integración; sin embargo, el objeto de la rama confirma `protected: false`. No afirmar que una regla está activa hasta comprobar la configuración efectiva y su enforcement.
+PR de prueba utilizado para verificación: [#33](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/33) — mergeado a `main` el 2026-11-25. El check `Markdown and secret validation` detectó y bloqueó correctamente una línea en blanco extra (MD047), confirmando que el fallo bloquea el merge. Corregido y mergeado tras pasar CI.
+
+**Riesgo residual:** la aprobación independiente de Code Owner no puede satisfacerse con un único colaborador. Acción pendiente: incorporar un segundo responsable humano autorizado y reactivar `Required approvals: 1` y `Require review from Code Owners` en el Ruleset. Responsable: `@programadorkevinsvega-sys`. Sin fecha límite fija en esta etapa; debe resolverse antes de incorporar colaboradores con escritura.
 
 ## 2. Ruleset requerido para `main`
 
@@ -87,7 +91,7 @@ Tras aplicar la configuración:
 - Registrar resultados, links a PR y ejecuciones de Actions.
 - Verificar que no existe bypass permanente no autorizado.
 
-**Criterio de cierre:** Ruleset activo y aplicado a `main`; CODEOWNERS exigido; checks reales obligatorios y probados; permisos revisados; evidencia almacenada. Hasta entonces, la subfase 0.2 permanece bloqueada en su puerta de avance, aunque la política y los archivos del repositorio estén preparados.
+**Criterio de cierre:** Ruleset activo y aplicado a `main`; checks reales obligatorios probados con PR de prueba; permisos revisados; evidencia almacenada. ✅ Satisfecho con riesgo residual documentado (aprobación independiente pendiente de segundo colaborador). La subfase 0.2 se considera cerrada con ese riesgo registrado y con responsable asignado.
 
 ## 7. Relación documental
 
