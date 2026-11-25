@@ -69,7 +69,7 @@ Registrar cambios administrativos de red, permisos, secretos, certificados y con
   workload propia; el certificado autentica el proceso que conecta.
 - Las aserciones de contexto de usuario tenant las emite IDENTITY en Public Backend; las
   aserciones de operador SaaS las emite PLATFORM en Admin Platform Backend.
-- Cada aserción incorpora actor, issuer, audience, vigencia, ámbito y §kid§, y se firma
+- Cada aserción incorpora actor, issuer, audience, vigencia, ámbito y `kid`, y se firma
   mediante la clave privada correspondiente en AWS KMS.
 - Los receptores verifican firma localmente, además de mTLS, audiencia, emisor, vigencia,
   estado de confianza de la clave y autorización del módulo propietario.
