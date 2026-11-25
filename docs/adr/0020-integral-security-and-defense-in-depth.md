@@ -1,11 +1,11 @@
 # ADR-0020: Marco integral de seguridad y defensa en profundidad
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: producto, aplicaciones, datos, procesos, infraestructura, desarrollo, operación y proveedores.
 - Complementa: ADR-0001 a ADR-0019 según su estado; especialmente ADR-0007, ADR-0008, ADR-0011 a ADR-0018.
 - Desarrollado por: ADR-0021 a ADR-0027.
-- Aprobación: pendiente de aprobación explícita del propietario del producto.
+- Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
 
@@ -13,7 +13,7 @@ Restaurant OS es un SaaS multi-tenant compuesto por cuatro procesos independient
 
 Los riesgos incluyen suplantación, robo de sesiones, escalada de privilegios, acceso cruzado entre tenants, inyección, abuso de APIs, manipulación de reglas comerciales, replay de mensajes, archivos maliciosos, exfiltración, compromiso de dependencias, ransomware e interrupción del servicio.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Principios obligatorios
 
@@ -40,6 +40,7 @@ El marco cubre Admin Platform Backend (PLATFORM), Public Backend (demás módulo
 Se tratarán como fronteras independientes: navegador→BFF; BFF→backend; backend→backend; proceso→PostgreSQL/Redis/NATS; servicio→proveedor; CI/CD→producción; operador→datos y administración.
 
 Cada análisis deberá considerar:
+
 - suplantación, robo/reutilización de sesión y compromiso de credenciales;
 - BOLA/IDOR, escalada horizontal/vertical y acceso entre tenants;
 - XSS, CSRF, SSRF, SQL/command injection, traversal y deserialización insegura;
@@ -108,4 +109,4 @@ Beneficios: lenguaje común, límites claros, controles consistentes y preparaci
 
 ## Estado de implementación
 
-Proposed. No implementa middleware, políticas, herramientas, pruebas, infraestructura ni controles. No modifica SQL, migraciones, schemas, roles, datos o despliegues.
+Accepted. La decisión está aprobada; no implementa middleware, políticas, herramientas, pruebas, infraestructura ni controles. No modifica SQL, migraciones, schemas, roles, datos o despliegues.
