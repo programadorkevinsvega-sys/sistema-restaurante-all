@@ -1,4 +1,4 @@
-# ADR-0012: UUID versión 7 como identificador técnico global y PostgreSQL estable actual
+# ADR-0012: UUIDv7 global y PostgreSQL como plataforma HA con réplicas de lectura
 
 - Estado: **Accepted**
 - Historial: Proposed → Accepted
