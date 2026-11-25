@@ -142,9 +142,9 @@ cualquier caso bloquea el avance, independientemente del estado del resto de pru
 | NEG-C-01 | Firma alterada | Cambiar cualquier claim o byte firmado | Rechazo UNAUTHENTICATED; sin efecto |
 | NEG-C-02 | Emisor incorrecto | Aserción IDENTITY presentada como PLATFORM o viceversa | Rechazo; no reinterpretar roles |
 | NEG-C-03 | Audiencia incorrecta | Aserción para otro proceso | Rechazo |
-| NEG-C-04 | Clave desconocida o retirada | §kid§ no confiable o fuera de ventana | Rechazo; sin fallback permisivo |
-| NEG-C-05 | Aserción expirada o aún no vigente | §expires_at§ vencido o §not_before§ futuro | Rechazo |
-| NEG-C-06 | Replay de operación sensible | Reutilizar §jti§/aserción en operación no repetible | Rechazo o idempotencia contractual; nunca duplicar |
+| NEG-C-04 | Clave desconocida o retirada | `kid` no confiable o fuera de ventana | Rechazo; sin fallback permisivo |
+| NEG-C-05 | Aserción expirada o aún no vigente | `expires_at` vencido o `not_before` futuro | Rechazo |
+| NEG-C-06 | Replay de operación sensible | Reutilizar `jti`/aserción en operación no repetible | Rechazo o idempotencia contractual; nunca duplicar |
 | NEG-C-07 | Identidad mTLS no corresponde | Certificado válido de workload no autorizado | Rechazo de conexión/RPC |
 | NEG-C-08 | Confusión actor/servicio | Contexto humano atribuido a otro servicio o campos mezclados | Rechazo |
 | NEG-C-09 | Alteración de tenant o ámbito | Cambiar tenant, empresa, marca, sucursal o roles sin nueva firma | Firma inválida o denegación |
