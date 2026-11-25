@@ -27,7 +27,9 @@
 - [ ] No se añadieron secretos, credenciales ni datos personales.
 - [ ] Dependencias y workflows revisados cuando aplica.
 - [ ] Permisos mínimos y separación de privilegios preservados.
-- [ ] Cambios sensibles identificados para revisión especializada.
+- [ ] Cambios sensibles identificados; revisión propia estructurada documentada por el mantenedor.
+- [ ] Si existe un segundo colaborador autorizado, revisión especializada/Code Owner solicitada cuando corresponda.
+- [ ] No se simula ni se marca como independiente una revisión realizada por el propio autor.
 
 ## Documentación y cierre
 
