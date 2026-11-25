@@ -1,10 +1,10 @@
 # Diseño de aislamiento por módulo y proceso
 
 **Estado:** diseño aprobado — subfase 0.4
-**Versión:** 1.0
+**Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.4
-**Autoridad:** ADR-0001, ADR-0008, ADR-0010, ADR-0021
+**Autoridad:** ADR-0001, ADR-0008, ADR-0010, ADR-0021, ADR-0023
 **Documentos relacionados:**
 
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
@@ -14,8 +14,10 @@
 
 ## 1. Propósito
 
-Define cómo se implementa el aislamiento multi-tenant y entre módulos en PostgreSQL, en los
-procesos y en la mensajería. Es un diseño; no crea tablas, roles, políticas RLS ni código.
+Define el aislamiento multi-tenant y entre módulos en PostgreSQL, procesos y mensajería.
+Los SQL históricos existentes son la base de datos diseñada para cada módulo y contienen
+estructuras que deberán trasladarse a las rutas canónicas y corregirse cuando corresponda.
+Este documento no crea ni modifica tablas, roles, políticas RLS, SQL ni código.
 
 ---
 
@@ -49,8 +51,9 @@ tablas de otro módulo.
 | AUDIT | `audit` | Public Backend |
 | REPORTING | `reporting` | Public Backend |
 
-**Prohibido:** FKs entre schemas de módulos distintos, vistas que cruzan schemas propietarios,
-joins directos entre schemas en consultas de aplicación.
+**Regla arquitectónica:** no se permiten FKs entre schemas de módulos distintos, vistas que cruzan schemas propietarios ni joins directos entre schemas en consultas de aplicación.
+
+**Nota de auditoría de SQL histórico:** la inspección read-only identificó referencias entre schemas/módulos en el SQL histórico de IDENTITY. Son incompatibles con ADR-0001 y deben inventariarse y corregirse al preparar la distribución canónica de migraciones. No se modifican ni reescriben ahora los archivos históricos; cualquier corrección futura debe conservar trazabilidad y considerar si el SQL ya fue aplicado en algún entorno.
 
 ### 2.2 Roles PostgreSQL por módulo
 
@@ -68,12 +71,11 @@ Adicionalmente, roles de sistema:
 | `backup_reader` | SELECT sobre todos los schemas | Solo para backup lógico |
 | `monitoring_reader` | SELECT sobre pg\_stat\_* y schemas de observabilidad | Solo para monitoreo |
 
-Los nombres exactos y el script de provisión se definen en la subfase 0.6
-(Fundamentos de datos, PostgreSQL y consistencia). Este documento exige la separación; no la declara implementada.
+Los nombres exactos y el script de provisión se definen en la subfase 0.6. La revisión de SQL históricos no sustituye la provisión y verificación de estos roles; no se debe inferir que existen en una instancia PostgreSQL por aparecer en documentación.
 
 ### 2.3 Row-Level Security (RLS)
 
-Todas las tablas que contienen datos de tenant aplican RLS. La política base es:
+Todas las tablas que contienen datos de tenant deben aplicar RLS. Los SQL históricos ya contienen DDL RLS en determinados módulos/tablas; la cobertura completa debe auditarse contra el inventario real de tablas y columnas tenant-scoped. La presencia de DDL en Git no acredita que se haya ejecutado ni que proteja una base desplegada. La política base es:
 
 ```sql
 -- Patrón de política RLS por tenant (diseño; no ejecutar)
@@ -132,7 +134,9 @@ Señales efímeras: NATS Core. Eventos durables: NATS JetStream con Outbox/Inbox
 
 Cada proceso tiene credenciales propias: DSN de PostgreSQL, subjects NATS autorizados,
 claves de API de proveedores y certificados TLS. No se comparten secretos entre procesos
-ni entre entornos. El gestor de secretos y la rotación se diseñan en la subfase 0.7.
+ni entre entornos. Conforme a ADR-0023, AWS Secrets Manager administra secretos operativos,
+AWS KMS custodia claves privadas de firma y AWS IAM otorga permisos mínimos a workloads.
+La gestión concreta de certificados mTLS se define en 0.7.
 
 ---
 
@@ -177,6 +181,4 @@ Antes de cualquier despliegue productivo, se ejecutarán las siguientes pruebas:
 
 ## 6. Estado de implementación
 
-Diseño aprobado. No existen roles PostgreSQL, políticas RLS, configuración de pools, credenciales
-NATS ni código de aislamiento. La implementación comienza en las subfases 0.6 (PostgreSQL) y 0.9
-(mensajería y caché).
+Diseño aprobado. Los SQL históricos contienen tablas y DDL de seguridad/RLS para determinados módulos, pero no se ha acreditado su aplicación en una instancia ni la provisión de roles runtime/migrator, pools, credenciales NATS o controles de aplicación. La cobertura RLS y las referencias cruzadas entre schemas requieren auditoría completa en 0.6. No se modifican SQL históricos en esta subfase documental. La implementación y verificación se realizan en 0.6, 0.7 y 0.9 según el control.

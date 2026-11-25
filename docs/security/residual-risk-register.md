@@ -1,9 +1,9 @@
 # Registro de riesgos residuales
 
 **Estado:** vigente
-**Versión:** 1.2
+**Versión:** 1.3
 **Fecha:** 2026-11-25
-**Fase:** 0.3
+**Fase:** 0.3/0.4
 **Fuente:** [Modelo de amenazas](./threat-model.md) y [Matriz de control](./threat-control-matrix.md)
 
 ---
@@ -11,7 +11,7 @@
 ## Lectura del registro
 
 Un riesgo residual es una amenaza para la que no existe aún un control implementado y verificado,
-o cuyo control tiene limitaciones conocidas. Cada entrada incluye:
+o cuyo control tiene limitaciones conocidas. Los SQL históricos del repositorio son la base de datos diseñada para cada módulo. La presencia de tablas, constraints o DDL RLS en esos archivos no demuestra que se hayan trasladado a las rutas canónicas, aplicado en una instancia ni probado. Cada entrada incluye:
 
 - **ID:** referencia al ID de amenaza en `threat-model.md`.
 - **Descripción:** qué riesgo permanece abierto.
@@ -47,13 +47,13 @@ explícita del propietario del producto.
 | Campo | Valor |
 |---|---|
 | ID amenazas | D-01, D-02, E-01, E-02, E-04 |
-| Descripción | No existen RLS, roles PostgreSQL por módulo ni lógica de autorización RBAC/ABAC implementada. |
-| Motivo | Depende de 0.4 (modelo de identidad) y 0.6 (diseño de PostgreSQL y RLS). |
-| Tratamiento | Mitigar: definir y probar autorización multi-tenant, RBAC/ABAC, RLS y roles de base de datos en 0.4/0.6; impedir exposición de datos hasta su verificación. |
+| Descripción | Existe DDL histórico RLS en determinados módulos/tablas, pero no se ha acreditado su aplicación ni cobertura completa; tampoco provisión de roles runtime/migrator ni lógica ejecutable RBAC/ABAC probada. |
+| Motivo | Modelo y contrato en 0.4; distribución canónica de SQL, reconciliación de referencias cross-schema, roles y verificación de RLS en 0.6 y fases funcionales. |
+| Tratamiento | Mitigar: inventariar DDL sin reescribir históricos ahora; trasladar/corregir SQL mediante cambios autorizados, provisionar roles y probar RLS/autorización antes de exponer datos. |
 | Controles compensatorios | No hay base de datos en producción ni datos reales expuestos en esta etapa. |
-| Fase de cierre | 0.4 y 0.6 |
+| Fase de cierre | Diseño: 0.4. SQL/roles/RLS y pruebas: 0.6 y fases funcionales correspondientes. |
 | Propietario | @programadorkevinsvega-sys |
-| Condición de revisión | Si se crean tablas o se exponen datos antes de completar 0.4 y 0.6 |
+| Condición de revisión | Antes de trasladar/corregir SQL, aplicar migraciones, provisionar roles o exponer datos; revisar cambios en tablas tenant-scoped |
 
 ### RR-003 — Validación de entradas en fronteras (T-01, T-02, E-03, D-07)
 
@@ -73,9 +73,9 @@ explícita del propietario del producto.
 | Campo | Valor |
 |---|---|
 | ID amenazas | D-05 |
-| Descripción | No existe gestor de secretos configurado. Los secretos de infraestructura (DSN, claves API, certificados) no tienen ciclo de rotación ni revocación automatizado. |
+| Descripción | No existe gestor de secretos operativo configurado; la decisión de AWS administrado está aprobada, pero no desplegada. Los secretos de infraestructura (DSN, claves API, certificados) no tienen ciclo de rotación ni revocación automatizado. |
 | Motivo | Depende de 0.7 (infraestructura, red, secretos y criptografía). Gitleaks en CI detecta exposición accidental en repositorio, pero no gestiona secretos operativos. |
-| Tratamiento | Mitigar: incorporar gestor de secretos, permisos mínimos, rotación y revocación en 0.7; Gitleaks solo es un control complementario de repositorio. |
+| Tratamiento | Mitigar: AWS Secrets Manager, IAM y KMS según ADR-0023; desplegar y probar en 0.7. Gitleaks solo es un control complementario de repositorio. |
 | Controles compensatorios | Gitleaks activo en CI (implementado y verificado en PR #33). Sin infraestructura productiva desplegada. |
 | Fase de cierre | 0.7 |
 | Propietario | @programadorkevinsvega-sys |

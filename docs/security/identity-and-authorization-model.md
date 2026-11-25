@@ -1,10 +1,10 @@
 # Modelo de identidad y autorización
 
 **Estado:** diseño aprobado — subfase 0.4
-**Versión:** 1.0
+**Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.4
-**Autoridad:** ADR-0008, ADR-0011, ADR-0020, ADR-0021
+**Autoridad:** ADR-0008, ADR-0011, ADR-0020, ADR-0021, ADR-0023
 **Documentos relacionados:**
 
 - [Contrato de contexto autenticado](./authenticated-context-contract.md)
@@ -27,7 +27,7 @@ no implementa código, tablas, tokens ni middleware.
 
 ### 2.1 Identidad de usuario
 
-Representa a un ser humano autenticado que interactúa con el sistema a través de un BFF.
+Representa a un usuario de tenant autenticado. Los operadores internos SaaS son una categoría humana separada cuya autoridad es PLATFORM.
 
 | Atributo | Descripción |
 |---|---|
@@ -42,8 +42,7 @@ Representa a un ser humano autenticado que interactúa con el sistema a través 
 | `expires_at` | Timestamp de expiración del access token |
 
 **Propietario exclusivo:** módulo IDENTITY en Public Backend.
-Los BFF no calculan ni almacenan estos atributos; los reciben del contrato de IDENTITY como
-contexto validado y los propagan a los backends.
+Public BFF consume la aserción emitida por IDENTITY y la propaga sin alterar claims ni privilegios. Admin BFF no autentica operadores de plataforma contra IDENTITY.
 
 ### 2.2 Identidad de servicio
 
@@ -63,10 +62,12 @@ procesos ni entornos. La identidad de servicio no equivale a permiso universal.
 
 Identidad de los empleados internos que administran la plataforma SaaS.
 
-- Propietario: módulo PLATFORM en Admin Platform Backend.
-- No comparte tablas, sesiones ni tokens con usuarios de tenant.
-- El acceso excepcional a datos operativos de un tenant es temporal, justificado, auditado y revocable.
-- Se separa técnicamente de las identidades de IDENTITY para módulos de negocio.
+- Propietario exclusivo: módulo PLATFORM en Admin Platform Backend.
+- Admin BFF consume la autoridad de PLATFORM; no autentica estos operadores contra IDENTITY.
+- No comparte tablas, credenciales, sesiones ni tokens con usuarios de tenant.
+- La aserción de contexto de operador la emite PLATFORM con su propio issuer y clave KMS.
+- El acceso excepcional a datos operativos de tenant es temporal, justificado, limitado, auditable y revocable.
+- Public Backend solo acepta esa aserción para una operación de negocio cuando el módulo propietario valida la concesión excepcional; no existe acceso global automático.
 
 ---
 
@@ -75,7 +76,7 @@ Identidad de los empleados internos que administran la plataforma SaaS.
 ### 3.1 Principios
 
 - **Autorización en el módulo propietario:** el módulo dueño del recurso aplica la decisión final.
-  Los BFF verifican sesión y propagan contexto; no toman decisiones de acceso a datos.
+  Public BFF verifica la sesión tenant con IDENTITY y Admin BFF verifica la sesión de operador con PLATFORM. Ambos propagan una aserción firmada sin alterar claims; no toman decisiones de acceso a datos.
 - **RBAC** asigna conjuntos de permisos a roles administrables.
 - **ABAC** evalúa atributos de contexto para afinar la decisión: tenant, sucursal, recurso,
   relación actor-recurso, estado, importe, canal y nivel de autenticación.
@@ -164,8 +165,8 @@ No se duplican tablas de usuarios, sesiones ni permisos entre procesos.
 
 El contexto autenticado se propaga en cada llamada gRPC como parte del contrato del mensaje.
 Nunca se transmite en NATS Core ni en eventos JetStream como credencial activa.
-La especificación exacta de campos y formato está en
-[Contrato de contexto autenticado](./authenticated-context-contract.md).
+La especificación de emisores, audiencia, firma, mTLS, claves y propagación está en
+[Contrato de contexto autenticado](./authenticated-context-contract.md) y ADR-0023.
 
 ---
 
@@ -182,12 +183,6 @@ La especificación exacta de campos y formato está en
 
 ## 7. Estado de implementación
 
-Diseño aprobado. No existen en este momento:
+Diseño aprobado. El repositorio contiene migraciones SQL históricas con estructuras de datos de PLATFORM e IDENTITY, incluidas tablas relacionadas con credenciales, sesiones, roles y políticas RLS en determinadas tablas. Esos archivos son el diseño SQL existente de los módulos; no prueban que las migraciones estén aplicadas, que los roles runtime/migrator estén provisionados ni que los flujos funcionales existan.
 
-- Crates de IDENTITY ni código de autenticación.
-- Tokens, sesiones ni middleware.
-- Tablas, roles PostgreSQL ni RLS implementados.
-- Contratos gRPC de autenticación generados.
-
-La implementación comienza en la subfase 1.3 — IDENTITY: usuarios, autenticación y sesiones,
-previa satisfacción de las dependencias 0.4, 0.5 y 0.6.
+Aún no existen flujos ejecutables completos de autenticación/autorización, emisión/verificación de aserciones firmadas, middleware, contratos gRPC generados ni pruebas automatizadas. No se deben recrear tablas ni diseñar un modelo paralelo ignorando los SQL históricos. Su traslado a las rutas canónicas y las correcciones de compatibilidad se realizarán posteriormente mediante tareas autorizadas, sin reescribir migraciones históricas.

@@ -1,10 +1,10 @@
 # Casos negativos de autorización
 
 **Estado:** diseño aprobado — subfase 0.4
-**Versión:** 1.0
+**Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.4
-**Autoridad:** ADR-0021
+**Autoridad:** ADR-0021, ADR-0023
 **Documentos relacionados:**
 
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
@@ -135,8 +135,30 @@ cualquier caso bloquea el avance, independientemente del estado del resto de pru
 
 ---
 
-## 11. Estado de implementación
+## 11. Casos de integridad del contexto entre procesos
 
-Diseño aprobado. Las pruebas no están escritas ni ejecutadas. Se implementan en paralelo
+| ID | Escenario | Configuración adversa | Resultado esperado |
+|---|---|---|---|
+| NEG-C-01 | Firma alterada | Cambiar cualquier claim o byte firmado | Rechazo UNAUTHENTICATED; sin efecto |
+| NEG-C-02 | Emisor incorrecto | Aserción IDENTITY presentada como PLATFORM o viceversa | Rechazo; no reinterpretar roles |
+| NEG-C-03 | Audiencia incorrecta | Aserción para otro proceso | Rechazo |
+| NEG-C-04 | Clave desconocida o retirada | `kid` no confiable o fuera de ventana | Rechazo; sin fallback permisivo |
+| NEG-C-05 | Aserción expirada o aún no vigente | `expires_at` vencido o `not_before` futuro | Rechazo |
+| NEG-C-06 | Replay de operación sensible | Reutilizar `jti`/aserción en operación no repetible | Rechazo o idempotencia contractual; nunca duplicar |
+| NEG-C-07 | Identidad mTLS no corresponde | Certificado válido de workload no autorizado | Rechazo de conexión/RPC |
+| NEG-C-08 | Confusión actor/servicio | Contexto humano atribuido a otro servicio o campos mezclados | Rechazo |
+| NEG-C-09 | Alteración de tenant o ámbito | Cambiar tenant, empresa, marca, sucursal o roles sin nueva firma | Firma inválida o denegación |
+| NEG-C-10 | Operador PLATFORM sin concesión excepcional | Aserción válida, sin concesión vigente para tenant/recurso | Denegación por módulo propietario |
+| NEG-C-11 | BFF usa autoridad equivocada | Admin BFF usa IDENTITY o Public BFF usa PLATFORM para autenticar | Rechazo |
+| NEG-C-12 | Fallo de KMS/distribución/verificación | Clave pública no disponible o error de verificación | Fallo cerrado; nunca omitir firma |
+
+Estos casos complementan las pruebas de sesión y autorización. La firma no sustituye
+autorización del módulo propietario ni autenticación mTLS.
+
+---
+
+## 12. Estado de implementación
+
+Diseño aprobado. Los escenarios están especificados, pero las pruebas automatizadas no están escritas ni ejecutadas. Se implementan en paralelo
 con la subfase de cada módulo correspondiente, comenzando por IDENTITY (1.3) y
 Autorización RBAC/ABAC (1.4).
