@@ -11,7 +11,7 @@ dos BFF son procesos de composición sin propiedad de dominios ni datos.
 4. Public Backend.
 
 Los BFF son procesos separados de sus backends. Los módulos viven en
-`backend/<backend-propietario>/modules/<modulo>/`; `crates/` se reserva para
+\`backend/<backend-propietario>/modules/<modulo>/\`; \`crates/\` se reserva para
 capacidades técnicas neutrales, contratos versionados y adaptadores. Cada
 módulo mantiene ownership exclusivo de su schema, rol, migraciones e historial
 SQLx.
@@ -31,7 +31,8 @@ SQLx.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md): especificación técnica vinculada a ADR-0011 Accepted; no representa implementación.
-- [ADRs](../adr/README.md): índice de decisiones aceptadas y propuestas. ADR-0018 propone el marco de privacidad, retención, documentación legal y consentimiento como puerta de lanzamiento; aún no está aceptado ni implementado.
+- [Validación de entradas y contratos de datos](./input-validation-and-data-contracts.md): especificación técnica propuesta vinculada a ADR-0019; no representa validadores ni middleware implementados.
+- [ADRs](../adr/README.md): índice de decisiones aceptadas y propuestas. ADR-0019 propone la política transversal de validación de entradas y protección de integridad; requiere aprobación explícita.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.
 
