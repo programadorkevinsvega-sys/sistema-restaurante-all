@@ -71,14 +71,14 @@ La estructura completa y la responsabilidad de cada carpeta están definidas en 
 
 **Debe fallar:**
 ```rust
-// BUSINESS importando la implementación interna de CORE
-use ensambria_core::identity_authentication::AuthenticationService;
+// Un módulo consumidor importando la implementación interna de otro módulo
+use provider_module::internal::OperationService;
 ```
 
 **Permitido:**
 ```rust
-// BUSINESS consumiendo el contrato público del owner
-use core_identity_contracts::{AuthenticationPort, AuthenticateRequest, AuthenticateResponse};
+// Un módulo consumidor usando únicamente el contrato público del módulo propietario
+use provider_module_contracts::{OperationPort, OperationRequest, OperationResponse};
 ```
 
 ---
