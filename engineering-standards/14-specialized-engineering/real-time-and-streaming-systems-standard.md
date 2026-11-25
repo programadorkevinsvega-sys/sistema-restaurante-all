@@ -43,3 +43,20 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Amenazas y escenarios de fallo específicos
+
+Evaluar agotamiento de conexiones/buffers, slow consumers, abuso de canales, fuga entre suscriptores, replay, eventos fuera de orden, poison messages, particiones, lag creciente, pérdida de cursor, skew temporal y cascadas por reconexión masiva.
+
+## 9. Pruebas de aceptación mínimas
+
+- Medir latencia p50/p95/p99, throughput, jitter, pérdida y lag bajo carga representativa.
+- Simular consumidor lento, buffer lleno, payload excesivo, conexión abrupta y tormenta de reconexión.
+- Verificar autorización por canal y aislamiento de datos en cada reconexión/suscripción.
+- Probar replay, cursor expirado, duplicados, eventos tardíos, orden por clave y evolución incompatible de esquema.
+- Forzar failover, partición de red y saturación; comprobar backpressure y recuperación sin cascada.
+- Validar límites de conexiones, mensajes, tamaño, frecuencia y duración.
+
+## 10. Operación y evidencias
+
+Conservar SLI de latencia/lag/errores/conexiones, límites de buffers, políticas de retención, pruebas de carga/failover, dashboards, alertas y runbooks de consumidor lento y reconexión masiva.
