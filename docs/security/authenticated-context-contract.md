@@ -6,6 +6,7 @@
 **Fase:** 0.4
 **Autoridad:** ADR-0004, ADR-0007, ADR-0008, ADR-0021, ADR-0023
 **Documentos relacionados:**
+
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Diseño de aislamiento por módulo y proceso](./isolation-design.md)
 - [Casos negativos de autorización](./authorization-negative-cases.md)
