@@ -44,3 +44,20 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Riesgos específicos y controles de calidad documental
+
+Evaluar documentación desactualizada, ejemplos inseguros, instrucciones no reproducibles, secretos accidentales, enlaces rotos, diagramas divergentes, contenido contradictorio, traducciones desfasadas y conocimiento operativo concentrado en una persona.
+
+## 9. Pruebas de aceptación mínimas
+
+- Ejecutar quickstarts y snippets en entorno limpio y versión soportada.
+- Validar enlaces relativos, anchors, referencias cruzadas y navegación en CI.
+- Comparar ejemplos de configuración con esquemas actuales y escanear secretos.
+- Comprobar que cada documento normativo tenga owner, estado, versión y fecha de revisión.
+- Revisar que diagramas y contratos se generen o validen contra fuentes autoritativas cuando sea viable.
+- Hacer prueba de onboarding con un colaborador que no conozca el sistema.
+
+## 10. Operación y evidencias
+
+Conservar resultados de validación de enlaces/snippets, inventario de documentos, ownership, métricas de frescura, historial de revisiones y registro de contenido obsoleto/retirado.
