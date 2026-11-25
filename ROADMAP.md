@@ -791,7 +791,7 @@ Este documento contiene tres vistas distintas y complementarias; no son tres cal
 
 1. **Fases funcionales del producto (Fases 0-10):** agrupan capacidades y resultados funcionales que se entregan al producto. Son la referencia para saber qué capacidades pertenecen a cada etapa.
 2. **Orden recomendado de construcción funcional (lotes 0-11):** organiza dependencias funcionales y el orden sugerido de los grandes dominios/capacidades. El lote 0 establece PLATFORM y los lotes 1-11 recorren capacidades empresariales y operativas. No define crates, schemas ni orden de migraciones.
-3. **Plan maestro de desarrollo (Fases 0-...):** agrupa trabajo de ingeniería, infraestructura y entrega en una secuencia de ejecución orientativa. Puede solaparse con las fases funcionales y no sustituye sus criterios de aceptación.
+3. **Plan maestro de desarrollo:** agrupa trabajo de ingeniería, infraestructura y entrega en una secuencia de ejecución orientativa. Puede solaparse con las fases funcionales y no sustituye sus criterios de aceptación.
 
 La numeración de una vista no debe interpretarse como numeración de otra. Para planificar una tarea concreta se identifica su fase funcional, lote y dependencias de implementación; no se crea una cuarta secuencia ni se cambia el ownership definido por ADR-0008 y `requisitos.md`.
 
