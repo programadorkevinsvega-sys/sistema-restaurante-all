@@ -56,6 +56,11 @@ SQLx.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases funcionales y entregables generales.
 - [Plan maestro de ejecución detallado](../planning/master-execution-plan.md): subfases, tareas, dependencias, ADR, entregables, pruebas y puertas de avance.
+- [Modelo de red y matriz de flujos](../infrastructure/network-model.md): zonas, flujos permitidos y egress por proceso; entregable de subfase 0.7.
+- [Política de secretos](../infrastructure/secrets-policy.md): ciclo de vida, separación por proceso/módulo/entorno y reglas de uso; entregable de subfase 0.7.
+- [Baseline de contenedores](../infrastructure/container-baseline.md): controles mínimos por imagen y contenedor antes de desplegar; entregable de subfase 0.7.
+- [Política TLS/criptográfica](../infrastructure/tls-crypto-policy.md): TLS por frontera, certificados, cifrado en reposo y gestión de claves; entregable de subfase 0.7.
+- [Runbooks de rotación](../infrastructure/rotation-runbooks.md): procedimientos de rotación programada y de emergencia; entregable de subfase 0.7.
 
 ## ADR de seguridad aceptados
 
