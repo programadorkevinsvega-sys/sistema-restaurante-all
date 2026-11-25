@@ -85,4 +85,4 @@ Auditar permisos; definir matriz por workflow/environment; integrar escaneo; est
 
 ## Estado de implementación
 
-Proposed. No modifica workflows, reglas GitHub, dependencias, lockfiles, runners, secretos ni despliegues.
+La decisión arquitectónica está **Accepted**; su implementación permanece pendiente y se ejecuta por subfases del plan maestro. La política operativa se desarrolla en [Gobernanza del repositorio y contribución segura](../engineering/repository-governance-and-secure-contribution.md). La aceptación del ADR no demuestra que existan Rulesets, workflows reforzados, análisis de dependencias, SBOM, procedencia, firmas, runners aislados ni despliegues protegidos.
