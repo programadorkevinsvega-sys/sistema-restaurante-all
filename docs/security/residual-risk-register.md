@@ -1,7 +1,7 @@
 # Registro de riesgos residuales
 
 **Estado:** vigente
-**Versión:** 1.1
+**Versión:** 1.2
 **Fecha:** 2026-11-25
 **Fase:** 0.3
 **Fuente:** [Modelo de amenazas](./threat-model.md) y [Matriz de control](./threat-control-matrix.md)
