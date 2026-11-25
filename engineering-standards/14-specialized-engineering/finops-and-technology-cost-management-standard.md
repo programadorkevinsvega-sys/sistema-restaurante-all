@@ -9,27 +9,41 @@ Aplica a costos cloud, licencias, infraestructura, proveedores y operación téc
 ## 2. Principios
 
 - Definir requisitos por resultados, riesgo y contexto; no por preferencia tecnológica.
+
 - Mantener responsabilidades, límites de confianza y propiedad explícitos.
+
 - Aplicar mínimo privilegio, privacidad, accesibilidad y seguridad desde el diseño cuando correspondan.
+
 - Documentar decisiones, supuestos, dependencias y riesgos residuales.
 
 ## 3. Requisitos
 
 - Asignar dueño y etiquetas de costo por producto, ambiente, equipo y unidad de negocio cuando sea posible.
+
 - Definir presupuestos, forecast, alertas, límites y tratamiento de anomalías.
+
 - Medir costo por unidad de valor (usuario, transacción, tenant, job) además del gasto total.
+
 - Evaluar costo total de propiedad: licencias, operación, personal, transferencia, backups, observabilidad y egreso.
+
 - Optimizar con evidencia sin comprometer seguridad, durabilidad, privacidad o SLO.
+
 - Definir políticas de recursos huérfanos, ambientes temporales, retención y apagado programado.
+
 - Revisar descuentos/compromisos, lock-in y riesgo de capacidad mínima.
+
 - Incorporar costos estimados y costos reales en decisiones arquitectónicas y ADR.
 
 ## 4. Antipatrones
 
 - Adoptar herramientas sin requisitos ni evaluación de operación.
+
 - Confiar en controles exclusivamente del cliente cuando el servidor debe hacer cumplir la regla.
+
 - Registrar datos sensibles innecesarios o exponerlos en logs/telemetría.
+
 - Ignorar fallos parciales, cambios de versión, límites de capacidad o dependencias externas.
+
 - Considerar la existencia de documentación como prueba de implementación.
 
 ## 5. Verificación y evidencia
@@ -45,14 +59,21 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
 
 ## Riesgos y escenarios de fallo específicos
+
 Evaluar costos sin atribución, anomalías de gasto, egress inesperado, compromisos infrautilizados, sobreaprovisionamiento, optimización que rompe SLO/seguridad, consumo abusivo y dependencia financiera de un único proveedor.
 
 ## Pruebas de aceptación mínimas
+
 - Reconciliar facturas/usage con etiquetas y propietarios; cuantificar gasto no asignado.
+
 - Probar alertas de presupuesto y anomalías con umbrales y responsables reales.
+
 - Calcular costo unitario y costo total de propiedad, incluyendo personal, soporte, licencias, backup, observabilidad y salida.
+
 - Ensayar límites/cuotas y escenarios de crecimiento/picos; verificar que límites no provoquen pérdida de datos o degradación insegura.
+
 - Comparar ahorro propuesto con impacto medido en disponibilidad, latencia, durabilidad y riesgo.
 
 ## Operación y evidencias
+
 Conservar forecast, presupuesto aprobado, dashboards de costo, asignación por producto/equipo, costo unitario, excepciones, decisiones de compra/compromisos y resultados de optimización.
