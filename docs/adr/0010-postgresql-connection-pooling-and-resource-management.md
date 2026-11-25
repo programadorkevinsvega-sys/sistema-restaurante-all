@@ -62,7 +62,7 @@ La tabla describe el aislamiento lógico por módulo/rol. No prescribe que todos
 
 ### 2.4 Presupuesto global de conexiones
 
-El dimensionamiento debe realizarse desde el límite de PostgreSQL hacia los procesos, no sumando máximos arbitrarios por módulo.
+El dimensionamiento debe realizarse desde el límite de PostgreSQL hacia los procesos, no sumando máximos arbitrarios por módulo. Con la topología HA se separan y suman los pools de escritura y los pools de lectura por módulo, proceso e instancia; no se crea un pool por cada nodo standby.
 
 Para cada escenario de despliegue se calculará:
 
@@ -79,6 +79,7 @@ El cálculo debe considerar, como mínimo:
 - PLATFORM en cada réplica de Admin Platform Backend.
 - Los 19 pools de módulos en cada réplica de Public Backend.
 - Cualquier pool adicional aprobado para un workload aislado.
+- Pools de lectura de módulos elegibles, además de sus pools de escritura.
 - Número máximo de réplicas simultáneas durante rolling deployments, escalado y recuperación.
 - Conexiones de migración/operación, administración y monitorización.
 - Capacidad reservada y margen ante fallos o picos.
@@ -143,7 +144,19 @@ PgBouncer u otro proxy de conexiones queda como alternativa operativa opcional, 
 
 Solo se incorporará si las mediciones demuestran que resuelve un problema concreto de conexiones, escalado o administración. Antes de adoptarlo se debe validar el modo de pooling y su compatibilidad con SQLx, prepared statements, transacciones, parámetros de sesión, RLS y el uso de `SET LOCAL`. La adopción no puede debilitar la separación de roles ni el contexto transaccional.
 
-### 2.10 Pruebas y validación
+### 2.10 Enrutamiento de pools para primario y réplicas
+
+La topología PostgreSQL HA añade destinos de lectura, pero no cambia el ownership ni la identidad de los pools:
+
+1. Cada módulo conserva su identidad PostgreSQL runtime y su pool lógico de escritura dirigido al endpoint estable del primario.
+2. Cuando el módulo tenga consultas aprobadas para lectura en réplica, dispondrá de un pool de lectura separado y acotado, usando una identidad/rol runtime del mismo módulo con permisos de solo lectura y dirigido al endpoint de réplicas.
+3. Los pools de lectura no se crearán por cada réplica física ni por petición. El endpoint de lectura y el proxy/gestor HA seleccionarán réplicas saludables; el presupuesto debe contemplar todos los pools y todas las instancias de proceso.
+4. El pool de lectura no ejecutará escrituras, DDL, migraciones ni operaciones que dependan de consistencia inmediata. Los permisos PostgreSQL de solo lectura serán una defensa adicional; el enrutamiento de aplicación no será el único control.
+5. Las consultas no se enviarán automáticamente a réplica por el mero hecho de ser SELECT. Cada operación debe declarar su requisito de consistencia y frescura; las consultas críticas y read-your-writes permanecen en el primario.
+6. La capacidad de pools de lectura y escritura se dimensionará conjuntamente. Los pools de lectura no podrán agotar el presupuesto global ni competir sin límites con la capacidad de escritura.
+7. Después de failover, ambos tipos de pool deberán invalidar conexiones que apunten a roles antiguos y reconectarse a los endpoints estables correspondientes.
+
+### 2.11 Pruebas y validación
 
 La estrategia de implementación deberá contemplar pruebas con PostgreSQL real para:
 - Aislamiento de roles y schemas por módulo.
