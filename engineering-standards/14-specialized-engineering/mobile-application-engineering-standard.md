@@ -9,28 +9,43 @@ Aplica a clientes nativos, multiplataforma o híbridos en dispositivos móviles.
 ## 2. Principios
 
 - Definir requisitos por resultados, riesgo y contexto; no por preferencia tecnológica.
+
 - Mantener responsabilidades, límites de confianza y propiedad explícitos.
+
 - Aplicar mínimo privilegio, privacidad, accesibilidad y seguridad desde el diseño cuando correspondan.
+
 - Documentar decisiones, supuestos, dependencias y riesgos residuales.
 
 ## 3. Requisitos
 
 - Definir plataformas, versiones mínimas, ciclo de soporte y estrategia de actualización.
+
 - Aplicar almacenamiento seguro del sistema operativo para credenciales; evitar secretos embebidos y almacenamiento plano de tokens.
+
 - Solicitar permisos en contexto, con minimización, explicación y manejo de denegación/revocación.
+
 - Proteger deep links, universal links, intents, IPC y superficies expuestas.
+
 - Usar TLS con validación normal de certificados; no desactivar validación para resolver errores.
+
 - Gestionar ciclo de vida, procesos terminados, restauración de estado, batería y conectividad variable.
+
 - Definir telemetría respetuosa de privacidad, crash reporting y redacción de datos.
+
 - Probar dispositivos, tamaños, densidades, versiones, accesibilidad, actualización y distribución segura.
+
 - Revisar almacenamiento local, backups del dispositivo, capturas de pantalla y datos sensibles según amenaza.
 
 ## 4. Antipatrones
 
 - Adoptar herramientas sin requisitos ni evaluación de operación.
+
 - Confiar en controles exclusivamente del cliente cuando el servidor debe hacer cumplir la regla.
+
 - Registrar datos sensibles innecesarios o exponerlos en logs/telemetría.
+
 - Ignorar fallos parciales, cambios de versión, límites de capacidad o dependencias externas.
+
 - Considerar la existencia de documentación como prueba de implementación.
 
 ## 5. Verificación y evidencia
@@ -52,9 +67,13 @@ Evaluar pérdida o robo del dispositivo, rooting/jailbreak, extracción de datos
 ## 9. Pruebas de aceptación mínimas
 
 - Inspeccionar almacenamiento, backups, logs, caché y capturas para comprobar que secretos/datos sensibles no se filtran.
+
 - Verificar permisos concedidos, denegados, revocados y limitados; la app debe degradarse de forma segura.
+
 - Probar enlaces externos/IPC manipulados, sesión expirada, certificado inválido, cambio de cuenta y dispositivo comprometido cuando aplique.
+
 - Probar interrupción del proceso, falta de memoria, modo avión, cambio de red, actualización y migración de datos locales.
+
 - Verificar matriz de SO/dispositivos soportados, accesibilidad y firma/distribución.
 
 ## 10. Operación y evidencias
