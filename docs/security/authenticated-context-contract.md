@@ -6,6 +6,7 @@
 **Fase:** 0.4
 **Autoridad:** ADR-0004, ADR-0007, ADR-0021
 **Documentos relacionados:**
+
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Diseño de aislamiento por módulo y proceso](./isolation-design.md)
 
@@ -75,13 +76,14 @@ El BFF valida la sesión contra IDENTITY antes de cada solicitud. El contexto au
 se construye a partir de la respuesta de IDENTITY y se adjunta a la llamada gRPC hacia
 el backend. El BFF nunca construye el contexto a partir del payload del cliente.
 
-```
+```text
 Cliente → [HTTPS] → BFF → [verifica sesión en IDENTITY] → [construye contexto] → [gRPC] → Backend
 ```
 
 ### 3.2 Backend → Backend (gRPC)
 
 Cuando un backend llama a otro, propaga el contexto recibido sin modificarlo, añadiendo:
+
 - El `service_id` del proceso llamante como campo adicional de trazabilidad.
 - Un nuevo `request_id` para la solicitud derivada, enlazado al `trace_id` padre.
 

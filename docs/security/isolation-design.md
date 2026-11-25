@@ -6,6 +6,7 @@
 **Fase:** 0.4
 **Autoridad:** ADR-0001, ADR-0008, ADR-0010, ADR-0021
 **Documentos relacionados:**
+
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Contrato de contexto autenticado](./authenticated-context-contract.md)
 

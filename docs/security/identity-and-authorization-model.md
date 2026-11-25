@@ -6,6 +6,7 @@
 **Fase:** 0.4
 **Autoridad:** ADR-0008, ADR-0011, ADR-0020, ADR-0021
 **Documentos relacionados:**
+
 - [Contrato de contexto autenticado](./authenticated-context-contract.md)
 - [Matriz rol/atributo/acción/ámbito](./rbac-abac-matrix.md)
 - [Diseño de aislamiento por módulo y proceso](./isolation-design.md)
@@ -85,7 +86,7 @@ Identidad de los empleados internos que administran la plataforma SaaS.
 
 ### 3.2 Jerarquía de ámbito
 
-```
+```text
 Plataforma
   └── Tenant
         └── Grupo empresarial
@@ -101,7 +102,7 @@ acceso a datos de otro tenant ni a privilegios de plataforma.
 
 ### 3.3 Evaluación de una solicitud
 
-```
+```text
 1. ¿El actor tiene sesión/token válido y no revocado?           → Denegar si no
 2. ¿El token pertenece al tenant solicitado?                    → Denegar si no
 3. ¿El actor tiene el permiso para esta acción sobre este tipo? → Denegar si no

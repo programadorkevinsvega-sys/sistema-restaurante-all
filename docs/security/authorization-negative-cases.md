@@ -6,6 +6,7 @@
 **Fase:** 0.4
 **Autoridad:** ADR-0021
 **Documentos relacionados:**
+
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Matriz rol/atributo/acción/ámbito](./rbac-abac-matrix.md)
 - [Modelo de amenazas](./threat-model.md) — amenazas D-01, D-02, E-01, E-02, E-03, E-04

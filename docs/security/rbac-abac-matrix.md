@@ -6,6 +6,7 @@
 **Fase:** 0.4
 **Autoridad:** ADR-0021
 **Documentos relacionados:**
+
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Casos negativos de autorización](./authorization-negative-cases.md)
 
