@@ -53,7 +53,7 @@ Las versiones de Redis y bibliotecas cliente se seleccionarán al implementar se
 
 ## 5. Modelo de claves
 
-Formato conceptual: <environment>:cache:<owner-module>:<operation>:v<result-version>:<scope>:<parameter-digest>.
+Formato conceptual: environment:cache:owner-module:operation:v-result-version:scope:parameter-digest.
 
 La construcción debe normalizar parámetros y filtros; incluir tenant scope, usuario, rol, permisos, sucursal, idioma, moneda, zona horaria u otro contexto cuando cambie el resultado; evitar PII, tokens o parámetros sensibles en claro; incorporar versión del resultado; limitar longitud y cardinalidad; e impedir reutilización entre tenants o permisos distintos.
 
