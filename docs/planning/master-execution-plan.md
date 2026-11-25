@@ -117,6 +117,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias técnicas/funcionales:** ADR-0001, ADR-0002, ADR-0005, ADR-0007, ADR-0008 y ADR-0009; requisitos.md y promt.md. ADR-0005 conserva las reglas de contratos gRPC que siguen vigentes; la topología de cuatro procesos y la comunicación actual se rigen por ADR-0007.  
 **Documentos/ADR:** ADR-0001, 0002, 0005, 0007, 0008 y 0009; engineering-standard.md; restaurant-os-architecture.md; crate-architecture.md.  
+
 #### Entregables
 
 - Matriz de ownership validada.
@@ -158,6 +159,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1.  
 **Documentos/ADR:** ADR-0020, ADR-0024; documentation-quality-and-security-standard.md; implementation-rules.md.  
+
 #### Entregables
 
 - Política de contribución y revisión.
@@ -193,6 +195,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1.  
 **Documentos/ADR:** ADR-0020 a ADR-0027; ADR-0011, 0015, 0018 y 0019.  
+
 #### Entregables
 
 - Modelo de amenazas versionado.
@@ -218,6 +221,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1 y 0.3.  
 **Documentos/ADR:** ADR-0008, 0011, 0020, 0021; ADR-0010 y 0012.  
+
 #### Entregables
 
 - Modelo de identidad y autorización.
@@ -247,6 +251,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1, 0.3 y 0.4.  
 **Documentos/ADR:** ADR-0019 Accepted; ADR-0002, 0009, 0011, 0012, 0015, 0018, 0020, 0021, 0022, 0025 y 0027; ../architecture/input-validation-and-data-contracts.md.  
+
 #### Entregables
 
 - Catálogo de reglas y formatos.
@@ -275,6 +280,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1 y 0.4.  
 **Documentos/ADR:** ADR-0001, 0003, 0010, 0012, 0013, 0014; identifier-strategy.md; postgresql-ha-and-read-replicas.md; distributed-transaction-consistency.md; transactional-outbox-inbox-operations.md.  
+
 #### Entregables
 
 - Diseño de PostgreSQL HA y réplicas.
