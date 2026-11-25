@@ -40,6 +40,7 @@ Tipos habituales: `feat`, `fix`, `docs`, `security`, `refactor`, `test`, `build`
 ### Pull Requests
 
 Cada PR debe:
+
 - Tener un objetivo acotado y una descripción del problema, solución y alcance.
 - Indicar archivos/áreas afectadas, ADR y requisitos relacionados.
 - Describir riesgos, compatibilidad, migración y rollback cuando apliquen.
@@ -57,6 +58,7 @@ No se deben configurar checks obligatorios por nombre supuesto. Solo se hacen ob
 ## 3. Versionado y changelog
 
 Cuando el proyecto publique artefactos/versiones, usar Semantic Versioning (MAJOR.MINOR.PATCH) para versiones del producto y artefactos que sigan ese esquema:
+
 - MAJOR: incompatibilidad pública deliberada.
 - MINOR: capacidad compatible.
 - PATCH: corrección compatible.
@@ -68,6 +70,7 @@ Mantener `CHANGELOG.md` con secciones `Unreleased`, `Added`, `Changed`, `Depreca
 ## 4. Revisión de dependencias y vulnerabilidades
 
 Antes de incorporar o actualizar una dependencia:
+
 1. Justificar la necesidad y comprobar si la capacidad ya existe en el stack.
 2. Verificar origen, mantenedor, actividad, licencia, historial de vulnerabilidades y riesgo de typosquatting/supply-chain.
 3. Revisar dependencias transitivas, scripts de instalación/build y permisos requeridos.
@@ -103,6 +106,7 @@ Todo workflow privilegiado debe tener revisión específica de seguridad y permi
 ## 6. Permisos y separación de funciones
 
 Aplicar mínimo privilegio y conceder acceso por necesidad:
+
 - **Lectura:** consulta de código, issues y documentación; no implica capacidad de escritura.
 - **Escritura:** contribución mediante ramas y PR; no implica administración de repositorio ni despliegue productivo.
 - **Mantenimiento:** gestión operativa acotada del repositorio; no implica acceso automático a secretos/producción.
@@ -124,6 +128,7 @@ Ante sospecha de exposición: detener la publicación, no copiar el valor a come
 ## 8. Excepciones, bypasses y cambios de emergencia
 
 No se conceden bypasses permanentes ni se debilitan Rulesets para acelerar entregas. Una excepción requiere:
+
 - incidente o necesidad concreta y alcance limitado;
 - responsable solicitante y aprobador distinto cuando sea posible;
 - motivo, riesgo, controles compensatorios y rutas/commits afectados;
