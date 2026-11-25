@@ -89,11 +89,11 @@ Reduce movimiento lateral, exposición, compromiso de secretos y riesgo de recup
 
 ## Límites
 
-No define proveedor cloud, orquestador, VPN, bastión, WAF, KMS/HSM, imagen base ni parámetros de firewall. No modifica topologías, SQL, roles, migraciones o infraestructura.
+No selecciona orquestador, VPN, bastión, WAF, CA concreta, imagen base ni parámetros de firewall. La decisión de usar AWS KMS, Secrets Manager e IAM queda aceptada; el runtime y la integración de certificados se concretan en 0.7. No modifica SQL ni migraciones.
 
 ## Plan futuro
 
-Inventariar redes/puertos/identidades; diseñar matriz entrada-egress; definir PKI y secretos; endurecer imágenes; validar TLS/ACL de PostgreSQL, Redis y NATS; proteger backups; automatizar auditoría y alertas.
+Inventariar redes/puertos/identidades; diseñar matriz entrada-egress; definir PKI y secretos; seleccionar runtime; configurar KMS, IAM y Secrets Manager; endurecer imágenes; validar TLS/ACL de PostgreSQL, Redis y NATS; proteger backups; automatizar auditoría y alertas.
 
 ## Estado de implementación
 
