@@ -116,7 +116,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Definir el proceso de revisión de cambios de arquitectura y desviaciones.
 
 **Dependencias técnicas/funcionales:** ADR-0001, ADR-0002, ADR-0005, ADR-0007, ADR-0008 y ADR-0009; requisitos.md y promt.md. ADR-0005 conserva las reglas de contratos gRPC que siguen vigentes; la topología de cuatro procesos y la comunicación actual se rigen por ADR-0007.  
-**Documentos/ADR:** ADR-0001, 0002, 0005, 0007, 0008 y 0009; engineering-standard.md; restaurant-os-architecture.md; crate-architecture.md.  
+**Documentos/ADR:** ADR-0001, 0002, 0005, 0007, 0008 y 0009; engineering-standard.md; restaurant-os-architecture.md; crate-architecture.md; [Matriz de ownership, contratos y dependencias](../architecture/module-ownership-contracts-and-dependencies.md).  
 
 #### Entregables
 

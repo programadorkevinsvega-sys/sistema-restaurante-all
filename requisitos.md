@@ -5111,7 +5111,7 @@ restaurant-os/
 | `apps/pos/` | Aplicación de punto de venta. |
 | `backend/<backend>/modules/` | Módulos/crates que pertenecen exclusivamente al backend indicado. |
 | `crates/shared/` | Bibliotecas técnicas neutrales reutilizables; no debe apropiarse de dominios ni tablas. |
-| `crates/contracts/proto/` | Fuentes Protobuf versionadas para contratos gRPC. |
+| `contracts/protobuf/` | Fuentes Protobuf versionadas para contratos gRPC. |
 | `crates/contracts/events/` | Esquemas versionados de eventos compartidos. |
 | `crates/adapters/local/` | Adaptadores para llamadas entre módulos que comparten proceso. |
 | `crates/adapters/grpc/` | Adaptadores gRPC para fronteras entre procesos. |
