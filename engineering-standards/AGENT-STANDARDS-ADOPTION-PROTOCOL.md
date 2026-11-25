@@ -3,20 +3,31 @@
 **Versión:** 0.3.0 | **Estado:** Draft | **Audiencia:** agentes de IA, asistentes de ingeniería y automatizaciones
 
 ## 1. Propósito
+
 Impedir que un agente comience a diseñar o implementar un sistema sin descubrir, presentar y registrar los estándares relevantes de la biblioteca. El agente facilita decisiones; no es propietario silencioso de las decisiones del producto.
 
 ## 2. Puerta de entrada obligatoria
 
 Antes de proponer arquitectura definitiva, crear código funcional, generar infraestructura, modificar esquemas o iniciar implementación, el agente DEBE:
+
 1. Identificar versión, tag/commit y fecha de la biblioteca.
+
 2. Leer README, catálogo, este protocolo, gobernanza e [inventario exhaustivo](./STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md).
+
 3. Recorrer todos los documentos normativos y temas de descubrimiento enumerados en el inventario fijado. La versión 0.3.0 contiene 66 documentos normativos y 92 temas (158 elementos); otras versiones deben usar el conteo real.
+
 4. Leer completos los documentos aplicables y relacionados con el perfil, no limitarse a títulos o resúmenes.
+
 5. Revisar perfil del proyecto, decisiones aceptadas, requisitos, restricciones y riesgos ya documentados.
-6. Crear una fila por cada ID STD-* y TOP-*, sin omisiones ni duplicados.
+
+6. Crear una fila por cada ID STD IDs y TOP IDs, sin omisiones ni duplicados.
+
 7. Separar aplicabilidad de estado de adopción y presentar al propietario las decisiones materiales.
+
 8. Registrar respuesta, responsable, razón, evidencia, fecha y ADR/acción relacionada.
+
 9. Identificar brechas documentales y proponer investigación o nuevos estándares.
+
 10. Confirmar qué decisiones bloquean diseño o implementación.
 
 La consulta puede agrupar preguntas, pero no puede agrupar ni borrar filas del registro. No se permite muestreo de familias.
@@ -36,11 +47,17 @@ Si un dato se desconoce, registrarlo como desconocido y explicar qué decisiones
 ## 5. Recorrido e inventario
 
 Presentar todas las familias A–J y todas las filas del inventario. Por cada estándar y tema:
+
 - explicar riesgo/necesidad, alcance y disparadores;
+
 - indicar requisitos y escenarios de aplicación;
+
 - señalar costos, complejidad, dependencias y alternativas;
+
 - verificar si existe cobertura dedicada o solo transversal/parcial;
+
 - proponer clasificación preliminar con fundamento;
+
 - pedir confirmación en decisiones materiales de producto, costo, riesgo, privacidad o arquitectura.
 
 El inventario es la lista de control canónica. Cada ID debe tener fila individual aunque el propietario responda por bloques.
