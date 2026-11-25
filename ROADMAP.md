@@ -20,6 +20,19 @@ es la fuente de verdad para requisitos, propietarios de dominio y ubicacion de
 los crates; [promt.md](./promt.md) define el orden de trabajo por lotes. Las
 fases no cambian esos propietarios ni crean una estructura paralela.
 
+## Plan maestro de ejecución detallado
+
+El desglose operativo de las fases 0–10 y de la fase final está en
+[Plan maestro de ejecución detallado](docs/planning/master-execution-plan.md).
+Ese documento desarrolla subfases, tareas, dependencias técnicas y funcionales,
+ADR relacionados, entregables, pruebas, criterios verificables y puertas de
+avance. No crea fases nuevas ni modifica el ownership de los módulos.
+
+Las decisiones de seguridad ADR-0020 a ADR-0027 y la política de validación de
+entradas ADR-0019 (Accepted) se integran transversalmente en las fases donde
+corresponde. Su aceptación no significa que sus controles estén implementados.
+
+
 ## Propiedad de módulos y estructura física
 
 Los dominios conservan sus responsabilidades lógicas y se implementan una sola
