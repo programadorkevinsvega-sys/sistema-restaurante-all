@@ -63,6 +63,22 @@ Definir RPO/RTO por clase de servicio/dato y validar topología. Mantener copias
 
 Registrar cambios administrativos de red, permisos, secretos, certificados y configuración. Alertar exposición pública inesperada, certificados próximos a vencer, accesos fallidos y fallos de backup. Respetar ADR-0015: telemetría privada, mínimo privilegio y redacción. La pérdida de observabilidad no desactiva controles.
 
+### 10. Identidad de proceso y contexto autenticado firmado
+
+- mTLS es obligatorio entre los cuatro procesos. Cada proceso/worker tiene identidad de
+  workload propia; el certificado autentica el proceso que conecta.
+- Las aserciones de contexto de usuario tenant las emite IDENTITY en Public Backend; las
+  aserciones de operador SaaS las emite PLATFORM en Admin Platform Backend.
+- Cada aserción incorpora actor, issuer, audience, vigencia, ámbito y §kid§, y se firma
+  mediante la clave privada correspondiente en AWS KMS.
+- Los receptores verifican firma localmente, además de mTLS, audiencia, emisor, vigencia,
+  estado de confianza de la clave y autorización del módulo propietario.
+- Los BFF no inventan ni amplían claims. La identidad humana y la identidad del workload
+  permanecen diferenciadas.
+- AWS Certificate Manager / Private CA puede evaluarse para certificados; no se impone una
+  CA concreta ni se selecciona runtime en este ADR.
+- No se instalará ni operará Vault autogestionado como requisito de esta arquitectura.
+
 ## Alternativas consideradas
 
 Exponer datos públicamente con autenticación; compartir secretos; contenedores privilegiados; desactivar validación TLS; tratar réplicas como backups: todo rechazado. Seleccionar proveedor KMS/infraestructura ahora se aplaza por requerir evaluación.
@@ -81,4 +97,4 @@ Inventariar redes/puertos/identidades; diseñar matriz entrada-egress; definir P
 
 ## Estado de implementación
 
-Proposed. No instala servicios, cambia firewalls, crea secretos/certificados/roles/backups ni despliega infraestructura.
+Accepted. No instala servicios, cambia firewalls, crea secretos/certificados/roles/backups ni despliega infraestructura. La elección de AWS administrado y el uso de mTLS/contexto firmado están aceptados documentalmente, pero aún no desplegados.
