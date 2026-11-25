@@ -36,6 +36,11 @@ SQLx.
 - [Matriz amenaza/control/fase](../security/threat-control-matrix.md): controles asignados por amenaza, tipo, fase y estado; entregable de subfase 0.3.
 - [Registro de riesgos residuales](../security/residual-risk-register.md): riesgos abiertos con fase de cierre y propietario; entregable de subfase 0.3.
 - [Baseline de seguridad por proceso](../security/security-baseline-per-process.md): controles mínimos requeridos por proceso antes de producción; entregable de subfase 0.3.
+- [Modelo de identidad y autorización](../security/identity-and-authorization-model.md): tipos de identidad, RBAC+ABAC, sesiones y revocación; entregable de subfase 0.4.
+- [Matriz rol/atributo/acción/ámbito](../security/rbac-abac-matrix.md): roles del sistema, atributos ABAC y acciones por dominio; entregable de subfase 0.4.
+- [Contrato de contexto autenticado](../security/authenticated-context-contract.md): campos, semántica y reglas de propagación del contexto entre procesos y módulos; entregable de subfase 0.4.
+- [Diseño de aislamiento por módulo y proceso](../security/isolation-design.md): schemas PostgreSQL, roles, RLS, pools, mensajería y verificación; entregable de subfase 0.4.
+- [Casos negativos de autorización](../security/authorization-negative-cases.md): escenarios de rechazo obligatorios para todo endpoint y operación protegida; entregable de subfase 0.4.
 - [Validación de entradas y contratos de datos](./input-validation-and-data-contracts.md): especificación técnica vigente conforme a ADR-0019 Accepted; no representa validadores ni middleware implementados.
 - [ADRs](../adr/README.md): índice de decisiones aceptadas. ADR-0001 a ADR-0027 están Accepted; la aceptación no implica implementación.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
