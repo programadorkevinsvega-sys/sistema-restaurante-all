@@ -1,7 +1,9 @@
 # ADR-0016: Redis Cluster, TLS y caché distribuida de consultas
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Propuesto: 2026-11-24
+- Aceptado: 2026-11-24
+- Aprobación: decisión aprobada explícitamente por el propietario del producto.
 - Ámbito: infraestructura transversal de caché para los cuatro procesos y los módulos propietarios de consultas.
 - Complementa: ADR-0001, ADR-0003, ADR-0004, ADR-0007, ADR-0008, ADR-0009, ADR-0010, ADR-0013 y ADR-0015.
 - Especificación técnica futura: estrategia operativa de Redis y caché distribuida, derivada de este ADR una vez aceptado.
@@ -233,7 +235,7 @@ No se adopta como estrategia general para consultas costosas y de alta repetici�
 
 ## Plan de implementación futuro
 
-Una vez aceptado este ADR, la implementación deberá:
+La implementación deberá:
 
 1. Seleccionar versión de Redis y cliente compatible con Cluster, TLS y ACL, con soporte vigente.
 2. Diseñar topología de nodos, réplicas, dominios de fallo, red privada, certificados y rotación.
@@ -248,6 +250,6 @@ Una vez aceptado este ADR, la implementación deberá:
 
 ## Estado de implementación
 
-Este ADR está **Proposed** y requiere aprobación explícita antes de considerarse una decisión aceptada. Su contenido no significa que Redis esté desplegado o configurado, ni que exista un cliente, adaptador, caché, TLS, ACL, cluster, Sentinel, invalidación o instrumentación implementados.
+Este ADR está **Accepted**. La decisión arquitectónica está aprobada y vigente; eso no significa que Redis esté desplegado o configurado, ni que exista un cliente, adaptador, caché, TLS, ACL, cluster, Sentinel, invalidación o instrumentación implementados.
 
 No crea crates, dependencias, código, contenedores, servicios, certificados, secretos, dashboards, roles ni configuración. No modifica SQL, migraciones, schemas, tablas ni datos de PostgreSQL.
