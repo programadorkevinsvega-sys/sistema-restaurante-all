@@ -43,3 +43,20 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Amenazas y escenarios de fallo específicos
+
+Evaluar acceso horizontal entre propietarios/tenants, exposición por URL firmada filtrada, bucket/listado público, traversal, MIME spoofing, polyglot files, malware, decompression bombs, archivos enormes, cargas parciales, sobrescritura, ransomware, borrado accidental, retención legal y fallo de región/proveedor.
+
+## 9. Pruebas de aceptación mínimas
+
+- Intentar lectura, escritura, listado y borrado cruzado entre propietarios y roles.
+- Verificar expiración, alcance, método y revocación efectiva de URLs firmadas.
+- Probar MIME falso, extensión doble, contenido activo, archivo corrupto, bomba de descompresión, tamaño/cuota excedidos y checksum incorrecto.
+- Interrumpir cargas multipart y comprobar reanudación/limpieza; probar duplicados y colisiones de key.
+- Restaurar versiones/objetos, probar borrado y legal hold, y verificar propagación de políticas lifecycle.
+- Confirmar que objetos privados no se sirven desde un origen web confiable sin controles.
+
+## 10. Operación y evidencias
+
+Conservar políticas de bucket, matriz de permisos, escaneos, checksum/integridad, reportes de restore, lifecycle, auditoría de acceso y borrado, métricas de almacenamiento/egress y procedimientos de incidente.
