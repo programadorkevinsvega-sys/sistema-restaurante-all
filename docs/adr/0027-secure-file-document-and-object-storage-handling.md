@@ -1,16 +1,16 @@
 # ADR-0027: Seguridad de archivos, documentos y almacenamiento de objetos
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: cargas, procesamiento, almacenamiento, previsualización, descarga, exportación y eliminación de archivos/documentos.
 - Complementa: ADR-0001, ADR-0008, ADR-0014, ADR-0015, ADR-0018 y ADR-0020 a ADR-0026.
-- Aprobación: pendiente de aprobación explícita.
+- Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
 
 Restaurant OS manejará imágenes, documentos comerciales, soportes de pago, facturas, documentos fiscales, importaciones/exportaciones y adjuntos. Un archivo puede contener malware, explotar parsers, consumir recursos, filtrar metadatos o quedar accesible para otro tenant. Extensión y Content-Type no prueban el formato real; UUID/URL opaca tampoco autorizan descarga.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Archivos no confiables
 
@@ -77,4 +77,4 @@ Inventariar casos de uso/owners; definir formatos y límites; seleccionar almace
 
 ## Estado de implementación
 
-Proposed. No implementa cargas, almacenamiento, escaneo, cuarentena, parsers, URLs firmadas, tablas ni infraestructura.
+Accepted. La decisión está aprobada; no implementa cargas, almacenamiento, escaneo, cuarentena, parsers, URLs firmadas, tablas ni infraestructura.
