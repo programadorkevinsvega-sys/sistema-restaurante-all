@@ -1,7 +1,7 @@
 # Registro de revisión de escenarios de amenazas (tabletop)
 
 **Fase:** 0.3 — Modelo de amenazas y requisitos de seguridad  
-**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03, TT-04, TT-05 y TT-06 revisados y aprobados  
+**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03, TT-04, TT-05, TT-06 y TT-07 revisados y aprobados  
 **Versión:** 1.0  
 **Fecha:** 2026-11-25  
 **Alcance:** ejercicio de escritorio basado en arquitectura y ADR. No es una prueba de penetración, simulación sobre infraestructura, auditoría independiente ni evidencia de controles desplegados.  
@@ -116,7 +116,7 @@ Para cada escenario, el revisor debe responder y registrar:
 7. ¿Qué condición bloquea la reanudación?
 8. ¿Qué riesgo residual y tarea del plan se actualizan?
 
-**Resultado actual:** TT-01, TT-02, TT-03, TT-04, TT-05 y TT-06 cuentan con decisiones operativas revisadas y aprobadas por el propietario. TT-07 y TT-08 siguen pendientes de walkthrough. No se declara tabletop completo ni prueba técnica superada.
+**Resultado actual:** TT-01, TT-02, TT-03, TT-04, TT-05, TT-06 y TT-07 cuentan con decisiones operativas revisadas y aprobadas por el propietario. TT-08 sigue pendiente de walkthrough. No se declara tabletop completo ni prueba técnica superada.
 
 ### Registro de ejecución
 
@@ -179,11 +179,22 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Resultado:** respuesta operativa aprobada para el escenario. La arquitectura de backup, la protección de credenciales, las pruebas de restauración y los procedimientos de reconciliación deben implementarse y verificarse en las fases correspondientes.
 - **Acciones relacionadas:** TA-04 permanece pendiente de implementación y pruebas; TA-07 permanece pendiente para incorporar pruebas negativas y validaciones automatizadas a CI.
 
+
+#### TT-07 — Prompt injection o herramienta de IA con permisos excesivos
+
+- **Estado del walkthrough:** revisado y diez medidas aprobadas por el propietario.
+- **Fecha de revisión:** 2026-11-25.
+- **Decisiones aprobadas:** la IA no es autoridad para sustituir reglas de negocio ni autorización backend; cada herramienta opera con mínimo privilegio y sin acceso general a bases de datos, Redis, infraestructura o secretos; el backend propietario autoriza cada operación usando identidad, tenant, sucursal y permisos verificados; separar herramientas de lectura y escritura y exigir autorización adicional para acciones sensibles; requerir confirmación explícita de una persona autorizada para operaciones críticas, financieras, irreversibles o que afecten datos de clientes; tratar contenido externo como datos no confiables y nunca como instrucciones con autoridad; limitar herramientas y destinos mediante allowlists y validar estrictamente argumentos; minimizar y redactar datos sensibles y nunca incluir secretos o datos de otros tenants en el contexto del modelo; auditar solicitudes, herramientas, autorizaciones y resultados, con capacidad de suspensión y revocación; y probar prompt injection directo/indirecto, acceso cross-tenant, extracción de secretos, abuso de herramientas, escalamiento de privilegios y acciones sin confirmación.
+- **Casos aprobados para validar:** instrucciones maliciosas en descripciones de productos; documentos que intentan obtener datos de otro restaurante; modificación de precios o eliminación de productos sin autorización; envío de información a URL externa; instrucciones para ignorar políticas; usuario con permiso de consulta que intenta ejecutar operaciones administrativas; herramienta externa comprometida que devuelve instrucciones; y operación financiera intentada sin confirmación humana.
+- **Limitación aceptada:** no hay proveedor ni integración IA aprobada. Las decisiones son requisitos previos y no evidencia de controles implementados o probados. Toda futura integración debe pasar evaluación de seguridad y pruebas antes de habilitarse.
+- **Resultado:** respuesta operativa aprobada para el escenario. La política de IA, el catálogo y permisos de herramientas, las confirmaciones, la minimización de contexto y las pruebas deben definirse e implementarse antes de integrar IA.
+- **Acciones relacionadas:** TA-06 permanece pendiente hasta definir política de proveedores IA; TA-07 permanece pendiente para incorporar pruebas negativas y validaciones automatizadas a CI.
+
 ## 4. Registro de acciones del ejercicio
 
 | ID | Acción pendiente | Responsable | Fase | Estado |
 |---|---|---|---|---|
-| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (6/8) |
+| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (7/8) |
 | TA-02 | Implementar enrolamiento, revocación y protección local de POS | Propietario del producto | 0.4 / 0.10 | Pendiente |
 | TA-03 | Diseñar y probar sync idempotente, integridad, conflictos y reconciliación | Propietario del producto | 0.10 | Pendiente |
 | TA-04 | Implementar gestión de secretos, aislamiento de backups y restauración | Propietario del producto | 0.6 / 0.7 | Pendiente |
