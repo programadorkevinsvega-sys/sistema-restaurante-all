@@ -26,6 +26,7 @@ Los BFF no poseen dominios, schemas PostgreSQL ni tablas de negocio. Una interfa
 Los schemas indicados se corresponden con los nombres observados en las migraciones históricas existentes. Su presencia en SQL histórico no significa que los roles, permisos, migraciones nuevas o runners estén provisionados.
 
 Para cada módulo:
+
 - El rol PostgreSQL debe ser dedicado y limitado a su schema. Se separan las identidades de migración y runtime; los nombres físicos de esos roles deben fijarse en el diseño operativo de PostgreSQL, sin inventarlos en este catálogo.
 - El historial SQLx es exclusivo y schema-qualified: `<schema>._sqlx_migrations`.
 - La ruta canónica para migraciones nuevas es `backend/<backend-propietario>/modules/<modulo>/migrations/`. Los archivos listados como históricos permanecen en `migrations/` y no se mueven ni reescriben en esta subfase.
