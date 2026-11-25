@@ -91,7 +91,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ---
 
-# PARTE I — FUNDACIONES Y PRODUCTO
+## PARTE I — FUNDACIONES Y PRODUCTO
 
 ## 3. Fase 0 — Fundaciones
 
@@ -102,7 +102,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.1 — Cierre de arquitectura, ownership y contratos
 
-**Tareas**
+#### Tareas
+
 - Consolidar el mapa de los cuatro procesos y sus límites de responsabilidad.
 - Verificar la matriz de los módulos canónicos y sus ubicaciones físicas.
 - Registrar por módulo propietario, schema, rol, migraciones e historial SQLx independientes.
@@ -115,20 +116,23 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias técnicas/funcionales:** ADR-0001, ADR-0002, ADR-0005, ADR-0007, ADR-0008 y ADR-0009; requisitos.md y promt.md. ADR-0005 conserva las reglas de contratos gRPC que siguen vigentes; la topología de cuatro procesos y la comunicación actual se rigen por ADR-0007.  
 **Documentos/ADR:** ADR-0001, 0002, 0005, 0007, 0008 y 0009; engineering-standard.md; restaurant-os-architecture.md; crate-architecture.md.  
-**Entregables**
+#### Entregables
+
 - Matriz de ownership validada.
 - Mapa de procesos y fronteras.
 - Catálogo inicial de contratos y eventos con propietarios.
 - Matriz de dependencias justificadas y dependencias prohibidas.
 - Checklist de revisión arquitectónica.
 
-**Pruebas**
+#### Pruebas
+
 - Unitarias: no aplican a la documentación de arquitectura.
 - Integración/contrato: validación automatizada de estructura, enlaces y referencias entre documentos.
 - Seguridad: revisión de límites de confianza, ownership y ausencia de acceso cruzado.
 - E2E: no aplica todavía.
 
-**Criterios verificables**
+#### Criterios verificables
+
 - Cada módulo canónico tiene un único propietario.
 - PLATFORM es el único módulo de Admin Platform Backend.
 - Los BFF no poseen dominios ni persistencia de negocio.
@@ -139,7 +143,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.2 — Gobernanza documental y desarrollo seguro
 
-**Tareas**
+#### Tareas
+
 - Definir convenciones de ramas, PR, revisión, versionado y changelog.
 - Configurar Rulesets/branch protection reales para main y ramas críticas.
 - Exigir checks adecuados y revisión humana para cambios sensibles.
@@ -152,19 +157,22 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1.  
 **Documentos/ADR:** ADR-0020, ADR-0024; documentation-quality-and-security-standard.md; implementation-rules.md.  
-**Entregables**
+#### Entregables
+
 - Política de contribución y revisión.
 - Rulesets configurados y evidencia de enforcement.
 - Matriz de permisos de repositorio y CI.
 - Política de dependencias y vulnerabilidades.
 - Checklist de PR seguro.
 
-**Pruebas**
+#### Pruebas
+
 - Integración: PR de prueba para comprobar checks y protecciones.
 - Seguridad: intento controlado de push directo, force-push, workflow con permisos excesivos y exposición de secretos.
 - Operativas: evidencia de recuperación ante fallo de CI.
 
-**Criterios**
+#### Criterios
+
 - main no acepta cambios fuera del flujo protegido.
 - Los workflows tienen permisos mínimos y no exponen secretos a código no confiable.
 - CODEOWNERS no se presenta como enforcement si no hay reglas que exijan la revisión.
@@ -173,7 +181,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.3 — Modelo de amenazas y requisitos de seguridad
 
-**Tareas**
+#### Tareas
+
 - Inventariar activos, actores, superficies y fronteras de confianza.
 - Modelar amenazas para cuatro procesos, módulos, navegador, APIs, workers, mensajería, almacenamiento, proveedores y operación.
 - Evaluar suplantación, robo de sesión, BOLA/IDOR, escalada, inyección, SSRF, XSS, CSRF, abuso, scraping, DDoS, exfiltración, malware, supply chain y pérdida de disponibilidad.
@@ -183,7 +192,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1.  
 **Documentos/ADR:** ADR-0020 a ADR-0027; ADR-0011, 0015, 0018 y 0019.  
-**Entregables**
+#### Entregables
+
 - Modelo de amenazas versionado.
 - Matriz amenaza/control/fase/prueba/evidencia.
 - Registro de riesgos residuales.
@@ -195,7 +205,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.4 — Identidad, autorización y aislamiento como fundamentos
 
-**Tareas**
+#### Tareas
+
 - Diseñar identidad de usuario y de servicio diferenciadas.
 - Definir contexto autenticado confiable y propagación entre procesos.
 - Definir RBAC + ABAC y alcance por tenant, grupo, empresa, marca, sucursal, recurso y operación.
@@ -206,7 +217,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1 y 0.3.  
 **Documentos/ADR:** ADR-0008, 0011, 0020, 0021; ADR-0010 y 0012.  
-**Entregables**
+#### Entregables
+
 - Modelo de identidad y autorización.
 - Matriz rol/atributo/acción/ámbito.
 - Contrato de contexto autenticado.
@@ -219,7 +231,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.5 — Política transversal de validación de entradas
 
-**Tareas**
+#### Tareas
+
 - Aplicar validación en frontend, BFF, frontera backend/gRPC, aplicación, dominio y persistencia.
 - Definir contratos por campo: tipo, requerido, null, rango, formato, precisión, cardinalidad y profundidad.
 - Definir DTO específicos por operación y rechazo de campos desconocidos por defecto en escrituras HTTP.
@@ -233,7 +246,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1, 0.3 y 0.4.  
 **Documentos/ADR:** ADR-0019 Accepted; ADR-0002, 0009, 0011, 0012, 0015, 0018, 0020, 0021, 0022, 0025 y 0027; ../architecture/input-validation-and-data-contracts.md.  
-**Entregables**
+#### Entregables
+
 - Catálogo de reglas y formatos.
 - Plantilla de contrato de entrada por operación.
 - Catálogo de errores públicos.
@@ -246,7 +260,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.6 — Fundamentos de datos, PostgreSQL y consistencia
 
-**Tareas**
+#### Tareas
+
 - Definir PostgreSQL objetivo y estrategia HA con primario y réplicas de lectura.
 - Definir pools por módulo/runtime, límites globales, separación de lectura/escritura y routing por consistencia.
 - Definir UUIDv7 global y estrategia futura para identificadores existentes, sin modificar SQL en esta fase.
@@ -258,7 +273,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 **Dependencias:** 0.1 y 0.4.  
 **Documentos/ADR:** ADR-0001, 0003, 0010, 0012, 0013, 0014; identifier-strategy.md; postgresql-ha-and-read-replicas.md; distributed-transaction-consistency.md; transactional-outbox-inbox-operations.md.  
-**Entregables**
+#### Entregables
+
 - Diseño de PostgreSQL HA y réplicas.
 - Presupuesto de conexiones por proceso/módulo/réplica.
 - Estrategia UUIDv7 y transición futura.
@@ -271,7 +287,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.7 — Infraestructura, red, secretos y criptografía
 
-**Tareas**
+#### Tareas
+
 - Diseñar redes separadas por entorno y función.
 - Definir exposición pública mínima y aislamiento de PostgreSQL, Redis, NATS, métricas y administración.
 - Definir egress restringido por proceso.
@@ -290,7 +307,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.8 — Observabilidad, auditoría y respuesta a incidentes
 
-**Tareas**
+#### Tareas
+
 - Definir OpenTelemetry y propagación W3C Trace Context.
 - Definir métricas RED/USE, logs estructurados y trazas sin datos sensibles.
 - Separar telemetría operativa, auditoría de negocio y evidencia de seguridad.
@@ -309,7 +327,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.9 — Plataforma de mensajería, caché y almacenamiento
 
-**Tareas**
+#### Tareas
+
 - Diseñar NATS Core y JetStream HA, cuentas, subjects, streams, retención, ACK y DLQ.
 - Diseñar Redis Cluster TLS/ACL y política cache-aside e invalidación durable.
 - Diseñar almacenamiento de objetos con aislamiento por entorno/finalidad, ownership de metadata por módulo y acceso temporal autorizado.
@@ -326,7 +345,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 0.10 — Fundamentos offline-first del POS
 
-**Tareas**
+#### Tareas
+
 - Definir identificadores generados en dispositivo y persistencia local durable.
 - Definir cola de operaciones, orden, reintentos, sincronización e idempotencia.
 - Definir estados de sincronización y recuperación tras reinicio.
@@ -355,7 +375,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 1.1 — PLATFORM y ciclo de vida SaaS
 
-**Tareas**
+#### Tareas
+
 - Modelar tenants, planes, suscripciones, capacidades, límites y overrides bajo PLATFORM.
 - Implementar altas, suspensión, reactivación y baja del tenant con proceso durable.
 - Separar privilegios SaaS de administración del tenant.
@@ -373,7 +394,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 1.2 — ORGANIZATION: estructura empresarial
 
-**Tareas**
+#### Tareas
+
 - Gestionar grupos empresariales, empresas legales, marcas y sucursales.
 - Gestionar áreas, estaciones, bodegas, cajas y terminales según ownership.
 - Definir zona horaria, moneda, región, idioma y datos fiscales por ámbito.
@@ -389,7 +411,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 1.3 — IDENTITY: usuarios, autenticación y sesiones
 
-**Tareas**
+#### Tareas
+
 - Implementar identidad global de usuario y membresías por tenant sin duplicación.
 - Implementar registro, invitaciones, activación y recuperación de cuenta.
 - Aplicar exclusivamente Argon2id para nuevas contraseñas locales, con salt aleatorio único generado por la biblioteca, formato PHC y parámetros mínimos aprobados en ADR-0011.
@@ -410,7 +433,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 1.4 — Autorización RBAC/ABAC y contexto confiable
 
-**Tareas**
+#### Tareas
+
 - Implementar roles y permisos por acción, módulo, tenant y ámbito.
 - Aplicar atributos de sucursal, empresa, importe, recurso y estado.
 - Construir contexto confiable de actor y servicio.
@@ -428,7 +452,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 1.5 — Configuración operativa inicial
 
-**Tareas**
+#### Tareas
+
 - Configurar datos fiscales y numeraciones por entidad/sucursal.
 - Configurar moneda, impuestos, idioma y zona horaria.
 - Configurar cajas, bodegas, cocinas, mesas, impresoras y terminales.
@@ -458,7 +483,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 2.1 — CATALOG: productos comerciales
 
-**Tareas**
+#### Tareas
+
 - Gestionar categorías, productos, variantes, presentaciones y agrupaciones comerciales.
 - Gestionar precios, impuestos y disponibilidad por sucursal.
 - Definir catálogo maestro y excepciones locales sin alterar el maestro.
@@ -475,7 +501,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 2.2 — SALES: pedidos y cuentas
 
-**Tareas**
+#### Tareas
+
 - Crear pedidos y líneas con estados explícitos.
 - Soportar mesa, mostrador, para llevar y delivery cuando el flujo correspondiente esté habilitado.
 - Gestionar descuentos, anulaciones y cambios autorizados.
@@ -493,7 +520,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 2.3 — PAYMENTS: cobros y devoluciones
 
-**Tareas**
+#### Tareas
+
 - Modelar intentos, autorizaciones, capturas, fallos, devoluciones y conciliación.
 - Soportar métodos y pagos mixtos según contratos habilitados.
 - Validar callbacks/webhooks y firmas de proveedores.
@@ -510,7 +538,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 2.4 — CASH: apertura, movimientos y cierre
 
-**Tareas**
+#### Tareas
+
 - Implementar apertura y cierre de caja por sucursal/terminal.
 - Registrar fondo inicial, entradas, retiros, gastos y arqueos.
 - Vincular movimientos con actor, motivo y operación.
@@ -526,7 +555,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 2.5 — POS web/PWA y seguridad de borde
 
-**Tareas**
+#### Tareas
+
 - Construir interfaz de venta y operación.
 - Aplicar validación UX sin depender de ella como barrera de seguridad.
 - Implementar sesiones seguras, CSRF, CSP, CORS restrictivo y cabeceras.
@@ -544,7 +574,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 2.6 — Offline-first: venta y caja habilitadas
 
-**Tareas**
+#### Tareas
+
 - Persistir localmente operaciones autorizadas antes de sincronizar.
 - Generar identificadores en dispositivo.
 - Mostrar estados pendientes, sincronizados, fallidos y en conflicto.
@@ -578,7 +609,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 3.1 — Recursos de servicio y mesas
 
-**Tareas**
+#### Tareas
+
 - Modelar zonas, mesas, capacidad y estados.
 - Construir mapa visual del salón.
 - Asignar meseros y controlar ocupación.
@@ -594,7 +626,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 3.2 — Menús gastronómicos y modificadores
 
-**Tareas**
+#### Tareas
+
 - Modelar menús por horario, sucursal y modalidad de servicio bajo Restaurant vertical.
 - Componer menús con productos base de CATALOG.
 - Gestionar modificadores culinarios, extras y disponibilidad.
@@ -610,7 +643,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 3.3 — KITCHEN: comandas y estaciones
 
-**Tareas**
+#### Tareas
+
 - Crear comandas a partir de pedidos mediante contrato/evento.
 - Separar líneas por estaciones y prioridades.
 - Gestionar estados de preparación por producto.
@@ -628,7 +662,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 3.4 — Tiempos, notificaciones y operación en tiempo real
 
-**Tareas**
+#### Tareas
+
 - Medir tiempos de preparación y servicio.
 - Emitir alertas de retrasos y cuellos de botella.
 - Implementar notificaciones con límites y preferencias.
@@ -655,7 +690,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 4.1 — INVENTORY: ledger y existencias
 
-**Tareas**
+#### Tareas
+
 - Definir productos inventariables, unidades y conversiones.
 - Registrar entradas, salidas, reservas, ajustes y conteos.
 - Implementar ledger inmutable y reconstrucción de saldo.
@@ -673,7 +709,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 4.2 — PRODUCTION: recetas y subrecetas versionadas
 
-**Tareas**
+#### Tareas
+
 - Modelar recetas, subrecetas, ingredientes, rendimientos y porciones.
 - Versionar recetas y vigencia por sucursal cuando corresponda.
 - Calcular consumo esperado y costo con precisión decimal.
@@ -689,7 +726,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 4.3 — Producción, lotes y consumo de inventario
 
-**Tareas**
+#### Tareas
+
 - Gestionar órdenes y lotes de producción.
 - Registrar insumos consumidos y productos resultantes mediante contratos de INVENTORY.
 - Controlar rendimiento, merma y diferencias.
@@ -705,7 +743,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 4.4 — Mermas, vencimientos y costeo
 
-**Tareas**
+#### Tareas
+
 - Registrar mermas y desperdicios con motivo y responsable.
 - Alertar sobre vencimientos y stock mínimo/máximo.
 - Calcular costo real y variación contra costo esperado.
@@ -732,7 +771,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 5.1 — PROCUREMENT: proveedores y catálogo de abastecimiento
 
-**Tareas**
+#### Tareas
+
 - Gestionar proveedores, datos comerciales/fiscales y contactos.
 - Gestionar productos suministrados, listas y precios históricos.
 - Registrar condiciones de pago, contratos y documentos.
@@ -748,7 +788,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 5.2 — Solicitudes, cotizaciones y órdenes de compra
 
-**Tareas**
+#### Tareas
+
 - Crear solicitudes de compra y cotizaciones.
 - Comparar proveedores y precios.
 - Crear órdenes con estados y versiones.
@@ -765,7 +806,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 5.3 — Recepción, conciliación y cuentas por pagar
 
-**Tareas**
+#### Tareas
+
 - Registrar recepción parcial/completa y diferencias.
 - Conciliar orden, recepción y factura de proveedor.
 - Gestionar documentos, costos de transporte y cuentas por pagar según ownership.
@@ -782,7 +824,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 5.4 — Transferencias entre sucursales
 
-**Tareas**
+#### Tareas
+
 - Solicitar y aprobar transferencias.
 - Registrar despacho, inventario en tránsito y recepción.
 - Gestionar diferencias, daños y ajustes.
@@ -809,7 +852,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 6.1 — WORKFORCE: empleados, cargos y contratos
 
-**Tareas**
+#### Tareas
+
 - Gestionar empleados, cargos, departamentos y relaciones laborales.
 - Gestionar contratos, documentos y vigencias.
 - Aplicar permisos por sucursal y rol.
@@ -825,7 +869,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 6.2 — Turnos, asistencia, ausencias y compensaciones
 
-**Tareas**
+#### Tareas
+
 - Gestionar horarios, turnos, asignaciones y asistencia.
 - Gestionar horas extra, descansos, ausencias, permisos y vacaciones.
 - Registrar las condiciones contractuales de remuneración y entregar a FINANCE los datos autorizados de turnos, asistencia, ausencias y variables laborales.
@@ -843,7 +888,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 6.3 — CUSTOMERS: perfiles e historial
 
-**Tareas**
+#### Tareas
+
 - Gestionar perfiles, contactos y preferencias.
 - Conservar historial de compras según ownership y reglas de retención.
 - Permitir acceso a perfil sin perderlo automáticamente al eliminar un tenant, conforme ADR-0014.
@@ -859,7 +905,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 6.4 — Fidelización, campañas y consentimientos
 
-**Tareas**
+#### Tareas
+
 - Gestionar puntos, cupones, promociones y tarjetas regalo.
 - Gestionar segmentación y preferencias.
 - Separar consentimientos por finalidad y canal.
@@ -888,7 +935,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 7.1 — BILLING: documentos fiscales y numeración
 
-**Tareas**
+#### Tareas
+
 - Separar documento fiscal de pedido y pago.
 - Gestionar numeración y autorización por empresa legal/sucursal/punto de venta.
 - Integrar proveedor/autoridad fiscal según jurisdicción.
@@ -906,7 +954,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 7.2 — FINANCE: libro, asientos y periodos
 
-**Tareas**
+#### Tareas
+
 - Definir plan contable, centros de costo y reglas de contabilización.
 - Registrar asientos balanceados y reversos.
 - Gestionar ingresos, egresos, cuentas por pagar, cuentas por cobrar, flujo de caja, costos operativos, impuestos y rentabilidad por sucursal/empresa legal.
@@ -927,7 +976,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 7.3 — CASH y tesorería: conciliaciones
 
-**Tareas**
+#### Tareas
+
 - Consolidar arqueos, entradas, retiros y diferencias.
 - Conciliar bancos y pasarelas.
 - Gestionar cuentas por cobrar/pagar en su módulo propietario.
@@ -944,7 +994,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 7.4 — Reportes financieros y fiscales
 
-**Tareas**
+#### Tareas
+
 - Construir estado de resultados, balance y flujo de caja.
 - Reportar por sucursal, marca y empresa legal con filtros autorizados.
 - Aplicar reglas de moneda, periodo y zona horaria.
@@ -960,7 +1011,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 7.5 — Cumplimiento fiscal colombiano y DIAN
 
-**Tareas**
+#### Tareas
+
 - Implementar en BILLING el ciclo de documentos fiscales exigidos para Colombia: factura electrónica de venta, documento equivalente electrónico tipo POS cuando corresponda, notas crédito, notas de ajuste y registro de documentos anulados.
 - Registrar respuestas de validación, aceptación/rechazo, transmisión, reenvíos controlados y acuses de la DIAN/proveedor autorizado, conservando documento original y trazabilidad.
 - Gestionar NIT, responsabilidades tributarias y configuración fiscal de empresa legal, sucursal y punto de venta.
@@ -991,7 +1043,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 8.1 — Datos analíticos y ownership
 
-**Tareas**
+#### Tareas
+
 - Definir eventos y métricas de negocio con propietarios.
 - Separar datos operativos de proyecciones analíticas.
 - Definir consistencia, retraso y linaje de indicadores.
@@ -1008,7 +1061,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 8.2 — Dashboards operativos y ejecutivos
 
-**Tareas**
+#### Tareas
+
 - Construir vistas por sucursal, marca, empresa y consolidado autorizado.
 - Mostrar ventas, pedidos, ticket promedio, inventario, mermas, caja y cocina.
 - Definir filtros, paginación y límites de exportación.
@@ -1024,7 +1078,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 8.3 — Detección de anomalías y predicciones
 
-**Tareas**
+#### Tareas
+
 - Definir datos y ventanas de entrenamiento/consulta permitidas.
 - Construir detección de anomalías en ventas, caja, descuentos, inventario y demanda.
 - Medir calidad, falsos positivos y sesgos operativos.
@@ -1040,7 +1095,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 8.4 — Capacidades de IA asistida
 
-**Tareas**
+#### Tareas
+
 - Definir herramientas disponibles por agente y permisos.
 - Aplicar autorización del backend propietario en cada acción.
 - Limitar contexto, datos y llamadas a proveedores.
@@ -1058,7 +1114,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 8.5 — REPORTING: informes, plantillas y distribución
 
-**Tareas**
+#### Tareas
+
 - Implementar REPORTING como propietario de solicitudes, definiciones de informes, plantillas, versiones publicadas inmutables, ejecuciones, artefactos y entregas.
 - Generar PDF, XLSX y CSV, además de formatos estructurados autorizados.
 - Permitir informes configurables por usuario, empresa y sucursal, con filtros, campos, agrupaciones y comparaciones.
@@ -1077,7 +1134,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 8.6 — AUDIT: auditoría de accesos y evidencias
 
-**Tareas**
+#### Tareas
+
 - Implementar AUDIT como propietario de los registros de auditoría de seguridad y de los eventos de acceso/consulta/generación/exportación/descarga que le correspondan por contrato.
 - Mantener separados auditoría, logs operativos, métricas/trazas e historial de negocio.
 - Recibir eventos mediante contratos versionados y entrega durable/idempotente; no consultar directamente schemas ajenos.
@@ -1106,7 +1164,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 9.1 — AUTOMATION: motor de reglas y flujos
 
-**Tareas**
+#### Tareas
+
 - Definir disparadores, condiciones, acciones, versiones y estados.
 - Gestionar aprobaciones y límites de ejecución.
 - Aplicar idempotencia, reintentos, backoff y DLQ.
@@ -1123,7 +1182,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 9.2 — INTEGRATIONS: credenciales y conectores
 
-**Tareas**
+#### Tareas
+
 - Gestionar credenciales por tenant/proveedor/entorno.
 - Implementar ciclo de emisión, rotación, expiración y revocación.
 - Validar firmas, callbacks, esquemas y versiones externas.
@@ -1140,7 +1200,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 9.3 — API pública, webhooks y canales digitales
 
-**Tareas**
+#### Tareas
+
 - Publicar APIs versionadas y documentación.
 - Definir autenticación, scopes, cuotas y límites por cliente.
 - Firmar y proteger webhooks, reintentos y replay.
@@ -1161,7 +1222,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 9.4 — Pagos, fiscalidad, mensajería y proveedores externos
 
-**Tareas**
+#### Tareas
+
 - Implementar conectores concretos habilitados por mercado y contrato: pasarelas de pago, DIAN/proveedores de facturación, WhatsApp Business, correo, SMS, Google Maps, plataformas/marketplaces de delivery, reservas, sistemas contables, analítica externa y automatizadores externos.
 - Para WhatsApp, cubrir recepción/confirmación de pedidos, notificaciones, estados de domicilio y atención al cliente, respetando consentimiento y asociación autorizada con cliente/pedido.
 - Para mapas, cubrir validación de direcciones, distancias, tiempos estimados, zonas de cobertura, tarifas y ubicación de domicilios.
@@ -1181,7 +1243,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 9.5 — Hardware, dispositivos y periféricos operativos
 
-**Tareas**
+#### Tareas
+
 - Integrar dispositivos POS, impresoras de tickets/documentos, impresoras de cocina, lectores de códigos, cajones de dinero, pantallas KDS y terminales de pago.
 - Registrar y provisionar cada dispositivo por tenant, sucursal, caja y función; permitir activación, desactivación, revocación y reasignación autorizada.
 - Mantener estado de conexión, compatibilidad, salud, última comunicación y alertas de desconexión.
@@ -1210,7 +1273,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 10.1 — Portal de clientes y autoservicio
 
-**Tareas**
+#### Tareas
+
 - Habilitar consulta de perfil, historial, reservas, pedidos y seguimiento.
 - Gestionar preferencias y consentimiento.
 - Asegurar separación entre clientes y tenants.
@@ -1226,7 +1290,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 10.2 — Escala de sincronización offline
 
-**Tareas**
+#### Tareas
+
 - Probar múltiples terminales, desconexiones prolongadas y grandes colas.
 - Definir límites, backpressure y prioridades de sincronización.
 - Gestionar conflictos con reglas deterministas y revisión humana.
@@ -1242,7 +1307,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 10.3 — Alta disponibilidad y recuperación ante desastres
 
-**Tareas**
+#### Tareas
+
 - Desplegar y verificar PostgreSQL HA, Redis Cluster y NATS HA según ADR.
 - Probar failover, fencing, quorum y recuperación.
 - Verificar backups, WAL, PITR y restauración.
@@ -1259,7 +1325,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 10.4 — Rendimiento, límites y optimización
 
-**Tareas**
+#### Tareas
+
 - Medir perfiles de carga por servicio/módulo y rutas críticas.
 - Dimensionar pools, workers, conexiones, shards, streams, caché y almacenamiento.
 - Afinar índices según consultas reales y métricas.
@@ -1277,7 +1344,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 10.5 — Seguridad avanzada y pruebas adversariales
 
-**Tareas**
+#### Tareas
+
 - Ejecutar pentest de aplicaciones, APIs, sesiones, infraestructura y multi-tenancy.
 - Ejecutar pruebas de abuso, DDoS controlado, scraping y exfiltración.
 - Revisar supply chain, SBOM, procedencia, firmas y artefactos.
@@ -1294,7 +1362,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 10.6 — Auditoría, continuidad y operación
 
-**Tareas**
+#### Tareas
+
 - Verificar cobertura de eventos auditables.
 - Ejecutar ejercicios de respuesta a incidentes y recuperación.
 - Validar rotación/revocación de secretos.
@@ -1315,7 +1384,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### 10.7 — Modalidades de infraestructura y migración de tenants
 
-**Tareas**
+#### Tareas
+
 - Habilitar el modelo de despliegue por tenant definido en requisitos.md: Shared Cloud (aplicación y base compartidas con aislamiento tenant), Dedicated Database (aplicación compartida y base independiente) y Dedicated Environment (aplicación, base y recursos dedicados).
 - Mantener en PLATFORM únicamente el control de modalidad, región, estado y referencias seguras de infraestructura; no almacenar contraseñas ni secretos, solo referencias al gestor de secretos.
 - Definir el ciclo de aprovisionamiento, validación, suspensión, cambio de modalidad y retiro de cada despliegue.
@@ -1342,7 +1412,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### F.1 — Inventario final de tratamientos y mercados
 
-**Tareas**
+#### Tareas
+
 - Confirmar jurisdicciones, mercados, tipos de cliente y superficies.
 - Completar inventario por módulo de datos, finalidad, sensibilidad, base/justificación, destinatarios y retención.
 - Identificar roles de Restaurant OS y tenant por actividad.
@@ -1358,7 +1429,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### F.2 — Matriz de retención y eliminación
 
-**Tareas**
+#### Tareas
+
 - Definir plazos/criterios por categoría, finalidad, módulo y jurisdicción con revisión legal.
 - Definir triggers, acciones, excepciones y legal hold.
 - Definir tratamiento de respaldos y restauraciones.
@@ -1374,7 +1446,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### F.3 — Documentos y contratos legales
 
-**Tareas**
+#### Tareas
+
 - Redactar política de privacidad.
 - Redactar política de retención y eliminación.
 - Redactar términos SaaS y términos de usuarios finales cuando aplique.
@@ -1392,7 +1465,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### F.4 — Banner, preferencias y consentimiento
 
-**Tareas**
+#### Tareas
+
 - Configurar banner y centro de preferencias según jurisdicción y superficie.
 - Clasificar tecnologías necesarias, preferencias, analítica y marketing.
 - Aplicar consentimiento previo donde corresponda.
@@ -1411,7 +1485,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### F.5 — Derechos, incidentes y proveedores
 
-**Tareas**
+#### Tareas
+
 - Verificar canales y procedimientos de acceso, rectificación, oposición, portabilidad, limitación, retiro y eliminación según jurisdicción.
 - Verificar identidad y routing al módulo propietario.
 - Probar respuesta a incidentes y plazos de notificación aplicables.
@@ -1427,7 +1502,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ### F.6 — Go/No-Go por jurisdicción
 
-**Tareas**
+#### Tareas
+
 - Revisar todas las puertas anteriores.
 - Confirmar que los artefactos desplegados corresponden al commit y build probados.
 - Confirmar backups, restauración, observabilidad, seguridad, guardias y runbooks.
@@ -1444,7 +1520,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 ---
 
-# PARTE II — SEGURIDAD INTEGRADA EN TODAS LAS FASES
+## PARTE II — SEGURIDAD INTEGRADA EN TODAS LAS FASES
 
 ## 15. Matriz de integración de ADR de seguridad
 
