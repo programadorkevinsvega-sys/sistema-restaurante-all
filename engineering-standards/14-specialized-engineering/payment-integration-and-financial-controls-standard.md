@@ -9,29 +9,45 @@ Aplica a cobros, reembolsos, transferencias, métodos de pago, conciliación o d
 ## 2. Principios
 
 - Definir requisitos por resultados, riesgo y contexto; no por preferencia tecnológica.
+
 - Mantener responsabilidades, límites de confianza y propiedad explícitos.
+
 - Aplicar mínimo privilegio, privacidad, accesibilidad y seguridad desde el diseño cuando correspondan.
+
 - Documentar decisiones, supuestos, dependencias y riesgos residuales.
 
 ## 3. Requisitos
 
 - Evitar almacenar datos de tarjeta sensibles; evaluar alcance PCI DSS y usar tokenización/hosted fields/proveedor certificado cuando corresponda.
+
 - Separar autorización, captura, anulación, reembolso, disputa y liquidación como estados/operaciones distintas.
+
 - Diseñar idempotencia de comandos, claves únicas, control de concurrencia y resultado incierto por timeout.
+
 - No marcar pago exitoso por redirección del navegador; verificar notificación autenticada y consultar proveedor cuando sea necesario.
+
 - Conciliar operaciones internas con reportes/liquidaciones externas; detectar faltantes, duplicados y diferencias.
+
 - Mantener ledger/auditoría inmutable según requisitos, precisión decimal, moneda, redondeo y trazabilidad.
+
 - Aplicar segregación de funciones, límites, aprobación y antifraude proporcional al riesgo.
+
 - Definir manejo de webhooks, reversos, chargebacks, cierres y contingencia del proveedor.
+
 - No registrar PAN, CVV, credenciales ni payloads financieros sensibles en logs.
+
 - Validar regulación, impuestos, jurisdicción y obligaciones contractuales con especialistas.
 
 ## 4. Antipatrones
 
 - Adoptar herramientas sin requisitos ni evaluación de operación.
+
 - Confiar en controles exclusivamente del cliente cuando el servidor debe hacer cumplir la regla.
+
 - Registrar datos sensibles innecesarios o exponerlos en logs/telemetría.
+
 - Ignorar fallos parciales, cambios de versión, límites de capacidad o dependencias externas.
+
 - Considerar la existencia de documentación como prueba de implementación.
 
 ## 5. Verificación y evidencia
@@ -53,10 +69,15 @@ Evaluar doble cargo, reembolso duplicado, webhook falsificado/repetido/fuera de 
 ## 9. Pruebas de aceptación mínimas
 
 - Repetir comandos de cobro/captura/reembolso y verificar idempotencia, unicidad y ausencia de doble efecto.
+
 - Simular timeout antes y después de que el proveedor procese la operación; resolver estado incierto mediante consulta/conciliación.
+
 - Validar firma/autenticidad, replay, duplicados, desorden y retraso de webhooks.
+
 - Probar importes negativos, precisión, redondeo, moneda no soportada, límites y cambio de tipo de cambio.
+
 - Conciliar ledger interno, operaciones del proveedor, settlement, fees, reversos y chargebacks; detectar faltantes y diferencias.
+
 - Verificar segregación de funciones, límites de aprobación, auditoría y ausencia de datos prohibidos en logs.
 
 ## 10. Operación y evidencias
