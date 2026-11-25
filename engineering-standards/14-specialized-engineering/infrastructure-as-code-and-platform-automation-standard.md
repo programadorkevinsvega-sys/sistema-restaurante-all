@@ -43,3 +43,16 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## Amenazas y escenarios de fallo específicos
+Evaluar compromiso del pipeline, state expuesto, drift no detectado, destrucción accidental, permisos excesivos, módulo malicioso, plan alterado entre aprobación y aplicación, y credenciales persistentes.
+
+## Pruebas de aceptación mínimas
+- Verificar control de acceso, cifrado, locking, versionado y restauración del state.
+- Confirmar que el plan revisado es el mismo artefacto/digest aplicado y que la aprobación queda auditada.
+- Probar policy-as-code ante exposición pública, cifrado ausente, IAM excesivo y recursos prohibidos.
+- Ejecutar pruebas de módulos, drift detection, importación, idempotencia y destrucción de entornos efímeros.
+- Simular fallo parcial y rollback/forward recovery sin destruir recursos compartidos.
+
+## Operación y evidencias
+Conservar repositorio y módulos versionados, planes/aplicaciones, approvals, logs de pipeline, inventario de state, detección de drift, políticas y reportes de escaneo.
