@@ -32,6 +32,10 @@ SQLx.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md): especificación técnica vinculada a ADR-0011 Accepted; no representa implementación.
+- [Modelo de amenazas](../security/threat-model.md): inventario de activos, actores, fronteras y amenazas STRIDE; entregable de subfase 0.3.
+- [Matriz amenaza/control/fase](../security/threat-control-matrix.md): controles asignados por amenaza, tipo, fase y estado; entregable de subfase 0.3.
+- [Registro de riesgos residuales](../security/residual-risk-register.md): riesgos abiertos con fase de cierre y propietario; entregable de subfase 0.3.
+- [Baseline de seguridad por proceso](../security/security-baseline-per-process.md): controles mínimos requeridos por proceso antes de producción; entregable de subfase 0.3.
 - [Validación de entradas y contratos de datos](./input-validation-and-data-contracts.md): especificación técnica vigente conforme a ADR-0019 Accepted; no representa validadores ni middleware implementados.
 - [ADRs](../adr/README.md): índice de decisiones aceptadas. ADR-0001 a ADR-0027 están Accepted; la aceptación no implica implementación.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
