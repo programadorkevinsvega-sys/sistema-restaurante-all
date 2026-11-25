@@ -70,6 +70,10 @@ SQLx.
 - [Diseño Redis Cluster y caché](./redis-design.md): topología, ACL, formato de clave, cache-aside, invalidación durable y fallback; entregable de subfase 0.9.
 - [Diseño object storage y archivos](./object-storage-design.md): buckets por módulo, metadata, URLs presignadas, pipeline de validación y cuarentena; entregable de subfase 0.9.
 - [Contratos de eventos y fallback](./event-contracts.md): envelope estándar, versionado, catálogo inicial y política de fallback seguro; entregable de subfase 0.9.
+- [Especificación offline-first del POS](./offline-first-spec.md): principios, datos locales, cola de operaciones, límites y protección; entregable de subfase 0.10.
+- [Máquina de estados de sincronización](./offline-sync-state-machine.md): estados del dispositivo, transiciones, flujo de cola y recuperación; entregable de subfase 0.10.
+- [Política de conflictos offline](./offline-conflict-policy.md): tipos de conflicto, reglas de resolución por tipo y trazabilidad; entregable de subfase 0.10.
+- [Matriz de operaciones permitidas offline](./offline-operations-matrix.md): qué puede y qué no puede hacer el POS sin conexión, con criterios de aceptación; entregable de subfase 0.10.
 
 ## ADR de seguridad aceptados
 
