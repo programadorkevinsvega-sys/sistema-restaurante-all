@@ -1,32 +1,35 @@
 # Catálogo maestro de estándares de ingeniería
 
-**Versión:** 0.2.0 | **Estado:** Draft | **Carácter:** índice normativo de descubrimiento
+**Versión:** 0.3.0 | **Estado:** Draft | **Carácter:** índice normativo de descubrimiento
 
 ## 1. Propósito y regla de exhaustividad
 
 Este catálogo es el punto de entrada obligatorio para cualquier agente, arquitecto o equipo que inicie un proyecto usando esta biblioteca. Su función es evitar que la selección dependa de la memoria, preferencias o sesgos del agente.
 
-**El agente DEBE recorrer todas las familias y registrar un resultado para cada estándar y tema del catálogo.** No basta con leer el README ni seleccionar solo los documentos que parezcan relevantes. Si un tema no tiene todavía un estándar especializado, debe registrarse como brecha documental y no inventarse que está cubierto.
+**El agente DEBE recorrer todas las familias y registrar un resultado para cada estándar documental y cada tema del catálogo.** La fuente canónica del inventario identificable es el [Inventario exhaustivo y matriz de cobertura](./STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md), con IDs estables STD-* y TOP-*. No basta con leer el README ni seleccionar solo documentos que parezcan relevantes. No se permite un registro parcial ni omitir filas.
 
-La biblioteca es extensible: el catálogo no afirma que sea posible enumerar para siempre toda disciplina existente. La revisión de cobertura debe buscar activamente nuevas áreas, tecnologías, obligaciones y amenazas.
+La biblioteca es extensible: la taxonomía no afirma que enumere para siempre toda disciplina existente. El agente debe buscar nuevas áreas, tecnologías, obligaciones, amenazas y riesgos emergentes. Los temas nuevos se registran provisionalmente y se proponen para la siguiente revisión del inventario.
 
-## 2. Estados de aplicabilidad y adopción
+## 2. Aplicabilidad y estado de adopción: dimensiones separadas
 
-Cada elemento tendrá exactamente uno de estos estados en el registro del proyecto:
+Cada elemento debe tener exactamente una clasificación de aplicabilidad y un estado de adopción. No son sinónimos.
 
-- **Adoptado:** aplica y sus requisitos son obligatorios para el proyecto.
+**Aplicabilidad:** Aplica, Condicional o No aplica. Para Condicional, registrar disparador, evidencia y resultado. Para No aplica, registrar justificación y disparador de reevaluación.
+
+**Estado de adopción:**
+- **Adoptado:** aplica y sus requisitos son obligatorios.
 - **Adoptado con adaptación:** aplica con ajustes explícitos y trazables.
 - **Aplazado:** aplica, pero su implantación tiene fecha, responsable, riesgo aceptado y controles temporales.
-- **No aplicable:** no corresponde al alcance; exige justificación verificable y disparadores de reevaluación.
-- **Rechazado:** el propietario decide no adoptarlo; exige ADR o excepción, impacto y mitigación.
+- **No aplicable:** solo válido cuando la aplicabilidad sea No aplica.
+- **Rechazado:** el propietario decide no adoptar un elemento aplicable; exige decisión explícita, impacto y mitigación.
 - **Pendiente de decisión:** requiere respuesta del propietario; no autoriza al agente a asumir.
 - **Brecha de biblioteca:** el tema es pertinente pero carece de estándar suficiente; requiere investigación y creación/revisión documental.
 
-No usar "omitido", "no revisado", vacío ni silencio como estado final. Una decisión pendiente bloquea únicamente el diseño o la implementación que dependa de ella; el agente debe señalar el bloqueo concreto.
+No usar omitido, no revisado, vacío ni silencio como estado final. No clasificar como No aplicable un requisito que aplica pero fue rechazado. Una decisión pendiente bloquea únicamente el diseño o implementación que dependa de ella.
 
 ## 3. Catálogo por familias
 
-La siguiente lista es una taxonomía de descubrimiento. Cada tema debe evaluarse, aunque el proyecto no lo utilice.
+La siguiente lista es la taxonomía de descubrimiento. Cada tema tiene ID estable en el inventario y debe evaluarse individualmente.
 
 ### A. Gobernanza, producto y ciclo de vida
 - Gobierno de estándares, jerarquía documental, lenguaje normativo y versionado.
@@ -140,30 +143,18 @@ La siguiente lista es una taxonomía de descubrimiento. Cada tema debe evaluarse
 - Geoespacial, mapas, geocodificación y datos de ubicación.
 - Búsqueda, recomendación, analítica y plataformas de datos.
 
-## 4. Mapeo a estándares existentes
+## 4. Mapeo y límites de cobertura
 
-El índice de cada carpeta identifica los documentos disponibles. Los temas sin documento propio deben evaluarse contra los estándares transversales y, cuando sean materialmente aplicables, declararse como brecha de biblioteca. No se debe fingir cobertura completa por proximidad temática.
+El inventario vincula cada tema con documentos relacionados y clasifica brechas conocidas. Un documento relacionado puede cubrir solo parte del tema. El agente debe verificar alcance, requisitos, amenazas, controles, pruebas y evidencias; la similitud de nombres no demuestra cobertura. Temas como salud, safety engineering, geoespacial, blockchain, SEO, notificaciones móviles, gobierno de datos, DNS/CDN y otras brechas señaladas deben declararse como tales cuando resulten pertinentes.
 
 ## 5. Criterios para agregar un estándar
 
-Crear un estándar especializado cuando el tema:
-- tenga amenazas, controles, ciclo de vida o pruebas propias;
-- requiera decisiones repetibles entre proyectos;
-- no pueda explicarse adecuadamente como una sección breve de otro documento;
-- tenga suficiente estabilidad y aplicabilidad para justificar mantenimiento.
-
-Evitar duplicación: usar un estándar principal y referencias cruzadas, definiendo claramente el propietario del requisito.
+Crear un estándar especializado cuando el tema tenga amenazas, controles, ciclo de vida o pruebas propias; requiera decisiones repetibles; no pueda explicarse adecuadamente como sección breve de otro documento; y tenga suficiente estabilidad y aplicabilidad. Evitar duplicación y definir propietario de cada requisito.
 
 ## 6. Revisión de exhaustividad
 
-Antes de cerrar la planificación de un proyecto, el agente debe:
-- recorrer todas las familias A–J;
-- revisar documentos existentes y brechas;
-- preguntar por tecnologías y capacidades especializadas;
-- registrar todos los estados;
-- explicar por qué no aplican las áreas descartadas;
-- revisar si el alcance cambió y activar reevaluación.
+Antes de cerrar la planificación, el agente debe recorrer todas las familias A–J y todos los IDs STD-* y TOP-*, crear una fila por ID, revisar documentos completos y brechas, registrar aplicabilidad y adopción por separado, justificar no aplicabilidad y reevaluar si cambia el alcance.
 
-## 7. Evolución del catálogo
+## 7. Evolución
 
-El catálogo debe revisarse periódicamente y ante nuevas amenazas, cambios regulatorios, tecnologías relevantes, incidentes, auditorías o solicitudes de proyectos. Mantener historial de cambios y compatibilidad con versiones anteriores.
+El catálogo y el inventario deben revisarse juntos ante nuevos estándares, amenazas, regulación, tecnologías, incidentes, auditorías o solicitudes. Mantener historial, IDs estables y compatibilidad. Nunca reutilizar un ID retirado.
