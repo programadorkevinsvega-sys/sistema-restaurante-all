@@ -34,3 +34,19 @@ Los textos, plazos, bases jurídicas y mecanismos deben validarse por jurisdicci
 ## Verificación
 
 Inventario actualizado, matriz de retención, pruebas de derechos, evidencia de consentimiento, auditoría de proveedores y simulacro de incidente.
+
+
+## Cookies, preferencias y avisos
+
+- Inventariar cookies, almacenamiento local, SDK y tecnologías similares por finalidad, proveedor, duración y categoría.
+- Clasificar tecnologías estrictamente necesarias y no esenciales; obtener consentimiento previo para las no esenciales cuando la jurisdicción lo exija.
+- Permitir aceptar, rechazar y configurar categorías con facilidad comparable, y ofrecer una vía accesible para retirar o modificar preferencias.
+- No activar analítica, marketing o seguimiento no esencial antes del consentimiento cuando sea exigible.
+- Conservar evidencia mínima de la versión del aviso, momento, categorías elegidas y contexto necesario para demostrar la preferencia.
+- No agrupar consentimiento de cookies, aceptación de términos y condiciones, aviso de privacidad y marketing en una única acción.
+- Mantener avisos contextuales y mecanismos de preferencia consistentes entre web, aplicaciones y canales aplicables.
+- Los textos legales, bases jurídicas y obligaciones de consentimiento deben validarse por jurisdicción; este estándar no reemplaza revisión legal.
+
+## Términos y condiciones
+
+Cada producto debe determinar, con revisión jurídica por jurisdicción, qué términos aplican a la organización, usuarios, clientes empresariales, consumidores, integraciones y proveedores. La aceptación debe ser demostrable, versionada y separada de otros consentimientos cuando corresponda. La biblioteca no proporciona textos contractuales universales ni sustituye asesoría legal.
