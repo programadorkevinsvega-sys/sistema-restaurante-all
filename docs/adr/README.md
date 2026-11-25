@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-Cada decisión se registra en un ADR independiente. El flujo es Proposed → Accepted. Una sugerencia de agente o un cambio documental sin aprobación explícita no constituye aceptación.
+Cada decisión se registra en un ADR independiente. El flujo es Accepted → Accepted. Una sugerencia de agente o un cambio documental sin aprobación explícita no constituye aceptación.
 
 Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y aprobación. Toda desviación del estándar registra motivo, alcance, riesgos, mitigaciones y condición de revisión.
 
