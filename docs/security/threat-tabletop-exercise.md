@@ -1,7 +1,7 @@
 # Registro de revisión de escenarios de amenazas (tabletop)
 
 **Fase:** 0.3 — Modelo de amenazas y requisitos de seguridad  
-**Estado:** escenarios preparados; walkthrough documental pendiente de validación del propietario  
+**Estado:** walkthrough documental en curso; TT-01 y TT-02 revisados y aprobados  
 **Versión:** 1.0  
 **Fecha:** 2026-11-25  
 **Alcance:** ejercicio de escritorio basado en arquitectura y ADR. No es una prueba de penetración, simulación sobre infraestructura, auditoría independiente ni evidencia de controles desplegados.  
@@ -116,7 +116,7 @@ Para cada escenario, el revisor debe responder y registrar:
 7. ¿Qué condición bloquea la reanudación?
 8. ¿Qué riesgo residual y tarea del plan se actualizan?
 
-**Resultado actual:** escenarios y respuestas esperadas documentados. El walkthrough formal por el propietario, con fecha, decisiones y acciones aceptadas, permanece pendiente. No se declara tabletop ejecutado ni prueba técnica superada.
+**Resultado actual:** TT-01 y TT-02 cuentan con decisiones operativas revisadas y aprobadas por el propietario. Los otros seis escenarios siguen pendientes de walkthrough. No se declara tabletop completo ni prueba técnica superada.
 
 ### Registro de ejecución
 
@@ -130,11 +130,20 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Acciones relacionadas:** TA-02 permanece pendiente de implementación; TA-07 permanece pendiente para pruebas negativas en CI.
 
 
+#### TT-02 — Cola offline manipulada, duplicada o reordenada
+
+- **Estado del walkthrough:** revisado y siete medidas aprobadas por el propietario.
+- **Fecha de revisión:** 2026-11-25.
+- **Decisiones aprobadas:** cada operación debe tener un identificador único e idempotente; mantener integridad y secuencia verificables; validar cada operación en el servidor antes de aceptarla; impedir que duplicados generen ventas o movimientos repetidos; poner conflictos en cuarentena para conciliación; no confirmar efectos financieros únicamente por el reporte del dispositivo; y dejar trazabilidad auditable de cada sincronización.
+- **Limitación aceptada:** estas medidas definen requisitos de diseño. No se afirma que la cola local sea inviolable ni que la integridad, secuencia, validación, cuarentena o auditoría estén implementadas o probadas.
+- **Resultado:** respuesta operativa aprobada para el escenario. El contrato de sincronización, la persistencia Inbox, la deduplicación y las pruebas de conflicto deben implementarse y verificarse en las fases correspondientes.
+- **Acciones relacionadas:** TA-03 permanece pendiente de implementación y pruebas; TA-07 permanece pendiente para incorporar pruebas negativas a CI.
+
 ## 4. Registro de acciones del ejercicio
 
 | ID | Acción pendiente | Responsable | Fase | Estado |
 |---|---|---|---|---|
-| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | Pendiente |
+| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (2/8) |
 | TA-02 | Implementar enrolamiento, revocación y protección local de POS | Propietario del producto | 0.4 / 0.10 | Pendiente |
 | TA-03 | Diseñar y probar sync idempotente, integridad, conflictos y reconciliación | Propietario del producto | 0.10 | Pendiente |
 | TA-04 | Implementar gestión de secretos, aislamiento de backups y restauración | Propietario del producto | 0.6 / 0.7 | Pendiente |
