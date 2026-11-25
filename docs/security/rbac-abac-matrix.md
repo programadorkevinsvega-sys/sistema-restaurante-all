@@ -9,6 +9,7 @@
 
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Casos negativos de autorización](./authorization-negative-cases.md)
+- [Acceso privilegiado y soporte excepcional](./privileged-access-and-exceptional-support.md)
 
 ---
 
@@ -32,8 +33,8 @@ Los roles no son un catálogo cerrado. Se extienden por dominio según necesidad
 
 | Rol | Ámbito | Descripción |
 |---|---|---|
-| `platform_operator` | Plataforma global | Administra tenants, planes y suscripciones. Acceso excepcional temporal a datos de tenant con justificación y auditoría. |
-| `platform_support` | Plataforma global | Acceso de soporte de solo lectura; acotado por tenant y ventana temporal. |
+| `platform_operator` | Plataforma global | Administra tenants, planes y suscripciones. Puede solicitar acceso excepcional; su uso requiere concesión aprobada y validación del módulo propietario. |
+| `platform_support` | Plataforma global | Solo lectura sobre datos operativos mediante concesión excepcional específica; acotado por tenant, recursos, acciones y ventana temporal. Sin escritura ni exportación masiva. |
 | `platform_billing` | Plataforma global | Gestiona facturación SaaS y planes. Sin acceso a datos operativos de tenant. |
 
 ### 2.2 Roles de tenant (propietario: IDENTITY)
@@ -92,7 +93,8 @@ Los atributos de contexto que modifican la decisión de autorización más allá
 | Crear tenant | `platform_operator` | — | Registrado en AUDIT |
 | Suspender / activar tenant | `platform_operator` | — | Registrado en AUDIT |
 | Ver configuración de tenant | `platform_operator`, `platform_support` | — | Support: solo lectura |
-| Acceso excepcional a datos operativos | `platform_operator` | Ventana temporal + justificación | Requiere `mfa_verified`; auditado |
+| Solicitar acceso excepcional a datos operativos | `platform_operator`, `platform_support` | Tenant único, módulo, recursos, acciones, motivo y ventana | Solicitar no equivale a aprobar; autoaprobación prohibida |
+| Usar concesión excepcional aprobada | `platform_operator`, `platform_support` (solo lectura) | Concesión activa y no revocada; tenant/recurso/acción exactos; MFA reciente | Validación final en módulo propietario; auditoría de PLATFORM y AUDIT; segunda aprobación para escritura/alto impacto según política |
 
 ### 4.2 Configuración de organización (ORGANIZATION)
 
