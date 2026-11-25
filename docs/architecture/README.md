@@ -21,6 +21,7 @@ SQLx.
 - [Estándar general](./engineering-standard.md): reglas obligatorias de arquitectura y estructura.
 - [Arquitectura de Restaurant OS](./restaurant-os-architecture.md): especialización de los cuatro procesos, dominios, datos y comunicación.
 - [Diseño de crates y dependencias](./crate-architecture.md): diseño técnico aceptado mediante ADR-0009.
+- [Matriz de ownership, contratos y dependencias](./module-ownership-contracts-and-dependencies.md): catálogo de los 20 módulos, sus procesos propietarios, schemas históricos, rutas de contratos y reglas de dependencias para la subfase 0.1.
 - [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](./identifier-strategy.md): política vigente de UUIDv7 vinculada a ADR-0012 Accepted; no significa que la generación o migración esté implementada.
 - [PostgreSQL HA y réplicas de lectura](./postgresql-ha-and-read-replicas.md): especificación operativa vigente conforme a ADR-0012 Accepted; no representa infraestructura desplegada.
 - [Redis Cluster, TLS y operación de caché distribuida](./redis-cache-operations.md): especificación vigente conforme a ADR-0016 Accepted; no representa infraestructura desplegada.
