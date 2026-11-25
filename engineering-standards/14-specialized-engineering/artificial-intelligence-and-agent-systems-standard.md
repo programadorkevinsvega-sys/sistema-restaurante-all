@@ -45,3 +45,18 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Amenazas y escenarios de fallo específicos
+Evaluar prompt injection directo/indirecto, recuperación de instrucciones maliciosas, tool abuse, exfiltración, escalada de privilegios, fuga cross-tenant, salida no validada, alucinación, automatización de daño, denegación de servicio por loops/costo y cambio de comportamiento del modelo/proveedor.
+
+## 9. Pruebas de aceptación mínimas
+- Ejecutar red team de prompt injection en instrucciones, RAG, archivos, web y salidas de herramientas.
+- Verificar autorización independiente del modelo en cada herramienta, recurso, tenant y acción.
+- Probar extracción de secretos/datos personales y confirmar que logs/trazas se minimizan y redactan.
+- Ensayar límites de tokens, presupuesto, iteraciones, timeout, destinos de red y fallback.
+- Evaluar datasets versionados para factualidad, robustez, sesgos, refusals, regresiones y comportamiento fuera de alcance.
+- Probar confirmación humana, cancelación, reversión y audit trail en acciones de alto impacto.
+- Verificar procedencia, versión, licencia, retención y condiciones de entrenamiento del proveedor/modelo.
+
+## 10. Operación y evidencias
+Conservar model/system card, threat model, evaluación de proveedor, versiones de prompts/modelos/herramientas, resultados de red team, trazas saneadas, métricas de calidad/costo y runbook de incidente/rollback.
