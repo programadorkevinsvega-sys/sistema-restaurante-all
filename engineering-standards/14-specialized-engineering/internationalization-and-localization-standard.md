@@ -43,3 +43,16 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## Riesgos y escenarios de fallo específicos
+Evaluar ambigüedad de fecha/hora, transición DST, doble conversión de zona, pérdida de precisión monetaria, traducción legal incorrecta, pluralización errónea, truncamiento, RTL mal renderizado y datos regionales interpretados con locale incorrecto.
+
+## Pruebas de aceptación mínimas
+- Probar fechas civiles, instantes UTC, zonas IANA y cambios DST (hora inexistente/repetida).
+- Verificar números, moneda, redondeo, unidades, calendarios, nombres y direcciones en locales objetivo.
+- Probar plurales, género gramatical, texto largo, expansión, fallback y RTL.
+- Confirmar que reglas de negocio usan valores normalizados y no dependen del formato de presentación.
+- Revisar por persona competente traducciones legales, financieras y de seguridad antes de publicar.
+
+## Operación y evidencias
+Conservar matriz de locales, fuentes de traducción, glosario, revisiones, pruebas automatizadas por locale, versión de contenido legal y plan de actualización.
