@@ -44,3 +44,17 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## Amenazas y escenarios de fallo específicos
+Evaluar data poisoning, leakage entre conjuntos, model inversion, extracción, drift, feedback loops, sesgo por subgrupo, distribución fuera de dominio, modelo no reproducible y dependencia de artefacto no aprobado.
+
+## Pruebas de aceptación mínimas
+- Reproducir entrenamiento desde código, datos, features, parámetros y entorno versionados.
+- Validar separación train/validation/test y detectar leakage temporal o por entidad.
+- Evaluar calidad, calibración, robustez y errores por segmentos relevantes; definir límites de aceptación.
+- Probar drift, datos ausentes/adversariales, rollback y fallback al modelo anterior o proceso manual.
+- Verificar autorización de artefactos/model registry, linaje, procedencia y acceso a datos.
+- Para decisiones de alto impacto, probar revisión humana, explicación/apelación y monitoreo de daños.
+
+## Operación y evidencias
+Conservar model card, dataset datasheet/linaje, métricas por segmento, evaluación de riesgos, aprobación de release, versiones de artefactos y alertas de drift.
