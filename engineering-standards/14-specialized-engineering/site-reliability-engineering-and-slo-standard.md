@@ -9,27 +9,41 @@ Aplica a servicios operados de forma continua y con objetivos medibles de confia
 ## 2. Principios
 
 - Definir requisitos por resultados, riesgo y contexto; no por preferencia tecnológica.
+
 - Mantener responsabilidades, límites de confianza y propiedad explícitos.
+
 - Aplicar mínimo privilegio, privacidad, accesibilidad y seguridad desde el diseño cuando correspondan.
+
 - Documentar decisiones, supuestos, dependencias y riesgos residuales.
 
 ## 3. Requisitos
 
 - Definir SLIs centrados en experiencia/resultado: disponibilidad, latencia, corrección, frescura y durabilidad según servicio.
+
 - Establecer SLO con ventana, población, exclusiones justificadas y dueño; distinguir SLO interno de SLA contractual.
+
 - Usar error budget para equilibrar cambios y confiabilidad; definir políticas ante agotamiento.
+
 - Diseñar guardias, escalamiento, severidades, comunicación, runbooks y postmortems sin culpa.
+
 - Priorizar alertas accionables basadas en síntomas y burn rate; evitar alert fatigue.
+
 - Medir dependencias y objetivos end-to-end; no sumar disponibilidad nominal de componentes sin análisis.
+
 - Realizar pruebas de carga, failover, restauración y ejercicios operativos.
+
 - Mantener capacidad, límites, degradación controlada y eliminación de toil.
 
 ## 4. Antipatrones
 
 - Adoptar herramientas sin requisitos ni evaluación de operación.
+
 - Confiar en controles exclusivamente del cliente cuando el servidor debe hacer cumplir la regla.
+
 - Registrar datos sensibles innecesarios o exponerlos en logs/telemetría.
+
 - Ignorar fallos parciales, cambios de versión, límites de capacidad o dependencias externas.
+
 - Considerar la existencia de documentación como prueba de implementación.
 
 ## 5. Verificación y evidencia
@@ -51,10 +65,15 @@ Evaluar alertas sin acción, saturación de guardias, error budgets mal definido
 ## 9. Pruebas de aceptación mínimas
 
 - Validar que cada SLI tenga consulta reproducible, fuente, población y exclusiones explícitas.
+
 - Simular burn rate y verificar alertas/escalamiento en ventanas acordadas.
+
 - Ejecutar ejercicios de failover, restauración y respuesta a incidentes con medición de RTO/RPO.
+
 - Comprobar que el error budget desencadena la política documentada y que excepciones quedan auditadas.
+
 - Revisar alertas con on-call para comprobar accionabilidad, severidad y runbook.
+
 - Comparar SLO end-to-end con dependencias y medir impacto de degradación parcial.
 
 ## 10. Operación y evidencias
