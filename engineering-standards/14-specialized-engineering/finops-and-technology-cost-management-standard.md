@@ -43,3 +43,16 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## Riesgos y escenarios de fallo específicos
+Evaluar costos sin atribución, anomalías de gasto, egress inesperado, compromisos infrautilizados, sobreaprovisionamiento, optimización que rompe SLO/seguridad, consumo abusivo y dependencia financiera de un único proveedor.
+
+## Pruebas de aceptación mínimas
+- Reconciliar facturas/usage con etiquetas y propietarios; cuantificar gasto no asignado.
+- Probar alertas de presupuesto y anomalías con umbrales y responsables reales.
+- Calcular costo unitario y costo total de propiedad, incluyendo personal, soporte, licencias, backup, observabilidad y salida.
+- Ensayar límites/cuotas y escenarios de crecimiento/picos; verificar que límites no provoquen pérdida de datos o degradación insegura.
+- Comparar ahorro propuesto con impacto medido en disponibilidad, latencia, durabilidad y riesgo.
+
+## Operación y evidencias
+Conservar forecast, presupuesto aprobado, dashboards de costo, asignación por producto/equipo, costo unitario, excepciones, decisiones de compra/compromisos y resultados de optimización.
