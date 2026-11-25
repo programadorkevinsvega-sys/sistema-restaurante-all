@@ -31,9 +31,11 @@ SQLx.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md): especificación técnica vinculada a ADR-0011 Accepted; no representa implementación.
-- [ADRs](../adr/README.md): índice de decisiones aceptadas y propuestas. ADR-0001 a ADR-0018 y ADR-0020 a ADR-0027 están Accepted; ADR-0019 se encuentra en PR #26 abierto.
+- [Validación de entradas y contratos de datos](./input-validation-and-data-contracts.md): especificación técnica vigente conforme a ADR-0019 Accepted; no representa validadores ni middleware implementados.
+- [ADRs](../adr/README.md): índice de decisiones aceptadas. ADR-0001 a ADR-0027 están Accepted; la aceptación no implica implementación.
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
-- [Roadmap](../../ROADMAP.md): fases y entregables.
+- [Roadmap](../../ROADMAP.md): fases funcionales y entregables generales.
+- [Plan maestro de ejecución detallado](../planning/master-execution-plan.md): subfases, tareas, dependencias, ADR, entregables, pruebas y puertas de avance.
 
 ## ADR de seguridad aceptados
 

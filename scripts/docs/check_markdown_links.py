@@ -14,7 +14,7 @@ from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 BS = chr(92)
-LINK_RE = re.compile("!?"+BS+"[([^"+BS+"]*)"+BS+"]"+BS+"("+BS+"s*(<[^>]+>|[^"+BS+"s)]+)")
+LINK_RE = re.compile(r"""!?\[[^\]]*\]\(\s*(?P<target><[^>]+>|[^\s)]+)(?:\s+["'][^"']*["'])?\s*\)""")
 REFERENCE_RE = re.compile("^"+BS+"s{0,3}"+BS+"[[^"+BS+"]+\u005d:"+BS+"s*(<[^>]+>|"+BS+"S+)", re.MULTILINE)
 HTML_HREF_RE = re.compile(r"""\b(?:href|src)\s*=\s*["']([^"']+)["']""", re.IGNORECASE)
 INLINE_CODE_RE = re.compile("(" + chr(96) + "+)(.*?)" + BS + "1", re.DOTALL)
@@ -69,7 +69,7 @@ def heading_anchors(text: str) -> set[str]:
 
 def extract_targets(text: str) -> list[str]:
     clean = strip_code(text)
-    targets = [match.group(2) for match in LINK_RE.finditer(clean)]
+    targets = [match.group("target") for match in LINK_RE.finditer(clean)]
     targets.extend(match.group(1) for match in REFERENCE_RE.finditer(clean))
     targets.extend(HTML_HREF_RE.findall(clean))
     return [value[1:-1] if value.startswith("<") and value.endswith(">") else value for value in targets]

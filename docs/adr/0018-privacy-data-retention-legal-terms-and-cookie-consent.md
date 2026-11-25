@@ -16,7 +16,7 @@ ADR-0014 ya establece que la baja de un tenant no elimina automáticamente perfi
 
 La documentación legal no puede redactarse como un texto genérico que prometa cumplimiento universal. Los requisitos dependen de los países donde opere el servicio, de la ubicación y naturaleza de las personas afectadas, de los roles de las partes, de las finalidades y de los proveedores utilizados. Las versiones definitivas requieren revisión jurídica especializada antes de ofrecer el servicio en cada mercado.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Paquete legal obligatorio para el lanzamiento
 

@@ -3,7 +3,7 @@
 - Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: aplicaciones web, navegador, recursos estáticos, cookies, sesiones web, BFF y exposición HTTP.
-- Complementa: ADR-0002, ADR-0007, ADR-0008, ADR-0011, ADR-0018, ADR-0019 (si se acepta), ADR-0020, ADR-0021 y ADR-0025.
+- Complementa: ADR-0002, ADR-0007, ADR-0008, ADR-0011, ADR-0018, ADR-0019, ADR-0020, ADR-0021 y ADR-0025.
 - Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
