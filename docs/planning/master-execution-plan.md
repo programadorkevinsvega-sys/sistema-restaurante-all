@@ -396,6 +396,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 #### Tareas
 
+- Crear, actualizar, activar, desactivar y suspender sucursales; conservar datos de ubicación/contacto y el historial de cambios de estado.
 - Gestionar grupos empresariales, empresas legales, marcas y sucursales.
 - Gestionar áreas, estaciones, bodegas, cajas y terminales según ownership.
 - Definir zona horaria, moneda, región, idioma y datos fiscales por ámbito.
@@ -1064,8 +1065,9 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 #### Tareas
 
 - Construir vistas por sucursal, marca, empresa y consolidado autorizado.
-- Mostrar ventas, pedidos, ticket promedio, inventario, mermas, caja y cocina.
-- Definir filtros, paginación y límites de exportación.
+- Mostrar ventas por día/hora/producto/categoría/canal/empleado, ticket promedio, descuentos, márgenes, rentabilidad, inventario/rotación/vencimientos/mermas, compras/proveedores, clientes/fidelización, personal/horas/propinas, caja y tiempos de cocina.
+- Comparar sucursales, marcas y empresas legales; mostrar metas frente a resultados y distinguir datos reales, estimados y su frescura.
+- Definir filtros por fecha/rango, sucursal, empleado, categoría, producto, canal y estado de pedido, con campos seleccionables, agrupaciones, paginación y límites de exportación.
 - Mostrar frescura de datos y retraso de actualización.
 - Proteger exportaciones y evitar exfiltración masiva.
 
@@ -1081,7 +1083,10 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 #### Tareas
 
 - Definir datos y ventanas de entrenamiento/consulta permitidas.
-- Construir detección de anomalías en ventas, caja, descuentos, inventario y demanda.
+- Construir detección de anomalías en ventas, caja, descuentos, inventario, compras, tiempos de cocina y demanda.
+- Pronosticar demanda de personal por sucursal/turno usando ventas esperadas, pedidos, reservas, productos, ausencias y vacaciones previstas.
+- Estimar necesidades de personal; alertar por exceso o falta de cobertura y permitir revisión/ajuste humano.
+- Mantener historial de predicciones, supuestos y resultados reales para evaluar calidad.
 - Medir calidad, falsos positivos y sesgos operativos.
 - Mostrar incertidumbre, periodo, fuente y supuestos.
 - Mantener decisión humana para acciones de impacto financiero u operativo.
@@ -1097,7 +1102,11 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 #### Tareas
 
-- Definir herramientas disponibles por agente y permisos.
+- Definir agentes especializados (ventas, inventario, finanzas, operaciones/cocina, marketing y coordinación AI Manager) como capacidades lógicas, no como seis módulos propietarios ni seis modelos obligatoriamente independientes.
+- Definir herramientas autorizadas para consultar ventas, costos, gastos, inventarios, mermas, márgenes, personal, pedidos y reportes mediante contratos de los módulos propietarios.
+- Hacer que AI Manager clasifique consultas, delegue, combine resultados, detecte contradicciones y solicite datos cuando sean insuficientes.
+- Presentar periodo, sucursales/ámbito, fuentes, datos utilizados, confianza, supuestos y acciones sugeridas.
+- No crear schema, tablas ni migraciones propias de AI; cualquier persistencia necesaria pertenece al módulo dueño del proceso y requiere respetar ADR-0006.
 - Aplicar autorización del backend propietario en cada acción.
 - Limitar contexto, datos y llamadas a proveedores.
 - Prevenir prompt injection, exfiltración y uso de herramientas no autorizadas.
@@ -1109,7 +1118,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Documentos/ADR:** ADR-0006, 0015, 0018, 0019, 0020, 0021, 0023, 0025, 0026.  
 **Entregables:** catálogo de herramientas; políticas; trazabilidad; evaluación de seguridad y calidad.  
 **Pruebas:** unitarias de autorización; integración de herramientas; seguridad prompt injection/exfiltración; E2E de acción propuesta y aprobación.  
-**Criterios:** IA no elude permisos, no obtiene acceso global por ser interna y no ejecuta acciones de alto impacto sin aprobación.  
+**Criterios:** IA no elude permisos, no obtiene acceso global por ser interna, no posee schema propio y no ejecuta acciones de alto impacto sin aprobación; sus resultados son trazables y no inventan datos ausentes.  
 **Puerta:** revisión de seguridad y pruebas adversariales aprobadas.
 
 ### 8.5 — REPORTING: informes, plantillas y distribución
