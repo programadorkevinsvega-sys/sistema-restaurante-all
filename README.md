@@ -68,3 +68,4 @@ Estas son decisiones documentadas, no una afirmación de que las tecnologías es
 - migrations/: archivos SQL históricos; no es la ubicación canónica de nuevas migraciones.
 
 Consulta los documentos enlazados antes de modificar cualquier área del repositorio.
+
