@@ -6,7 +6,7 @@
 - Aprobación: decisión aprobada explícitamente por el propietario del producto.
 - Ámbito: infraestructura transversal de caché para los cuatro procesos y los módulos propietarios de consultas.
 - Complementa: ADR-0001, ADR-0003, ADR-0004, ADR-0007, ADR-0008, ADR-0009, ADR-0010, ADR-0013 y ADR-0015.
-- Especificación técnica futura: estrategia operativa de Redis y caché distribuida, derivada de este ADR una vez aceptado.
+- Especificación operativa vigente: [Redis Cluster, TLS y operación de caché distribuida](../architecture/redis-cache-operations.md).
 
 ## Contexto
 
@@ -24,7 +24,7 @@ También debe distinguirse alta disponibilidad de particionamiento:
 
 El transporte entre procesos y la mensajería durable ya están definidos por ADR-0007 y ADR-0013. La observabilidad de Redis ya está incluida en ADR-0015. Este ADR concreta el uso de Redis como caché distribuida y sus controles de seguridad.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Redis como infraestructura transversal de caché
 
@@ -233,7 +233,7 @@ No se adopta como estrategia general para consultas costosas y de alta repetici�
 - Redis añade infraestructura, memoria, monitoreo, certificados, credenciales y costos.
 - El uso inadecuado de claves calientes puede producir hotspots aunque exista sharding.
 
-## Plan de implementación futuro
+## Plan de adopción
 
 La implementación deberá:
 
