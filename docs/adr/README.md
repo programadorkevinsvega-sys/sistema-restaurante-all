@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-Cada decisión se registra en un ADR independiente. El flujo es Accepted → Accepted. Una sugerencia de agente o un cambio documental sin aprobación explícita no constituye aceptación.
+Cada decisión se registra en un ADR independiente. El flujo de una decisión es Proposed → Accepted. Una sugerencia de agente o un cambio documental sin aprobación explícita no constituye aceptación.
 
 Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y aprobación. Toda desviación del estándar registra motivo, alcance, riesgos, mitigaciones y condición de revisión.
 
@@ -28,6 +28,9 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 ## Decisiones propuestas
 
 - **ADR-0019:** Validación de entradas y contratos de datos. Su propuesta está en [PR #26](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/26), que permanece abierto y sin fusionar; el archivo aún no forma parte de main.
+
+## Decisiones de seguridad aceptadas
+
 - [ADR-0020: Marco integral de seguridad y defensa en profundidad](./0020-integral-security-and-defense-in-depth.md)
 - [ADR-0021: Autorización, RBAC/ABAC y aislamiento multi-tenant](./0021-authorization-rbac-abac-and-tenant-isolation.md)
 - [ADR-0022: Seguridad del frontend, navegador, sesiones y APIs de borde](./0022-frontend-browser-session-and-api-security.md)
