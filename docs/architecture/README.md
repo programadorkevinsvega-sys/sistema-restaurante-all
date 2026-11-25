@@ -28,7 +28,7 @@ SQLx.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md): especificación técnica vinculada a ADR-0011 Accepted; no representa implementación.
-- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008, los límites de crates de ADR-0009, las decisiones de pooling (ADR-0010), autenticación (ADR-0011), identificadores (ADR-0012), consistencia distribuida (ADR-0013), baja de tenants/conservación de datos de clientes (ADR-0014) y observabilidad (ADR-0015).
+- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos de ADR-0008, los límites de crates de ADR-0009, las decisiones de pooling (ADR-0010), autenticación (ADR-0011), identificadores (ADR-0012), consistencia distribuida (ADR-0013), baja de tenants/conservación de datos de clientes (ADR-0014), observabilidad (ADR-0015) y Redis Cluster/TLS/caché distribuida (ADR-0016).
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.
 
