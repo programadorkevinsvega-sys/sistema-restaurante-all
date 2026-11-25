@@ -46,7 +46,7 @@ un escáner automático.
 | Identidades, certificados y claves por dispositivo POS | Crítico | IDENTITY / Infraestructura |
 | Backups, WAL, snapshots y claves de recuperación | Crítico | Infraestructura / módulo propietario |
 | Objetos, documentos, exportaciones y URLs temporales | Alto/Crítico según contenido | Módulo propietario |
-| Entradas, salidas, contexto y credenciales de herramientas de IA | Alto/Crítico según dato | Módulo propietario / proveedor
+| Entradas, salidas, contexto y credenciales de herramientas de IA | Alto/Crítico según dato | Módulo propietario / proveedor |
 
 ### 2.2 Procesos
 
