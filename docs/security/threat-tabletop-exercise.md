@@ -1,7 +1,7 @@
 # Registro de revisión de escenarios de amenazas (tabletop)
 
 **Fase:** 0.3 — Modelo de amenazas y requisitos de seguridad  
-**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03, TT-04 y TT-05 revisados y aprobados  
+**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03, TT-04, TT-05 y TT-06 revisados y aprobados  
 **Versión:** 1.0  
 **Fecha:** 2026-11-25  
 **Alcance:** ejercicio de escritorio basado en arquitectura y ADR. No es una prueba de penetración, simulación sobre infraestructura, auditoría independiente ni evidencia de controles desplegados.  
@@ -116,7 +116,7 @@ Para cada escenario, el revisor debe responder y registrar:
 7. ¿Qué condición bloquea la reanudación?
 8. ¿Qué riesgo residual y tarea del plan se actualizan?
 
-**Resultado actual:** TT-01, TT-02, TT-03, TT-04 y TT-05 cuentan con decisiones operativas revisadas y aprobadas por el propietario. Los otros tres escenarios siguen pendientes de walkthrough. No se declara tabletop completo ni prueba técnica superada.
+**Resultado actual:** TT-01, TT-02, TT-03, TT-04, TT-05 y TT-06 cuentan con decisiones operativas revisadas y aprobadas por el propietario. TT-07 y TT-08 siguen pendientes de walkthrough. No se declara tabletop completo ni prueba técnica superada.
 
 ### Registro de ejecución
 
@@ -168,11 +168,22 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Resultado:** respuesta operativa aprobada para el escenario. La gestión de secretos, permisos, aislamiento de workflows, procedencia y validación de artefactos debe implementarse y verificarse en las fases correspondientes.
 - **Acciones relacionadas:** TA-04 y TA-07 permanecen pendientes de implementación y pruebas.
 
+
+#### TT-06 — Ransomware, borrado o corrupción de backups
+
+- **Estado del walkthrough:** revisado y ocho medidas aprobadas por el propietario.
+- **Fecha de revisión:** 2026-11-25.
+- **Decisiones aprobadas:** separar privilegios para impedir que las credenciales runtime de la aplicación administren o eliminen backups; mantener copias aisladas e inmutables durante periodos definidos y protegidas con credenciales separadas de producción; conservar copias independientes y, cuando corresponda, en otra ubicación o cuenta; alertar ante borrados, modificaciones, fallos de backup, cambios de retención y accesos privilegiados anómalos; verificar integridad mediante manifiestos, checksums u otros mecanismos apropiados; restaurar primero en un entorno aislado y comprobar integridad, consistencia de PostgreSQL y dependencias; definir RPO/RTO y medirlos mediante ejercicios periódicos de restauración; y reanudar producción solo después de contener el compromiso, rotar credenciales, validar datos, revisar transacciones y sincronizaciones pendientes y autorizar la reapertura.
+- **Casos aprobados para validar:** cifrado de PostgreSQL con eliminación de backups accesibles; backups disponibles pero modificados o corruptos; restauración con inconsistencias entre módulos; divergencia entre PostgreSQL, Redis, colas y eventos; última copia íntegra más antigua que el RPO esperado; y compromiso de las credenciales de backup.
+- **Limitación aceptada:** las medidas son requisitos de diseño y respuesta. No se afirma que existan backups inmutables o aislados, alertas, manifiestos, RPO/RTO medidos ni restauraciones ejecutadas. Una copia existente no se considera válida hasta verificarla y restaurarla.
+- **Resultado:** respuesta operativa aprobada para el escenario. La arquitectura de backup, la protección de credenciales, las pruebas de restauración y los procedimientos de reconciliación deben implementarse y verificarse en las fases correspondientes.
+- **Acciones relacionadas:** TA-04 permanece pendiente de implementación y pruebas; TA-07 permanece pendiente para incorporar pruebas negativas y validaciones automatizadas a CI.
+
 ## 4. Registro de acciones del ejercicio
 
 | ID | Acción pendiente | Responsable | Fase | Estado |
 |---|---|---|---|---|
-| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (5/8) |
+| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (6/8) |
 | TA-02 | Implementar enrolamiento, revocación y protección local de POS | Propietario del producto | 0.4 / 0.10 | Pendiente |
 | TA-03 | Diseñar y probar sync idempotente, integridad, conflictos y reconciliación | Propietario del producto | 0.10 | Pendiente |
 | TA-04 | Implementar gestión de secretos, aislamiento de backups y restauración | Propietario del producto | 0.6 / 0.7 | Pendiente |
