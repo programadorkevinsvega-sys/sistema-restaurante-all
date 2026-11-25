@@ -51,7 +51,7 @@ explícita del propietario del producto.
 | Motivo | Modelo y contrato en 0.4; distribución canónica de SQL, reconciliación de referencias cross-schema, roles y verificación de RLS en 0.6 y fases funcionales. |
 | Tratamiento | Mitigar: inventariar DDL sin reescribir históricos ahora; trasladar/corregir SQL mediante cambios autorizados, provisionar roles y probar RLS/autorización antes de exponer datos. |
 | Controles compensatorios | No hay base de datos en producción ni datos reales expuestos en esta etapa. |
-| Fase de cierre | 0.4 y 0.6 |
+| Fase de cierre | Diseño: 0.4. SQL/roles/RLS y pruebas: 0.6 y fases funcionales correspondientes. |
 | Propietario | @programadorkevinsvega-sys |
 | Condición de revisión | Si se crean tablas o se exponen datos antes de completar 0.4 y 0.6 |
 
