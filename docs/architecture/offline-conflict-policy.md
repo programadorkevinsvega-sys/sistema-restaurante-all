@@ -20,6 +20,7 @@ porque el estado del recurso en el servidor ya no es compatible con el estado qu
 el dispositivo cuando creó la operación.
 
 Ejemplos:
+
 - El cajero vendió el último producto en stock offline, pero otro cajero (online) lo vendió primero.
 - Se aplicó un precio desactualizado porque el precio cambió mientras el dispositivo estaba offline.
 - Se usó un folio fiscal que ya fue asignado a otra operación por el servidor.
@@ -67,6 +68,7 @@ Regla: **este conflicto no debe ocurrir si el diseño es correcto.**
 Los folios offline son rangos exclusivos asignados al dispositivo por el servidor al abrir el turno. Un folio asignado a un dispositivo no puede ser asignado a otro dispositivo simultáneamente.
 
 Si ocurre:
+
 1. Es un bug en la gestión de rangos; escalar a desarrollo.
 2. No emitir el documento fiscal; el pedido se marca como pendiente de numeración.
 3. Requerir conexión para asignar un nuevo folio.
