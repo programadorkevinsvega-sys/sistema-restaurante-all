@@ -1,6 +1,6 @@
 # Protección efectiva de `main` y configuración de GitHub
 
-**Estado observado:** 2026-11-25 — Ruleset `protect-main` (ID `28057956`) activo sobre `main`, sin bypass actors. Requiere 0 aprobaciones, mantiene activada la revisión de Code Owners, exige el check `Markdown and secret validation` y bloquea borrado y force-push. El único mantenedor listado es el propietario del repositorio. La política del proyecto es solo-maintainer; por ello, la revisión independiente no es un requisito operativo hasta incorporar otra persona autorizada. La regla `require_code_owner_review: true` debe desactivarse para alinear la configuración con ese modelo; esta modificación administrativa no se ha aplicado desde la integración disponible.
+**Estado observado:** 2026-11-25 — Ruleset `protect-main` (ID `28057956`) activo sobre `main`, sin bypass actors. Requiere 0 aprobaciones, tiene desactivada la revisión obligatoria de Code Owners, exige el check `Markdown and secret validation`, requiere resolución de conversaciones, descarta aprobaciones obsoletas cuando aplique y bloquea borrado y force-push. La política vigente es solo-maintainer; no se exige aprobación independiente imposible de obtener.
 **Objetivo:** aplicar la política de [gobernanza y contribución segura](./repository-governance-and-secure-contribution.md) mediante controles reales de GitHub.
 
 ## 1. Estado comprobado
@@ -10,16 +10,16 @@
 | Rulesets de ramas | ✅ Configurado | Ruleset `protect-main` activo; target `main` |
 | Protección clásica de `main` | ✅ Activa vía Ruleset | Ruleset con enforcement `Active` aplicado a `main` |
 | Pull Request obligatorio | ✅ Activo | Verificado en PR #33: merge bloqueado sin PR |
-| Revisión de Code Owners | ⚠️ Desalineada con el modelo solo-maintainer | API del Ruleset: `require_code_owner_review: true`; hay un solo mantenedor. Debe desactivarse mientras no exista un segundo colaborador autorizado |
+| Revisión de Code Owners | ✅ Alineada con modelo solo-maintainer | API del Ruleset: `require_code_owner_review: false`; 0 aprobaciones requeridas mientras exista un único mantenedor |
 | Checks obligatorios | ✅ Activo | `Markdown and secret validation` requerido en Ruleset y ejecución `success` en PR #45 y en el commit de merge a `main` |
 | CODEOWNERS | ✅ Presente en raíz | Archivo `/CODEOWNERS`; rutas sensibles cubiertas |
 | Workflow documental | ✅ Presente y funcionando | `.github/workflows/documentation-security.yml`; CI pasó en PR #33, PR #45 y commit de merge de PR #45 |
 | Force push bloqueado | ✅ Activo | Configurado en Ruleset `protect-main` |
 | Restricción de borrado | ✅ Activo | Configurado en Ruleset `protect-main` |
 
-Evidencia reciente: [PR #45](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/45) terminó con sus dos ejecuciones `Markdown and secret validation` en `success`; tras el merge squash, el mismo check también terminó en `success` sobre el commit `e24593f5c02ec4c2264e7c2919a57160b5ca4f37` de `main`. La prueba histórica [PR #33](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/33) documenta además un fallo MD047 que bloqueó el flujo y fue corregido antes de fusionar.
+Evidencia reciente: [PR #46](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/46) terminó con `Markdown and secret validation` en `success`; el CI posterior al merge squash también terminó en `success` sobre el commit `371eb0c9ef09e20cc396120170799dc2ea53b83e` de `main`. [PR #45](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/45) y [PR #33](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/33) conservan evidencia histórica de validación y corrección de errores.
 
-**Riesgo/configuración pendiente:** la API confirma `required_approving_review_count: 0`, `require_code_owner_review: true`, `required_review_thread_resolution: true`, `dismiss_stale_reviews_on_push: true`, `required_status_checks.strict_required_status_checks_policy: true`, un check requerido (`Markdown and secret validation`), `deletion`, `non_fast_forward` y `bypass_actors: []`. Para el modelo actual de único mantenedor, cambiar `require_code_owner_review` a `false`; mantener 0 aprobaciones, PR obligatorio, resolución de conversaciones, check obligatorio, bloqueo de borrado/force-push y bypass vacío. Esta edición del Ruleset requiere permisos administrativos y no se pudo ejecutar mediante las acciones GitHub disponibles en esta sesión. No se afirma que esté aplicada.
+**Configuración verificada:** la API del Ruleset confirma `required_approving_review_count: 0`, `require_code_owner_review: false`, `require_last_push_approval: false`, `required_review_thread_resolution: true`, `dismiss_stale_reviews_on_push: true`, `require_extra_approval_for_unattributed_changes: true`, política estricta de checks con `Markdown and secret validation`, reglas `deletion` y `non_fast_forward`, y `bypass_actors: []`. El Ruleset está activo y apunta a `main`.
 
 ## 2. Ruleset requerido para `main`
 
@@ -91,7 +91,7 @@ Tras aplicar la configuración:
 - Registrar resultados, links a PR y ejecuciones de Actions.
 - Verificar que no existe bypass permanente no autorizado.
 
-**Criterio de cierre:** Ruleset activo y alineado con el modelo solo-maintainer (0 aprobaciones y revisión de Code Owners desactivada mientras no exista segundo revisor); checks reales obligatorios probados; PR obligatorio, resolución de conversaciones, bloqueo de force-push/borrado y bypass vacío verificados; permisos revisados; evidencia almacenada. **Estado actual: parcialmente satisfecho; subfase 0.2 aún no cerrada** porque `require_code_owner_review` continúa en `true` y requiere ajuste administrativo.
+**Criterio de cierre:** Ruleset activo y alineado con el modelo solo-maintainer (0 aprobaciones y revisión de Code Owners desactivada mientras no exista segundo revisor); checks reales obligatorios probados; PR obligatorio, resolución de conversaciones, bloqueo de force-push/borrado y bypass vacío verificados; permisos revisados; evidencia almacenada. **Estado observado el 2026-11-25: configuración administrativa alineada y CI de PR #46 y su commit de merge en success.** La revisión independiente se activará cuando se incorpore un segundo colaborador autorizado.
 
 ## 7. Relación documental
 

@@ -1,7 +1,7 @@
 # Baseline de seguridad por proceso
 
 **Estado:** vigente
-**Versión:** 1.0
+**Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.3
 **Fuente:** [Modelo de amenazas](./threat-model.md); ADR-0020 a ADR-0027.
@@ -117,6 +117,34 @@ Hereda todos los controles de Admin BFF más los siguientes, por tener mayor sup
 | Fallos seguros: una dependencia caída no concede permisos ni produce efectos duplicados | ADR-0020 | Diseñado | |
 
 ---
+
+## Clientes POS, dispositivos y operación offline
+
+El cliente POS y el dispositivo son una superficie distinta de los cuatro procesos backend. Este baseline aplica a la aplicación POS, almacenamiento local y canal de sincronización; no convierte el cliente en propietario de datos ni en autoridad de autorización.
+
+| Control | ADR | Estado | Notas |
+|---|---|---|---|
+| Enrolamiento explícito y una identidad revocable por dispositivo | ADR-0021, ADR-0022, ADR-0023 | Diseñado | No reutilizar una credencial global compartida entre terminales |
+| Tenant, sucursal, permisos y estado del dispositivo se resuelven/validan en servidor | ADR-0021 | Diseñado | Nunca confiar en tenant/rol enviados libremente por el cliente |
+| Datos locales minimizados y clasificados; no almacenar secretos ni PAN | ADR-0018, ADR-0022 | Diseñado | Definir datos permitidos offline por caso de uso |
+| Almacenamiento local cifrado con claves protegidas por el sistema operativo/keystore | ADR-0022, ADR-0023 | Diseñado | No hardcodear claves ni usar una clave global embebida en la app |
+| Bloqueo de pantalla, sesión local limitada, expiración y revocación del dispositivo | ADR-0022 | Diseñado | Definir comportamiento cuando el dispositivo vuelve a conectarse |
+| Cola offline con IDs idempotentes, secuencia, integridad y límites de tamaño/edad | ADR-0003, ADR-0013, ADR-0019 | Diseñado | El servidor valida, deduplica y registra gaps/replay |
+| Sincronización con reintentos/backoff, backpressure y límites por dispositivo/tenant | ADR-0017, ADR-0025 | Diseñado | No permitir que un terminal monopolice workers o conexiones |
+| Conflictos de ventas, precios, impuestos, inventario y pagos tienen política explícita | ADR-0013, ADR-0019 | Diseñado | No resolver silenciosamente conflictos financieros |
+| Revocación y reasignación bloquean sincronizaciones futuras y quedan auditadas | ADR-0021, ADR-0026 | Diseñado | Considerar dispositivo perdido/robado y credenciales comprometidas |
+| Actualizaciones de cliente verificadas y soporte de versiones mínimas cuando sea viable | ADR-0024 | Diseñado | No asumir que una app cliente antigua sigue siendo confiable |
+
+## Datos, caché, backups, objetos e IA
+
+| Superficie | Control mínimo | ADR | Estado |
+|---|---|---|---|
+| Redis | Claves con tenant/alcance/versiones; ACL/TLS; no es autoridad de autorización ni fuente de verdad | ADR-0016, ADR-0021, ADR-0023 | Diseñado |
+| NATS | Identidades por proceso, ACL por cuenta/subject, TLS, límites, ACK, retención y recuperación | ADR-0017, ADR-0023 | Diseñado |
+| Backups/WAL/PITR | Cifrado, acceso separado, aislamiento/inmutabilidad cuando aplique, integridad y restauración probada | ADR-0010, ADR-0023, ADR-0026 | Diseñado |
+| Object storage | Privado por defecto, autorización en descarga, URLs firmadas acotadas, cuarentena/validación y retención | ADR-0027 | Diseñado |
+| IA/proveedores | Minimización, clasificación, contrato/retención revisados, aislamiento de contexto y herramientas de mínimo privilegio | ADR-0018, ADR-0020, ADR-0023, ADR-0026 | Diseñado |
+| CI/CD | Permisos mínimos por job, acciones verificadas, separación PR/build/deploy, artefactos trazables | ADR-0024 | Parcial: workflow documental con `contents: read` y Gitleaks; no equivale a pipeline productivo |
 
 ## Notas de actualización
 

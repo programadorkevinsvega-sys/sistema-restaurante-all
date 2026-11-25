@@ -187,25 +187,27 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 #### Tareas
 
 - Inventariar activos, actores, superficies y fronteras de confianza.
-- Modelar amenazas para cuatro procesos, módulos, navegador, APIs, workers, mensajería, almacenamiento, proveedores y operación.
-- Evaluar suplantación, robo de sesión, BOLA/IDOR, escalada, inyección, SSRF, XSS, CSRF, abuso, scraping, DDoS, exfiltración, malware, supply chain y pérdida de disponibilidad.
-- Definir controles preventivos, detectivos, correctivos y evidencias.
+- Modelar amenazas para los cuatro procesos, módulos, navegador, APIs, workers, mensajería, almacenamiento, proveedores, dispositivos POS, operación offline y herramientas externas/IA.
+- Evaluar suplantación, robo de sesión, BOLA/IDOR, escalada, inyección, SSRF, XSS, CSRF, abuso, scraping, DDoS, exfiltración, malware, supply chain, backups, caché, sincronización offline y pérdida de disponibilidad.
+- Definir controles preventivos, detectivos, correctivos y evidencias sin marcar como implementado lo que solo está diseñado.
 - Asignar controles a fases y subfases de este plan.
-- Mantener riesgos residuales con propietario y tratamiento.
+- Mantener riesgos residuales con propietario, tratamiento, fecha/condición de revisión y trazabilidad completa.
+- Preparar y registrar escenarios tabletop con detección, contención, evidencia, recuperación y brechas.
 
 **Dependencias:** 0.1.  
-**Documentos/ADR:** ADR-0020 a ADR-0027; ADR-0011, 0015, 0018 y 0019.  
+**Documentos/ADR:** ADR-0020 a ADR-0027; ADR-0011, 0015, 0018 y 0019.
 
 #### Entregables
 
-- Modelo de amenazas versionado.
-- Matriz amenaza/control/fase/prueba/evidencia.
-- Registro de riesgos residuales.
-- Baseline de seguridad por proceso.
+- Modelo de amenazas STRIDE versionado: [threat-model.md](../security/threat-model.md).
+- Matriz amenaza/control/fase/prueba/evidencia y catálogo de criterios: [threat-control-matrix.md](../security/threat-control-matrix.md).
+- Registro de riesgos residuales con propietario, tratamiento y trazabilidad: [residual-risk-register.md](../security/residual-risk-register.md).
+- Baseline de seguridad por proceso, workers y clientes POS/offline: [security-baseline-per-process.md](../security/security-baseline-per-process.md).
+- Registro de escenarios y revisión de escritorio: [threat-tabletop-exercise.md](../security/threat-tabletop-exercise.md).
 
-**Pruebas:** revisión de amenazas y tabletop de escenarios; no sustituye pruebas técnicas posteriores.  
-**Criterios:** todas las superficies críticas tienen amenazas y controles asignados; no hay amenazas altas sin tratamiento o aceptación formal.  
-**Puerta:** modelo revisado y enlazado a tareas concretas del plan.
+**Pruebas:** revisión de amenazas y tabletop de escenarios; no sustituye pruebas técnicas posteriores. Los criterios del catálogo se convierten en pruebas automatizadas/evidencia durante las subfases asignadas. El registro distingue escenarios diseñados, walkthrough documental y ejecución técnica real.  
+**Criterios:** todas las superficies críticas tienen amenazas y controles asignados; no hay amenazas altas/críticas sin control asignado y riesgo residual trazable; no se declara verificado ningún control sin evidencia reproducible.  
+**Puerta:** modelo revisado, matriz trazable a riesgos y tareas concretas del plan, baseline por proceso y registro de tabletop completados; las pruebas técnicas permanecen asignadas a sus subfases de implementación.
 
 ### 0.4 — Identidad, autorización y aislamiento como fundamentos
 

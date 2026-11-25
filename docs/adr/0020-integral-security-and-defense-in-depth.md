@@ -66,7 +66,7 @@ Cada análisis deberá considerar:
 
 Cada funcionalidad evalúa identidad, autorización, tenant y alcance; validación de tipos/campos/límites; protección de sesiones, secretos y comunicaciones; límites de tamaño, tiempo, concurrencia, frecuencia y costo; integridad, idempotencia y replay; errores y degradación segura; auditoría; minimización/retención; pruebas negativas y de aislamiento.
 
-Los detalles especializados se definen en ADR-0021 a ADR-0027. La validación de entradas se alinea con ADR-0019 cuando sea aceptado; no se presupone su aprobación mientras PR #26 permanezca abierto.
+Los detalles especializados se definen en ADR-0021 a ADR-0027. La validación de entradas se rige por ADR-0019, que tiene estado Accepted. PR #26 está cerrado sin merge; la decisión aceptada y su documento vigente en `main` son la fuente de autoridad.
 
 ### 6. Excepciones y riesgo residual
 
