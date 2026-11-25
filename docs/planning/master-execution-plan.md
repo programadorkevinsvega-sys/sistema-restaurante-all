@@ -381,6 +381,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 #### Tareas
 
 - Modelar tenants, planes, suscripciones, capacidades, límites y overrides bajo PLATFORM.
+- Activar capacidades Core, Restaurant Pack y Optional según tenant, marca o sucursal, sin convertir capacidades verticales en dependencias obligatorias de Core.
 - Implementar altas, suspensión, reactivación y baja del tenant con proceso durable.
 - Separar privilegios SaaS de administración del tenant.
 - Definir medición de consumo y límites sin permitir bypass ante fallos.
@@ -410,7 +411,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 **Documentos/ADR:** ADR-0001, 0008, 0019, 0020, 0021.  
 **Entregables:** estructura empresarial y sucursales; configuración regional; matriz de herencia/excepciones.  
 **Pruebas:** unitarias de jerarquía y reglas; integración de unicidad y relaciones; seguridad tenant/sucursal cruzada; E2E crear empresa y sucursales.  
-**Criterios:** una sucursal pertenece a su ámbito empresarial correcto; no se permiten relaciones cruzadas entre tenants; la zona horaria es explícita.  
+**Criterios:** una sucursal pertenece a su ámbito empresarial correcto; no se permiten relaciones cruzadas entre tenants; la zona horaria es explícita; suspender/desactivar bloquea nuevas operaciones según estado sin eliminar históricos.  
 **Puerta:** jerarquía y aislamiento verificados.
 
 ### 1.3 — IDENTITY: usuarios, autenticación y sesiones
@@ -462,7 +463,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Configurar moneda, impuestos, idioma y zona horaria.
 - Configurar cajas, bodegas, cocinas, mesas, impresoras y terminales.
 - Configurar métodos de pago, horarios, canales, notificaciones, idiomas y formatos por empresa y sucursal.
-- Administrar plantillas versionadas de facturas, tickets, pedidos, cotizaciones y recepciones.
+- Administrar plantillas versionadas de facturas, tickets, pedidos, cotizaciones y recepciones, con variables dinámicas, encabezados/pies, logotipos y datos fiscales.
 - Aplicar cambios centrales a toda la empresa o a sucursales seleccionadas, mostrando origen, excepciones locales, previsualización, activación programada y reversión autorizada.
 - Registrar dispositivos POS, impresoras, lectores, cajones, pantallas de cocina y terminales de pago; mantener estado, sucursal y caja asociados.
 - Asignar rangos fiscales autorizados y no solapados a sucursal, punto de venta y dispositivo cuando corresponda.
@@ -780,7 +781,9 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 - Gestionar proveedores, datos comerciales/fiscales y contactos.
 - Gestionar productos suministrados, listas y precios históricos.
+- Evaluar desempeño de proveedores, cumplimiento, calidad, tiempos de entrega y variaciones de precio con historial.
 - Registrar condiciones de pago, contratos y documentos.
+- Permitir extracción asistida de datos de facturas de proveedor desde documentos mediante OCR/IA, con validación contra proveedor/orden/recepción y revisión humana antes de crear o contabilizar operaciones.
 - Aplicar verificación de identidad y autorización en cambios sensibles.
 - Gestionar archivos mediante el flujo seguro de ADR-0027.
 
@@ -896,6 +899,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 #### Tareas
 
 - Gestionar perfiles, contactos y preferencias.
+- Registrar encuestas, opiniones y retroalimentación de clientes con finalidad y permisos definidos.
 - Conservar historial de compras según ownership y reglas de retención.
 - Permitir acceso a perfil sin perderlo automáticamente al eliminar un tenant, conforme ADR-0014.
 - Definir separación entre perfil, relación comercial y datos propios del tenant.
@@ -912,8 +916,9 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 
 #### Tareas
 
-- Gestionar puntos, cupones, promociones y tarjetas regalo.
-- Gestionar segmentación y preferencias.
+- Gestionar puntos, cupones, promociones, campañas de recuperación y tarjetas regalo.
+- Gestionar segmentación y preferencias; definir campañas para clientes inactivos sin inferir consentimiento comercial.
+- Registrar resultados de campañas, encuestas y respuestas dentro del alcance autorizado.
 - Separar consentimientos por finalidad y canal.
 - Permitir revocación y opt-out de comunicaciones comerciales.
 - No condicionar el servicio a marketing.
@@ -1069,7 +1074,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 #### Tareas
 
 - Construir vistas por sucursal, marca, empresa y consolidado autorizado.
-- Mostrar ventas por día/hora/producto/categoría/canal/empleado, ticket promedio, descuentos, márgenes, rentabilidad, inventario/rotación/vencimientos/mermas, compras/proveedores, clientes/fidelización, personal/horas/propinas, caja y tiempos de cocina.
+- Mostrar ventas por día/hora/producto/categoría/canal/empleado, ticket promedio, descuentos, márgenes, rentabilidad, inventario/rotación/vencimientos/mermas, compras/proveedores, clientes/fidelización/encuestas, personal/horas/propinas, caja, cocina, domicilios, reservas y ejecuciones de automatización.
 - Comparar sucursales, marcas y empresas legales; mostrar metas frente a resultados y distinguir datos reales, estimados y su frescura.
 - Definir filtros por fecha/rango, sucursal, empleado, categoría, producto, canal y estado de pedido, con campos seleccionables, agrupaciones, paginación y límites de exportación.
 - Mostrar frescura de datos y retraso de actualización.
@@ -1091,6 +1096,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Pronosticar demanda de personal por sucursal/turno usando ventas esperadas, pedidos, reservas, productos, ausencias y vacaciones previstas.
 - Estimar necesidades de personal; alertar por exceso o falta de cobertura y permitir revisión/ajuste humano.
 - Mantener historial de predicciones, supuestos y resultados reales para evaluar calidad.
+- Permitir análisis asistido de facturas de proveedor y otros documentos autorizados, con extracción propuesta, validación contra datos de PROCUREMENT y revisión humana; nunca contabilizar automáticamente datos no verificados.
 - Medir calidad, falsos positivos y sesgos operativos.
 - Mostrar incertidumbre, periodo, fuente y supuestos.
 - Mantener decisión humana para acciones de impacto financiero u operativo.
@@ -1259,7 +1265,8 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 #### Tareas
 
 - Integrar dispositivos POS, impresoras de tickets/documentos, impresoras de cocina, lectores de códigos, cajones de dinero, pantallas KDS y terminales de pago.
-- Registrar y provisionar cada dispositivo por tenant, sucursal, caja y función; permitir activación, desactivación, revocación y reasignación autorizada.
+- Registrar y provisionar cada dispositivo por tenant, sucursal, caja y función antes de habilitar operación offline; permitir activación, desactivación, revocación y reasignación autorizada.
+- Validar la identidad del dispositivo mediante credenciales/provisión confiables al sincronizar; el identificador enviado por el navegador no constituye prueba de identidad ni autorización.
 - Mantener estado de conexión, compatibilidad, salud, última comunicación y alertas de desconexión.
 - Configurar impresoras por tipo de documento/estación y mantener plantillas/versiones de impresión.
 - Coordinar terminales de pago con PAYMENTS e INTEGRATIONS sin almacenar datos sensibles de tarjeta ni convertir el hardware en fuente de verdad financiera.
@@ -1310,6 +1317,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Gestionar conflictos con reglas deterministas y revisión humana.
 - Evitar duplicados y pérdida de operaciones ante fallos.
 - Medir latencia, retraso, tamaño de cola y tasa de conflictos.
+- Mostrar por dispositivo/sucursal las operaciones pendientes, sincronizadas, confirmadas, fallidas y en conflicto, sin presentar pendientes como operaciones confirmadas.
 
 **Dependencias:** 2.6 y 0.10.  
 **Documentos/ADR:** ADR-0003, 0013, 0015, 0019, 0020, 0021, 0025, 0026.  
