@@ -30,6 +30,7 @@ Las tres vistas se relacionan, pero no son numeraciones intercambiables. Los lot
 - Los ADR Accepted son decisiones arquitectónicas obligatorias.
 - Las especificaciones técnicas desarrollan esas decisiones sin modificarlas.
 - Este plan ordena el trabajo y convierte las decisiones en entregables y pruebas; no puede cambiar ownership, contratos ni decisiones aceptadas.
+- Si un ejemplo o regla histórica de requisitos.md contradice un ADR Accepted, prevalece el ADR; el plan debe identificar la parte supersedida para que no se implemente como requisito vigente.
 - Cualquier desviación arquitectónica requiere ADR aceptado antes de implementarse.
 
 ### 1.2 Topología y ownership que todas las fases deben respetar
@@ -266,6 +267,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Definir pools por módulo/runtime, límites globales, separación de lectura/escritura y routing por consistencia.
 - Definir UUIDv7 global y estrategia futura para identificadores existentes, sin modificar SQL en esta fase.
 - Definir transacciones locales por módulo, Outbox/Inbox, idempotencia y Saga.
+- Identificar expresamente y no aplicar el ejemplo histórico de requisitos.md que propone una transacción local única con escrituras de varios módulos: ADR-0013 Accepted prevalece; incluso dentro del mismo proceso, cada módulo confirma sus propias transacciones y los flujos multi-módulo se coordinan mediante contratos/Saga/Outbox/Inbox, sin XA/2PC ni transacciones PostgreSQL compartidas.
 - Definir roles separados de migración, runtime, backup y monitoreo.
 - Definir política RLS y contexto de tenant.
 - Definir backups, WAL, PITR y pruebas de restauración.
@@ -1731,7 +1733,7 @@ Esta matriz relaciona los apartados normativos de `requisitos.md` con las subfas
 | Infraestructura compartida y dedicada; migración entre modalidades | 0.6–0.7; 10.3; 10.7 | Shared Cloud, Dedicated Database y Dedicated Environment; ensayo de migración, conciliación y rollback |
 | Preparación de PostgreSQL, roles, RLS, secretos y respaldos | 0.6–0.7; 10.3 | pruebas RLS, mínimo privilegio, backups, WAL, PITR y restore |
 | Arquitectura técnica, cuatro procesos, crates, contratos y comunicación | 0.1; 0.2; 0.6; 0.9; 10.3 | cuatro binarios independientes, BFF separados, contratos, adaptadores local/gRPC/messaging y CI de contratos |
-| Transacciones, Outbox/Inbox, Saga, eventos y coordinación | 0.6; 0.8–0.9; 1.1; 2.2–2.6; 3.3; 5.3–5.4; 9.1; 10.2 | atomicidad local, entrega durable, idempotencia, compensación, reconciliación y pruebas de fallos parciales |
+| Transacciones, Outbox/Inbox, Saga, eventos y coordinación | 0.6; 0.8–0.9; 1.1; 2.2–2.6; 3.3; 5.3–5.4; 9.1; 10.2 | ADR-0013 prevalece sobre el ejemplo histórico de transacción multi-módulo en requisitos.md; atomicidad por módulo, entrega durable, idempotencia, compensación, reconciliación y pruebas de fallos parciales |
 | Sistema RBAC + ABAC, permisos específicos y doble aprobación | 0.4; 1.3–1.4; todas las subfases operativas; 10.5 | pruebas por tenant/empresa/marca/sucursal/área/caja/terminal, importe, horario, estado y separación de funciones |
 | Módulos funcionales heredados 1–17 | 1.1–1.5; 2.1–2.6; 3.1–3.4; 4.1–4.4; 5.1–5.4; 6.1–6.4; 7.1–7.5; 8.1–8.6; 9.1–9.5; 10.1–10.7 | trazabilidad por dominio y flujos E2E entre módulos propietarios |
 | Capacidades transversales A — Usuarios, roles y permisos | 0.4; 1.3–1.4 | autenticación, membresías, permisos y pruebas negativas |
