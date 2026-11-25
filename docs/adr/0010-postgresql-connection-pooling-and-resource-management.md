@@ -144,7 +144,7 @@ PgBouncer u otro proxy de conexiones queda como alternativa operativa opcional, 
 
 Solo se incorporará si las mediciones demuestran que resuelve un problema concreto de conexiones, escalado o administración. Antes de adoptarlo se debe validar el modo de pooling y su compatibilidad con SQLx, prepared statements, transacciones, parámetros de sesión, RLS y el uso de `SET LOCAL`. La adopción no puede debilitar la separación de roles ni el contexto transaccional.
 
-### 2.11 Enrutamiento de pools para primario y réplicas
+### 2.10 Enrutamiento de pools para primario y réplicas
 
 La topología PostgreSQL HA añade destinos de lectura, pero no cambia el ownership ni la identidad de los pools:
 
@@ -156,7 +156,7 @@ La topología PostgreSQL HA añade destinos de lectura, pero no cambia el owners
 6. La capacidad de pools de lectura y escritura se dimensionará conjuntamente. Los pools de lectura no podrán agotar el presupuesto global ni competir sin límites con la capacidad de escritura.
 7. Después de failover, ambos tipos de pool deberán invalidar conexiones que apunten a roles antiguos y reconectarse a los endpoints estables correspondientes.
 
-### 2.10 Pruebas y validación
+### 2.11 Pruebas y validación
 
 La estrategia de implementación deberá contemplar pruebas con PostgreSQL real para:
 - Aislamiento de roles y schemas por módulo.
