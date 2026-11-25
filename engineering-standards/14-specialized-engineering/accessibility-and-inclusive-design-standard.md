@@ -44,3 +44,17 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Riesgos y escenarios de fallo específicos
+Evaluar exclusión por discapacidad visual, auditiva, motora, cognitiva o neurológica; barreras en autenticación/pago; pérdida de foco; contenido dinámico no anunciado; contraste insuficiente; dependencia de gestos; movimiento dañino y documentos descargables inaccesibles.
+
+## 9. Pruebas de aceptación mínimas
+- Seleccionar versión y nivel de WCAG aplicable y mapear criterios pertinentes por flujo.
+- Completar tareas críticas solo con teclado, sin trampas y con foco visible/lógico.
+- Probar lectores de pantalla y tecnologías de asistencia en plataformas representativas.
+- Verificar zoom/reflow, contraste, objetivos táctiles, movimiento reducido, subtítulos y transcripciones.
+- Probar formularios, errores, autenticación, recuperación y mensajes dinámicos anunciables.
+- Combinar escáner automatizado, inspección manual y pruebas con usuarios; documentar límites y barreras residuales.
+
+## 10. Operación y evidencias
+Conservar matriz de criterios, versión normativa, reportes automáticos/manuales, sesiones de prueba, issues de barreras, excepciones aprobadas y evidencia de remediación.
