@@ -12,9 +12,13 @@ La biblioteca establece una base reutilizable. Cada proyecto conserva autoridad 
 ## 2. Lenguaje normativo
 
 - **DEBE / NO DEBE:** requisito obligatorio cuando el estándar ha sido adoptado y el requisito aplica.
+
 - **DEBERÍA / NO DEBERÍA:** recomendación fuerte; apartarse requiere razón documentada.
+
 - **PUEDE:** opción permitida, no obligación.
+
 - **OBLIGATORIO CONDICIONAL:** requisito obligatorio solo cuando se cumple el disparador de aplicabilidad.
+
 - **EJEMPLO:** ilustración no normativa.
 
 Las palabras normativas no convierten por sí mismas un documento en política aprobada. Estado documental, aprobación y adopción deben ser explícitos.
@@ -22,10 +26,15 @@ Las palabras normativas no convierten por sí mismas un documento en política a
 ## 3. Jerarquía
 
 1. Leyes, regulación, contratos y obligaciones externas aplicables.
+
 2. Políticas de seguridad, privacidad y riesgo aprobadas por la organización.
+
 3. Estándares adoptados por el proyecto.
+
 4. ADR aceptados del proyecto.
+
 5. Especificaciones de diseño e implementación.
+
 6. Procedimientos, guías y ejemplos.
 
 Un ADR no puede anular una obligación legal. Una decisión local que se aparte de un estándar adoptado debe registrar excepción o proponer revisión. Un estándar general no impone arquitectura concreta si el proyecto no lo ha adoptado.
@@ -33,9 +42,13 @@ Un ADR no puede anular una obligación legal. Una decisión local que se aparte 
 ## 4. Estados documentales
 
 - **Draft:** contenido en elaboración; no normativo.
+
 - **In Review:** revisión técnica, seguridad, operaciones o legal en curso.
+
 - **Accepted:** aprobado para publicación como estándar.
+
 - **Deprecated:** disponible para proyectos existentes, pero no recomendado para nuevas adopciones.
+
 - **Retired:** retirado; se conserva por trazabilidad.
 
 La biblioteca y cada documento tienen estado propio. La aceptación de la biblioteca no implica que todos sus estándares sean obligatorios para todos los proyectos.
@@ -43,13 +56,21 @@ La biblioteca y cada documento tienen estado propio. La aceptación de la biblio
 ## 5. Responsabilidades y aprobación
 
 Antes de pasar un estándar a Accepted, debe identificar:
+
 - ID estable del inventario y versión individual.
+
 - Autor/owner editorial responsable de mantenimiento.
+
 - Revisores técnicos pertinentes y sus competencias.
+
 - Revisión de seguridad cuando afecte superficies de ataque o controles.
+
 - Revisión de privacidad/legal cuando afecte datos personales o regulación.
+
 - Revisión de operaciones/SRE, QA, UX/accesibilidad o dominio cuando corresponda.
+
 - Aprobador con autoridad definida por el gobierno de la biblioteca.
+
 - Fecha de aprobación, vigencia, alcance y próxima revisión.
 
 No inventar nombres, firmas ni aprobaciones. Mientras esos campos no estén asignados y la revisión no haya concluido, el documento permanece Draft o In Review.
