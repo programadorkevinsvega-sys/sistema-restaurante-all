@@ -59,6 +59,8 @@ La versión 0.1.0 es una primera biblioteca estructurada y redactada para revisi
 
 ## Navegación
 
+- [Matriz de trazabilidad de procedencia](./SOURCE-TRACEABILITY.md)
+
 - [Gobernanza](./GOVERNANCE.md)
 - [Versionado](./VERSIONING.md)
 - [Registro de cambios](./CHANGELOG.md)
