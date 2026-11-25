@@ -120,7 +120,6 @@ Un control en estado Diseñado significa que existe la decisión pero no el cód
 | DOM-06 | Clave idempotente por operación/dispositivo, secuencia verificable y reconciliación transaccional; conflictos de precio, impuestos, stock y pago no se resuelven silenciosamente | Preventivo/Correctivo | 0.10; 0.6; fases funcionales de ventas/caja/inventario | ADR-0003, ADR-0013, ADR-0019, ADR-0020 | Diseñado | — |
 | DOM-07 | El servidor resuelve tenant/sucursal desde identidad y enrolamiento vigente del dispositivo; rechaza contexto enviado que no coincida | Preventivo | 0.4; 0.10 | ADR-0021, ADR-0022 | Diseñado | — |
 
-
 ---
 
 ## Catálogo de pruebas y criterios de aceptación
