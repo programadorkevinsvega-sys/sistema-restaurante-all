@@ -1,8 +1,8 @@
 # Registro de revisión de escenarios de amenazas (tabletop)
 
 **Fase:** 0.3 — Modelo de amenazas y requisitos de seguridad  
-**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03, TT-04, TT-05, TT-06, TT-07 y TT-08 revisados y aprobados  
-**Versión:** 1.0  
+**Estado:** walkthrough documental completado; TT-01 a TT-08 revisados y aprobados por el propietario del producto  
+**Versión:** 1.1  
 **Fecha:** 2026-11-25  
 **Alcance:** ejercicio de escritorio basado en arquitectura y ADR. No es una prueba de penetración, simulación sobre infraestructura, auditoría independiente ni evidencia de controles desplegados.  
 **Participantes previstos:** propietario del producto / único mantenedor. No se presupone un equipo de respuesta todavía existente.
@@ -212,4 +212,4 @@ Para cada escenario, el revisor debe responder y registrar:
 
 ## 5. Criterio de cierre de esta evidencia
 
-El registro queda completo como preparación documental cuando los escenarios tienen activo, amenazas, detección, contención, evidencia, recuperación, brecha y riesgo vinculado. La subfase no se declara cerrada hasta que el propietario complete el walkthrough y acepte las acciones/residuales. Las pruebas técnicas se ejecutan en las subfases que implementan cada control.
+El ejercicio de escritorio queda completado cuando los ocho escenarios tienen activo, amenazas, detección, contención, evidencia, recuperación, brechas y riesgos vinculados, y el propietario ha revisado y aprobado las decisiones. Las acciones pendientes y los riesgos residuales permanecen registrados, con responsable, tratamiento y fase de cierre; no es necesario implementar aquí los controles técnicos asignados a otras subfases. Este registro no acredita pruebas técnicas, despliegues ni eficacia operativa de controles.
