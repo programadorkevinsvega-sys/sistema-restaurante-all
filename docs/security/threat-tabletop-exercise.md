@@ -1,7 +1,7 @@
 # Registro de revisión de escenarios de amenazas (tabletop)
 
 **Fase:** 0.3 — Modelo de amenazas y requisitos de seguridad  
-**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03 y TT-04 revisados y aprobados  
+**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03, TT-04 y TT-05 revisados y aprobados  
 **Versión:** 1.0  
 **Fecha:** 2026-11-25  
 **Alcance:** ejercicio de escritorio basado en arquitectura y ADR. No es una prueba de penetración, simulación sobre infraestructura, auditoría independiente ni evidencia de controles desplegados.  
@@ -116,7 +116,7 @@ Para cada escenario, el revisor debe responder y registrar:
 7. ¿Qué condición bloquea la reanudación?
 8. ¿Qué riesgo residual y tarea del plan se actualizan?
 
-**Resultado actual:** TT-01, TT-02, TT-03 y TT-04 cuentan con decisiones operativas revisadas y aprobadas por el propietario. Los otros cuatro escenarios siguen pendientes de walkthrough. No se declara tabletop completo ni prueba técnica superada.
+**Resultado actual:** TT-01, TT-02, TT-03, TT-04 y TT-05 cuentan con decisiones operativas revisadas y aprobadas por el propietario. Los otros tres escenarios siguen pendientes de walkthrough. No se declara tabletop completo ni prueba técnica superada.
 
 ### Registro de ejecución
 
@@ -149,6 +149,16 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Resultado:** respuesta operativa aprobada para el escenario. Los controles deben implementarse y verificarse en las fases de identidad/autorización, PostgreSQL, Redis y pruebas.
 - **Acciones relacionadas:** TA-05 y TA-07 permanecen pendientes de implementación y pruebas.
 
+#### TT-05 — Manipulación de callback de proveedor de pagos
+
+- **Estado del walkthrough:** revisado y ocho medidas aprobadas por el propietario.
+- **Fecha de revisión:** 2026-11-25.
+- **Decisiones aprobadas:** verificar criptográficamente la firma del callback mediante el mecanismo oficial del PSP y gestionar la rotación de claves; validar el origen sin depender únicamente de la IP; procesar cada evento y operación de forma idempotente; comparar importe, moneda, referencia, comercio y transacción contra la operación pendiente del servidor; aplicar una máquina de estados con transiciones permitidas; consultar la API autenticada del PSP cuando el protocolo lo permita antes de confirmar efectos financieros; persistir eventos de forma durable con deduplicación, reintentos controlados, trazabilidad y cuarentena de eventos inválidos o contradictorios; y responder a anomalías preservando evidencia, alertando, revisando transacciones relacionadas y conciliando con el PSP.
+- **Casos aprobados para validar:** callback con firma falsa o ausente; callback legítimo repetido; importe o moneda diferentes; referencia de pago perteneciente a otro tenant; evento recibido después de una cancelación; eventos fuera de orden; fallo del sistema después de recibir la confirmación del PSP; y referencia inexistente o manipulada.
+- **Limitación aceptada:** una firma válida acredita autenticidad e integridad según el mecanismo del proveedor, pero no demuestra por sí sola que orden, tenant, importe y estado sean correctos. La integración debe respetar el protocolo específico del PSP. No se afirma que estos controles estén implementados ni probados.
+- **Resultado:** respuesta operativa aprobada para el escenario. La integración, la persistencia durable, la idempotencia, la máquina de estados y la conciliación deben implementarse y verificarse en las fases correspondientes.
+- **Acciones relacionadas:** TA-07 permanece pendiente para incorporar pruebas negativas a CI; la implementación de la integración y sus controles se planificará en la fase funcional correspondiente.
+
 #### TT-04 — Secreto expuesto o workflow comprometido
 
 - **Estado del walkthrough:** revisado y ocho medidas aprobadas por el propietario.
@@ -163,7 +173,7 @@ Para cada escenario, el revisor debe responder y registrar:
 
 | ID | Acción pendiente | Responsable | Fase | Estado |
 |---|---|---|---|---|
-| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (4/8) |
+| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (5/8) |
 | TA-02 | Implementar enrolamiento, revocación y protección local de POS | Propietario del producto | 0.4 / 0.10 | Pendiente |
 | TA-03 | Diseñar y probar sync idempotente, integridad, conflictos y reconciliación | Propietario del producto | 0.10 | Pendiente |
 | TA-04 | Implementar gestión de secretos, aislamiento de backups y restauración | Propietario del producto | 0.6 / 0.7 | Pendiente |
