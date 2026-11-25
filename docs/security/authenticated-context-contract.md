@@ -101,7 +101,7 @@ deben corresponder a identidades permitidas para la comunicación.
 Estos metadatos se propagan o regeneran según el contrato de trazabilidad/idempotencia. No
 pueden alterar el actor, tenant, roles, ámbitos, emisor, audiencia ni vigencia de la aserción.
 
-### 3.5 Metadatos de correlación y datos prohibidos
+### 3.5 Datos prohibidos
 
 `trace_id`, `request_id`, `saga_id` e `idempotency_key` son metadatos operativos, no
 credenciales ni sustitutos de autorización. No se aceptan como autoridad tenant, user, roles
