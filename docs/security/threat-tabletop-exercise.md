@@ -1,7 +1,7 @@
 # Registro de revisión de escenarios de amenazas (tabletop)
 
 **Fase:** 0.3 — Modelo de amenazas y requisitos de seguridad  
-**Estado:** walkthrough documental en curso; TT-01 y TT-02 revisados y aprobados  
+**Estado:** walkthrough documental en curso; TT-01, TT-02 y TT-03 revisados y aprobados  
 **Versión:** 1.0  
 **Fecha:** 2026-11-25  
 **Alcance:** ejercicio de escritorio basado en arquitectura y ADR. No es una prueba de penetración, simulación sobre infraestructura, auditoría independiente ni evidencia de controles desplegados.  
@@ -116,7 +116,7 @@ Para cada escenario, el revisor debe responder y registrar:
 7. ¿Qué condición bloquea la reanudación?
 8. ¿Qué riesgo residual y tarea del plan se actualizan?
 
-**Resultado actual:** TT-01 y TT-02 cuentan con decisiones operativas revisadas y aprobadas por el propietario. Los otros seis escenarios siguen pendientes de walkthrough. No se declara tabletop completo ni prueba técnica superada.
+**Resultado actual:** TT-01, TT-02 y TT-03 cuentan con decisiones operativas revisadas y aprobadas por el propietario. Los otros cinco escenarios siguen pendientes de walkthrough. No se declara tabletop completo ni prueba técnica superada.
 
 ### Registro de ejecución
 
@@ -139,11 +139,21 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Resultado:** respuesta operativa aprobada para el escenario. El contrato de sincronización, la persistencia Inbox, la deduplicación y las pruebas de conflicto deben implementarse y verificarse en las fases correspondientes.
 - **Acciones relacionadas:** TA-03 permanece pendiente de implementación y pruebas; TA-07 permanece pendiente para incorporar pruebas negativas a CI.
 
+#### TT-03 — Acceso cruzado entre tenants por API o caché
+
+- **Estado del walkthrough:** revisado y ocho medidas aprobadas por el propietario.
+- **Fecha de revisión:** 2026-11-25.
+- **Decisiones aprobadas:** cada módulo propietario valida autorización para tenant, sucursal y recurso; el tenant confiable se obtiene de identidad/contexto verificado en servidor y nunca de un valor libre enviado por cliente; aplicar RLS en PostgreSQL donde corresponda con contexto de sesión seguro; aislar claves y resultados Redis por tenant y ámbito de autorización; denegar por defecto cuando falte contexto o permiso; mantener pruebas negativas de aislamiento para API, búsquedas, exportaciones, caché, procesos y sincronización; auditar actor, tenant autenticado, recurso, módulo y decisión; y tratar UUID/identificadores opacos como localizadores, nunca como autorización.
+- **Casos aprobados para validar:** cambio de ID para consultar factura ajena; consulta sin filtro de tenant; reutilización de caché entre tenants; acceso fuera del ámbito de sucursal; operación de sync con tenant manipulado; y trabajo en segundo plano con contexto heredado incorrectamente.
+- **Limitación aceptada:** estas medidas son requisitos de diseño. No se afirma que RLS, autorización, aislamiento de Redis, auditoría o pruebas negativas estén implementados ni probados.
+- **Resultado:** respuesta operativa aprobada para el escenario. Los controles deben implementarse y verificarse en las fases de identidad/autorización, PostgreSQL, Redis y pruebas.
+- **Acciones relacionadas:** TA-05 y TA-07 permanecen pendientes de implementación y pruebas.
+
 ## 4. Registro de acciones del ejercicio
 
 | ID | Acción pendiente | Responsable | Fase | Estado |
 |---|---|---|---|---|
-| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (2/8) |
+| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (3/8) |
 | TA-02 | Implementar enrolamiento, revocación y protección local de POS | Propietario del producto | 0.4 / 0.10 | Pendiente |
 | TA-03 | Diseñar y probar sync idempotente, integridad, conflictos y reconciliación | Propietario del producto | 0.10 | Pendiente |
 | TA-04 | Implementar gestión de secretos, aislamiento de backups y restauración | Propietario del producto | 0.6 / 0.7 | Pendiente |
