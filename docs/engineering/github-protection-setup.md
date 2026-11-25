@@ -42,6 +42,7 @@ No activar reglas de firma de commits, linear history, merge queue u otras restr
 ## 3. CODEOWNERS
 
 El archivo raíz `/CODEOWNERS` es una ubicación reconocida por GitHub. Mantener responsables reales para:
+
 - `.github/` y workflows.
 - `docs/adr/`, `docs/architecture/`, `docs/engineering/` y `docs/security/`.
 - `scripts/` e `infrastructure/`.
@@ -54,6 +55,7 @@ CODEOWNERS solo identifica responsables. La obligación de revisión nace al act
 El workflow documental actual es `.github/workflows/documentation-security.yml`. Declara `contents: read`, fija checkout por SHA y ejecuta validación Markdown, enlaces locales y Gitleaks. Su existencia no equivale a un check obligatorio ni prueba que todas las ejecuciones hayan pasado.
 
 Antes de agregar un check al Ruleset:
+
 1. Abrir un PR de prueba que active el workflow.
 2. Confirmar el nombre exacto del check reportado por GitHub.
 3. Confirmar ejecuciones correctas y fallidas, y que el fallo bloquea el merge.
@@ -67,6 +69,7 @@ No hay workflow de despliegue que deba recibir permisos privilegiados en el esta
 En **Settings → Collaborators and teams**, revisar cada usuario/equipo y asignar el rol mínimo. Registrar quién puede leer, escribir, mantener y administrar. El permiso de repositorio no concede por sí solo acceso a secretos productivos: los environments y credenciales deben mantenerse separados.
 
 Antes de producción:
+
 - Proteger cuentas con escritura/administración mediante MFA.
 - Revisar acceso y revocación de colaboradores.
 - Configurar environments independientes y aprobaciones de despliegue.
@@ -76,6 +79,7 @@ Antes de producción:
 ## 6. Verificación y evidencia
 
 Tras aplicar la configuración:
+
 - Registrar fecha, actor administrador, ID/nombre del Ruleset y ramas objetivo.
 - Guardar captura o exportación de sus reglas sin incluir secretos.
 - Consultar la configuración efectiva de `main` y confirmar que aparece protegida.
