@@ -91,6 +91,18 @@ deben corresponder a identidades permitidas para la comunicación.
 
 ### 3.4 Metadatos de correlación y datos prohibidos
 
+| Campo | Formato | Uso |
+|---|---|---|
+| `trace_id` | W3C Trace Context | Correlación distribuida; nunca autoridad |
+| `request_id` | UUIDv7 | Identificador único de solicitud |
+| `saga_id` | UUIDv7, opcional | Saga en curso cuando aplique |
+| `idempotency_key` | UUIDv7 o formato contractual, opcional | Idempotencia de operaciones con efecto |
+
+Estos metadatos se propagan o regeneran según el contrato de trazabilidad/idempotencia. No
+pueden alterar el actor, tenant, roles, ámbitos, emisor, audiencia ni vigencia de la aserción.
+
+### 3.5 Metadatos de correlación y datos prohibidos
+
 `trace_id`, `request_id`, `saga_id` e `idempotency_key` son metadatos operativos, no
 credenciales ni sustitutos de autorización. No se aceptan como autoridad tenant, user, roles
 o permisos suministrados en el payload del cliente.
