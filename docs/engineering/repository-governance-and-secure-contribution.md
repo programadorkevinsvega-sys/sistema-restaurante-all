@@ -1,6 +1,6 @@
 # Gobernanza del repositorio y contribución segura
 
-**Estado:** política aprobada para el flujo de contribución; enforcement de GitHub pendiente de configuración y verificación administrativa.
+**Estado:** política aprobada para un proyecto con un único mantenedor; enforcement de GitHub sujeto a la configuración efectiva documentada en `github-protection-setup.md`.
 **Ámbito:** repositorio Restaurant OS, ramas, Pull Requests, revisiones, dependencias, GitHub Actions, secretos y cadena de suministro.
 **Autoridad:** subordinada a ADR-0020 y ADR-0024, a los requisitos y a los estándares vigentes.
 
@@ -49,7 +49,7 @@ Cada PR debe:
 - Incluir documentación y changelog cuando corresponda.
 - No mezclar refactors ajenos ni cambios fuera del alcance aprobado.
 
-La revisión humana es independiente de la autoría del cambio. Nadie aprueba su propio PR. La revisión del propietario CODEOWNERS se exige para las rutas que cubre una vez activo el enforcement de GitHub. Los cambios sensibles requieren además revisión de una persona con competencia en seguridad/operación; una aprobación automática o de agente no sustituye esa revisión humana.
+El proyecto opera actualmente con un único mantenedor y no dispone de una segunda persona que pueda revisar o aprobar PRs. Por tanto, el flujo vigente exige PR, CI obligatorio, revisión propia estructurada antes de fusionar y evidencia verificable; no exige una aprobación humana independiente imposible de obtener. El autor no registra una aprobación ficticia ni presenta una revisión propia como independiente. CODEOWNERS identifica ownership de rutas, pero no debe convertirse en un bloqueo imposible mientras exista un único mantenedor. Cuando se incorporen colaboradores autorizados, se activarán las aprobaciones independientes y la revisión de Code Owners para las rutas sensibles.
 
 Cambios sensibles incluyen, como mínimo: autenticación/autorización, aislamiento multi-tenant, validación de entradas, pagos/datos financieros, criptografía, secretos, archivos, infraestructura, dependencias críticas, workflows, permisos CI/CD, CODEOWNERS, Rulesets y políticas de seguridad.
 
@@ -101,7 +101,7 @@ Automatización de actualizaciones (por ejemplo Dependabot) se habilitará cuand
 - Mantener logs y artefactos libres de secretos y datos personales.
 - Los checks obligatorios se definen solo después de verificar el nombre real del check y su estabilidad.
 
-Todo workflow privilegiado debe tener revisión específica de seguridad y permisos, además de revisión de sus acciones, dependencias y rutas de ejecución.
+Todo workflow privilegiado debe someterse a una revisión propia específica de seguridad, permisos, acciones, dependencias y rutas de ejecución mientras exista un único mantenedor. Antes de habilitar despliegues productivos o cambios de alto impacto, se recomienda revisión externa especializada cuando no exista una segunda persona interna.
 
 ## 6. Permisos y separación de funciones
 
@@ -130,7 +130,7 @@ Ante sospecha de exposición: detener la publicación, no copiar el valor a come
 No se conceden bypasses permanentes ni se debilitan Rulesets para acelerar entregas. Una excepción requiere:
 
 - incidente o necesidad concreta y alcance limitado;
-- responsable solicitante y aprobador distinto cuando sea posible;
+- responsable solicitante; si existe otra persona autorizada, aprobador distinto; en el modelo de único mantenedor, revisión propia documentada y controles compensatorios;
 - motivo, riesgo, controles compensatorios y rutas/commits afectados;
 - duración/expiración explícita;
 - registro en issue/PR privado o restringido según sensibilidad;
@@ -147,8 +147,9 @@ Los cambios de emergencia deben conservar trazabilidad y someterse a revisión p
 - [ ] Workflows y permisos tienen mínimo privilegio.
 - [ ] Contratos, ownership y documentación permanecen coherentes.
 - [ ] Pruebas/checks aplicables ejecutados; resultados y límites declarados.
-- [ ] Revisión humana independiente completada.
-- [ ] Codeowners y revisores de seguridad requeridos participaron cuando aplica.
+- [ ] Revisión propia estructurada completada y registrada por el único mantenedor.
+- [ ] CI obligatorio completado; no se simula una aprobación independiente.
+- [ ] Si hay colaboradores autorizados disponibles, Code Owners y revisores especializados participaron cuando aplica.
 - [ ] Riesgos/excepciones tienen responsable y vencimiento.
 - [ ] Changelog actualizado cuando corresponde.
 
@@ -156,4 +157,4 @@ Los cambios de emergencia deben conservar trazabilidad y someterse a revisión p
 
 La política de contribución y este checklist describen el estándar que debe seguir el equipo. La aplicación técnica depende de Rulesets/branch protection, permisos, CODEOWNERS y workflows configurados en GitHub. El estado efectivo se mantiene en [github-protection-setup.md](./github-protection-setup.md).
 
-**No se considera cerrada la subfase 0.2 hasta que las protecciones de `main`, la revisión CODEOWNERS y los checks requeridos estén configurados y probados con evidencia real.**
+**La subfase 0.2 solo puede cerrarse cuando las protecciones reales de `main`, los checks obligatorios, la política de permisos y el flujo de revisión propio estén alineados y probados. La revisión independiente no es requisito mientras el proyecto tenga un único mantenedor; se convierte en requisito al incorporar un segundo colaborador autorizado y actualizar el Ruleset.**
