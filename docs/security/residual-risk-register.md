@@ -1,7 +1,7 @@
 # Registro de riesgos residuales
 
 **Estado:** vigente
-**Versión:** 1.0
+**Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.3
 **Fuente:** [Modelo de amenazas](./threat-model.md) y [Matriz de control](./threat-control-matrix.md)
@@ -100,19 +100,138 @@ explícita del propietario del producto.
 | Propietario | @programadorkevinsvega-sys |
 | Condición de revisión | Antes de exponer cualquier BFF a tráfico externo |
 
-### RR-007 — Aprobación independiente de PR (riesgo de gobernanza)
+### RR-007 — Revisión independiente no disponible en modelo solo-maintainer
 
 | Campo | Valor |
 |---|---|
-| ID amenazas | E-05 (parcial) |
-| Descripción | El Ruleset `protect-main` tiene `Required approvals: 0` porque el repositorio tiene un único propietario. No existe revisión humana independiente de los cambios mergeados. |
-| Motivo | Decisión operativa explícita del propietario del producto. Con un solo colaborador no es posible revisión independiente. |
-| Controles compensatorios | PR obligatorio para todo cambio; CI con markdownlint, validación de enlaces y Gitleaks activos; historial Git completo. |
-| Fase de cierre | Cuando se incorpore un segundo colaborador con escritura |
+| ID amenazas | E-05 (riesgo organizativo; no equivale a una vulnerabilidad técnica del workflow documental) |
+| Descripción | El proyecto tiene un único mantenedor. No existe una segunda persona que pueda realizar revisión humana independiente; no se simula esa aprobación. |
+| Motivo | Restricción organizativa conocida y aceptada para el estado actual del proyecto. |
+| Controles compensatorios | PR obligatorio; revisión propia estructurada; CI obligatorio; Ruleset activo; resolución de conversaciones; bloqueo de force-push/borrado; bypass vacío; evidencia del diff y checks. |
+| Fase de cierre | Al incorporar un segundo colaborador autorizado con capacidad real de revisión. No bloquea por sí solo la operación actual mientras los controles compensatorios se mantengan. |
 | Propietario | @programadorkevinsvega-sys |
-| Condición de revisión | Al incorporar cualquier colaborador con permisos de escritura |
+| Condición de revisión | Cada cambio sensible y cada modificación del Ruleset; además, inmediatamente al incorporar otro colaborador. |
+| Estado | Riesgo organizativo conocido; controles compensatorios verificados en PR #46 y Ruleset `protect-main` (ID 28057956). |
 
 ---
+
+### RR-008 — Dispositivos POS y operación offline
+
+| Campo | Valor |
+|---|---|
+| ID amenazas | S-06, T-06, R-04, D-08, DS-06, E-08, DOM-06, DOM-07 |
+| Descripción | No existe todavía implementación verificada de enrolamiento/revocación de dispositivos, protección del almacenamiento local, integridad de cola, sincronización idempotente ni reconciliación de conflictos offline. |
+| Motivo | El diseño offline-first se implementará en 0.10 y las capacidades transversales de identidad, validación, infraestructura y auditoría dependen de 0.4, 0.5, 0.7 y 0.8. |
+| Controles compensatorios | No declarar el dispositivo autoridad de tenant, permisos, precios ni estado final; limitar datos locales y no habilitar sincronización productiva antes de los controles. Son requisitos de diseño, no controles técnicos ya desplegados. |
+| Fase de cierre | 0.4, 0.5, 0.7, 0.8 y 0.10; pruebas de flujo en las fases funcionales correspondientes. |
+| Propietario | @programadorkevinsvega-sys |
+| Condición de revisión | Antes de habilitar almacenamiento local con datos reales, enrolamiento o sincronización de ventas. |
+
+### RR-009 — Backups, almacenamiento de objetos y recuperación
+
+| Campo | Valor |
+|---|---|
+| ID amenazas | T-08, D-09, D-10, DS-07, T-04 (parcial) |
+| Descripción | Cifrado, aislamiento, permisos, integridad y restauración de backups/objetos no están implementados ni probados en entornos reales. |
+| Motivo | Depende del diseño de datos, infraestructura, almacenamiento y operación de recuperación. |
+| Controles compensatorios | No almacenar datos reales ni exponer buckets/objetos/backups públicamente; no considerar réplicas como backup. |
+| Fase de cierre | 0.6, 0.7, 0.8, 0.9 y 10.7 según activo. |
+| Propietario | @programadorkevinsvega-sys |
+| Condición de revisión | Antes de almacenar archivos o datos persistentes reales y antes de cualquier despliegue productivo. |
+
+### RR-010 — Uso de IA y herramientas externas
+
+| Campo | Valor |
+|---|---|
+| ID amenazas | D-11, E-09, DS-04 (parcial) |
+| Descripción | No existe todavía política técnica implementada para minimización de datos enviados a IA, aislamiento de contexto, permisos de herramientas, retención, prompt injection ni aprobación de acciones sensibles. |
+| Motivo | Las integraciones de IA y sus proveedores se incorporarán solo cuando exista caso de uso, evaluación y contrato aprobados. |
+| Controles compensatorios | No enviar secretos, PAN, datos sensibles ni información de tenant a herramientas/modelos externos sin autorización, evaluación del proveedor y controles contractuales/técnicos. |
+| Fase de cierre | Antes de cada integración IA; 0.3 define requisitos, y las fases de integración ejecutan controles. |
+| Propietario | @programadorkevinsvega-sys |
+| Condición de revisión | Antes de habilitar cualquier proveedor, agente o herramienta con acceso a datos o acciones. |
+
+### RR-011 — Aislamiento e integridad de caché Redis
+
+| Campo | Valor |
+|---|---|
+| ID amenazas | T-07 |
+| Descripción | Las claves, namespaces, invalidación y pruebas de aislamiento de caché no están implementadas ni verificadas. |
+| Motivo | Depende de Redis, ownership por módulo, autorización y estrategia de caché distribuida. |
+| Controles compensatorios | Redis no es fuente autoritativa ni mecanismo de autorización; no reutilizar entradas entre tenants/alcances. |
+| Fase de cierre | 0.6 y 0.7; pruebas de aislamiento en las fases de implementación. |
+| Propietario | @programadorkevinsvega-sys |
+| Condición de revisión | Antes de cachear respuestas con datos de usuario, tenant o permisos. |
+
+### RR-012 — Identidad de servicios y seguridad de mensajería
+
+| Campo | Valor |
+|---|---|
+| ID amenazas | S-02, S-04, S-05, T-03, DS-05 |
+| Descripción | Identidades de servicio, mTLS, ACL/subjects NATS, validación de callbacks y protección de replay no están implementados ni probados. |
+| Motivo | Depende de identidad, infraestructura, mensajería y contratos de eventos. |
+| Controles compensatorios | No exponer endpoints administrativos ni subjects amplios; no procesar eventos externos sin validación e idempotencia. |
+| Fase de cierre | 0.4, 0.6, 0.7 y fases de integración con proveedores. |
+| Propietario | @programadorkevinsvega-sys |
+| Condición de revisión | Antes de conectar procesos, publicar eventos o aceptar callbacks externos. |
+
+### RR-013 — Cadena de suministro y despliegue
+
+| Campo | Valor |
+|---|---|
+| ID amenazas | T-05, D-05 (parcial), E-05 (técnico) |
+| Descripción | Gitleaks y el workflow documental están activos, pero no existe evidencia suficiente de SCA integral, SBOM, procedencia/firma de artefactos, runner de despliegue aislado ni environment productivo protegido. |
+| Motivo | El workflow actual valida documentación y secretos; no es un pipeline de build/release/despliegue. |
+| Controles compensatorios | PR obligatorio, CI documental con permisos `contents: read`, Gitleaks y bloqueo de merge ante fallos. |
+| Fase de cierre | 0.2 para gobernanza; 0.7 y 10.5/F.6 para cadena de suministro y despliegue. |
+| Propietario | @programadorkevinsvega-sys |
+| Condición de revisión | Antes de generar/publicar imágenes, artefactos o desplegar a staging/producción. |
+
+### RR-014 — Integridad y autorización de operaciones de pago
+
+| Campo | Valor |
+|---|---|
+| ID amenazas | D-06, DOM-03 |
+| Descripción | El flujo PSP, tokenización, autorización de reversos/anulaciones y pruebas de integridad financiera no están implementados ni certificados. |
+| Motivo | Depende de las fases de pagos/caja y de la integración con proveedor seleccionado. |
+| Controles compensatorios | No almacenar PAN ni datos completos de tarjeta; no marcar pagos como confirmados por callback no verificado; no permitir anulación sin autorización. |
+| Fase de cierre | Fase 2 y fases de caja/pagos; preparación de cumplimiento antes de producción. |
+| Propietario | @programadorkevinsvega-sys |
+| Condición de revisión | Antes de procesar pagos reales o almacenar tokens/datos financieros. |
+
+### RR-015 — Disponibilidad de PostgreSQL y límites de recursos
+
+| Campo | Valor |
+|---|---|
+| Campo | Valor |
+|---|---|
+| ID amenazas | DS-02 |
+| Descripción | Los pools, circuit breakers, timeouts y límites reales aún no están implementados ni dimensionados. |
+| Motivo | Depende de la implementación de PostgreSQL y de pruebas de carga/degradación. |
+| Controles compensatorios | No exponer el servicio ni aceptar tráfico productivo sin límites y pruebas; el diseño de pooling no equivale a configuración ejecutada. |
+| Fase de cierre | 0.6, 0.7 y pruebas de carga/operación. |
+| Propietario | @programadorkevinsvega-sys |
+| Condición de revisión | Antes de habilitar tráfico concurrente o cargas productivas. |
+
+## Trazabilidad de amenazas a riesgos residuales
+
+| Amenazas | Riesgo |
+|---|---|
+| S-01, S-03, E-06, E-07 | RR-001 |
+| D-01, D-02, E-01, E-02, E-04, DOM-04, DOM-07 | RR-002; RR-008 para sincronización de dispositivo |
+| T-01, T-02, E-03, D-07 | RR-003 |
+| D-05 | RR-004 y RR-013 |
+| R-01, R-02, R-03, R-04, D-03 | RR-005; RR-008 para auditoría offline |
+| DS-01, DS-04 | RR-006; RR-010 para herramientas IA; RR-008 para sync |
+| S-02, S-04, S-05, T-03, DS-05 | RR-012 |
+| S-06, T-06, R-04, D-08, DS-06, E-08, DOM-06, DOM-07 | RR-008 |
+| T-04, T-08, D-09, D-10, DS-07 | RR-009 |
+| D-11, E-09 | RR-010 |
+| T-07 | RR-011 |
+| T-05, E-05 técnico | RR-013 |
+| D-06, DOM-03 | RR-014 |
+| DS-02 | RR-015 |
+| DOM-01, DOM-02, DOM-05 | Se cubren en el diseño de autorización/auditoría del módulo; mantener como Diseñado hasta pruebas de sus fases funcionales. |
 
 ## Riesgos cerrados
 
