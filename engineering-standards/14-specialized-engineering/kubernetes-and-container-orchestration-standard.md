@@ -44,3 +44,17 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## Amenazas y escenarios de fallo específicos
+Evaluar escape de contenedor, escalada por RBAC, movimiento lateral, secret exposure, supply-chain de imágenes, admission bypass, abuso de metadata/cloud identity, agotamiento de recursos y caída de plano de control/zona.
+
+## Pruebas de aceptación mínimas
+- Ejecutar controles de postura para RBAC, Pod Security, NetworkPolicy, admission y service accounts.
+- Verificar workloads no-root, capabilities mínimas, seccomp, filesystem read-only y límites.
+- Rechazar imágenes sin digest, firma/procedencia exigida o con vulnerabilidades bloqueantes según política.
+- Probar aislamiento de namespaces, egress, acceso a metadata y secretos.
+- Simular node/zone failure, autoscaling, rollout bloqueado, upgrade y restauración de volúmenes/estado.
+- Verificar backups y recuperación del plano de control según responsabilidad del proveedor/operador.
+
+## Operación y evidencias
+Conservar inventario de clusters/versiones, configuración RBAC/network, resultados de policy scans, imágenes firmadas, auditoría, pruebas de upgrade/restore y runbooks.
