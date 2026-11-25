@@ -1,3 +1,10 @@
-# Architecture policies require review by the repository owner.
-# Branch protection must enable required Code Owner review for enforcement.
+# La propiedad documental debe exigir revisión cuando se active el control correspondiente en GitHub Rulesets.
+# CODEOWNERS identifica responsables; no activa por sí solo la obligatoriedad.
 docs/architecture/ @programadorkevinsvega-sys
+docs/adr/ @programadorkevinsvega-sys
+docs/engineering/ @programadorkevinsvega-sys
+docs/security/ @programadorkevinsvega-sys
+PROMPT_MAESTRO.md @programadorkevinsvega-sys
+ROADMAP.md @programadorkevinsvega-sys
+requisitos.md @programadorkevinsvega-sys
+README.md @programadorkevinsvega-sys

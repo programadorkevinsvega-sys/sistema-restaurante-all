@@ -21,7 +21,7 @@ Proteger `main` para que los cambios entren mediante Pull Request y las revision
 
 ## CODEOWNERS
 
-El repositorio ya contiene un archivo `CODEOWNERS` en la raíz que asigna `docs/architecture/` a `@programadorkevinsvega-sys`. Mantener esa asignación o actualizarla con responsables reales cuando cambie la propiedad documental.
+El archivo `CODEOWNERS` en la raíz asigna actualmente `docs/architecture/`, `docs/adr/`, `docs/engineering/`, `docs/security/` y los documentos normativos raíz (README, PROMPT_MAESTRO, ROADMAP y requisitos) a `@programadorkevinsvega-sys`. Mantener estas asignaciones o actualizarlas con responsables reales cuando cambie la propiedad documental.
 
 - Mantener el archivo `CODEOWNERS` en una ubicación reconocida por GitHub (`.github/CODEOWNERS`, `CODEOWNERS` en la raíz o `docs/CODEOWNERS`).
 - Declarar responsables reales y rutas que deban revisar.
@@ -37,4 +37,4 @@ Hasta que la configuración se aplique y se verifique:
 - No se afirma que `main` esté protegida.
 - No se afirma que CI o status checks estén activos sin workflows y ejecuciones verificables.
 
-Registrar en el repositorio la fecha de configuración, las opciones activadas y evidencia de verificación cuando se complete el proceso.
+La lectura de la configuración efectiva de protección de ramas no está disponible para esta integración de GitHub. Por tanto, no se afirma que el ruleset o branch protection esté activo. Registrar en el repositorio la fecha de configuración, las opciones activadas y evidencia de verificación cuando un administrador complete el proceso.

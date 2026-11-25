@@ -23,6 +23,7 @@ SQLx.
 - [Diseño de crates y dependencias](./crate-architecture.md): diseño técnico aceptado mediante ADR-0009.
 - [Estrategia técnica de identificadores UUIDv7 y PostgreSQL](./identifier-strategy.md): política vigente de UUIDv7 vinculada a ADR-0012 Accepted; no significa que la generación o migración esté implementada.
 - [PostgreSQL HA y réplicas de lectura](./postgresql-ha-and-read-replicas.md): especificación operativa vigente de clúster single-writer, replicación física, failover, routing consciente de consistencia, TLS, backups PITR y observabilidad, conforme a ADR-0012 Accepted.
+- [Redis Cluster, TLS y operación de caché distribuida](./redis-cache-operations.md): especificación operativa vigente conforme a ADR-0016 Accepted; cubre topología cluster, TLS/ACL, cache-aside, ownership, invalidación durable, consistencia, degradación, observabilidad y pruebas; no representa infraestructura desplegada.
 - [NATS Core y JetStream en clúster](./nats-core-jetstream-cluster.md): especificación vigente de clúster NATS, quorum, JetStream R=3 para streams críticos, TLS, aislamiento por cuentas, backups, recuperación y observabilidad, conforme a ADR-0017 Accepted; no representa infraestructura desplegada.
 - [Estrategia técnica de consistencia distribuida y Sagas](./distributed-transaction-consistency.md): especificación técnica vinculada a ADR-0013 Accepted; no representa implementación.
 - [Operación de Transactional Outbox e Inbox](./transactional-outbox-inbox-operations.md): especificación técnica vinculada a ADR-0003, ADR-0013 y ADR-0015; desarrolla secuencias por agregado, recuperación de huecos, DLQ, backpressure, límites, alertas e intervención; no representa implementación.
@@ -30,7 +31,7 @@ SQLx.
 - [Reglas de implementación](../engineering/implementation-rules.md): reglas operativas de implementación.
 - [Estándar documental](../engineering/documentation-quality-and-security-standard.md): exactitud, seguridad, README, enlaces, revisión y validación documental.
 - [Seguridad de contraseñas y autenticación](../security/password-and-authentication.md): especificación técnica vinculada a ADR-0011 Accepted; no representa implementación.
-- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos (ADR-0008), límites de crates (ADR-0009), pooling (ADR-0010), PostgreSQL HA (ADR-0012), autenticación (ADR-0011), consistencia distribuida (ADR-0013), conservación de datos (ADR-0014), observabilidad (ADR-0015), Redis Cluster (ADR-0016) y NATS Core/JetStream HA (ADR-0017).
+- [ADRs](../adr/README.md): decisiones aceptadas y propuestas, incluida la distribución de módulos (ADR-0008), límites de crates (ADR-0009), pooling (ADR-0010), PostgreSQL HA (ADR-0012), autenticación (ADR-0011), consistencia distribuida (ADR-0013), conservación de datos (ADR-0014), observabilidad (ADR-0015), Redis Cluster y operación de caché (ADR-0016) y NATS Core/JetStream HA (ADR-0017).
 - [Requisitos](../../requisitos.md): fuente de verdad de responsabilidades de dominios y carpetas.
 - [Roadmap](../../ROADMAP.md): fases y entregables.
 

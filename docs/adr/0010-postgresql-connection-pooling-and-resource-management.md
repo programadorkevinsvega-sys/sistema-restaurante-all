@@ -5,7 +5,6 @@
 - Aprobado: 2026-11-24
 - Aprobación: decisión aprobada explícitamente por el propietario del producto.
 - Complementa: ADR-0001, ADR-0003, ADR-0004, ADR-0007, ADR-0008 y ADR-0009.
-- Fuente de referencia: estrategia ENSAMBRIA de Connection Pooling y Gestión de Conexiones PostgreSQL, adaptada a la arquitectura vigente de Restaurant OS.
 
 ## 1. Contexto
 
@@ -108,7 +107,7 @@ La configuración operativa debe definir y validar límites para:
 - Llamadas remotas efectuadas fuera de transacciones.
 - Apagado ordenado y drenaje de operaciones.
 
-Los valores concretos se establecerán por workload con pruebas y objetivos de latencia; no se copian valores ilustrativos de ENSAMBRIA.
+Los valores concretos se establecerán por workload mediante pruebas representativas y objetivos de latencia; no se fijan valores universales sin evidencia.
 
 Ante saturación:
 - No se acumulan tareas o peticiones sin límite esperando una conexión.
