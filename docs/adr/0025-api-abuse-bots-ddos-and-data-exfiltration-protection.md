@@ -1,16 +1,16 @@
 # ADR-0025: Protección contra abuso de APIs, bots, DDoS y extracción de datos
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: APIs públicas/internas, autenticación, automatización, cuotas, scraping, consumo de recursos, integraciones y egreso de datos.
 - Complementa: ADR-0003, ADR-0007, ADR-0010, ADR-0011, ADR-0013, ADR-0015, ADR-0016, ADR-0017 y ADR-0020 a ADR-0022.
-- Aprobación: pendiente de aprobación explícita.
+- Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
 
 Una API puede ser correcta y permitir abuso: fuerza bruta, credential stuffing, enumeración, scraping, exportaciones masivas, automatización de pedidos, consumo ilimitado de IA/SMS/correo, solicitudes costosas o DDoS. Límites solo por IP no bastan en un SaaS multi-tenant detrás de NAT/proxies.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Límites multidimensionales
 
@@ -80,4 +80,4 @@ Clasificar endpoints por costo/riesgo; definir límites iniciales; aplicar contr
 
 ## Estado de implementación
 
-Proposed. No implementa rate limits, cuotas, WAF, DDoS, CAPTCHA, controles Redis ni reglas de red.
+Accepted. La decisión está aprobada; no implementa rate limits, cuotas, WAF, DDoS, CAPTCHA, controles Redis ni reglas de red.
