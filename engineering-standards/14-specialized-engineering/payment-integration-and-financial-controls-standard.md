@@ -45,3 +45,20 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Amenazas y escenarios de fallo específicos
+
+Evaluar doble cargo, reembolso duplicado, webhook falsificado/repetido/fuera de orden, timeout con resultado incierto, manipulación de importes/moneda, fraude, abuso de credenciales, conciliación incompleta, disputa, indisponibilidad del adquirente y exposición de datos de tarjeta. Los requisitos PCI y regulatorios se determinan por alcance, jurisdicción y contratos vigentes.
+
+## 9. Pruebas de aceptación mínimas
+
+- Repetir comandos de cobro/captura/reembolso y verificar idempotencia, unicidad y ausencia de doble efecto.
+- Simular timeout antes y después de que el proveedor procese la operación; resolver estado incierto mediante consulta/conciliación.
+- Validar firma/autenticidad, replay, duplicados, desorden y retraso de webhooks.
+- Probar importes negativos, precisión, redondeo, moneda no soportada, límites y cambio de tipo de cambio.
+- Conciliar ledger interno, operaciones del proveedor, settlement, fees, reversos y chargebacks; detectar faltantes y diferencias.
+- Verificar segregación de funciones, límites de aprobación, auditoría y ausencia de datos prohibidos en logs.
+
+## 10. Operación y evidencias
+
+Conservar alcance PCI documentado cuando aplique, acuerdos del proveedor, matriz de estados financieros, ledger/auditoría, conciliaciones diarias o por ciclo, reportes de discrepancias, pruebas de recuperación, evidencias de aprobación y runbooks de incidentes.
