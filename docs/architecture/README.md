@@ -61,6 +61,11 @@ SQLx.
 - [Baseline de contenedores](../infrastructure/container-baseline.md): controles mínimos por imagen y contenedor antes de desplegar; entregable de subfase 0.7.
 - [Política TLS/criptográfica](../infrastructure/tls-crypto-policy.md): TLS por frontera, certificados, cifrado en reposo y gestión de claves; entregable de subfase 0.7.
 - [Runbooks de rotación](../infrastructure/rotation-runbooks.md): procedimientos de rotación programada y de emergencia; entregable de subfase 0.7.
+- [Estrategia de observabilidad](../engineering/observability-design.md): instrumentación por capa, stack, propagación W3C, dashboards y retención; entregable de subfase 0.8.
+- [Catálogo de eventos auditables](../engineering/audit-events-catalog.md): eventos por módulo con evidencia mínima y criticidad; entregable de subfase 0.8.
+- [Matriz de alertas](../engineering/alert-matrix.md): alertas con severidad, señal, umbral, propietario y runbook; entregable de subfase 0.8.
+- [Runbooks de respuesta a incidentes](../engineering/incident-response-runbooks.md): procedimientos INC-01 a INC-SEC-02 para incidentes operativos y de seguridad; entregable de subfase 0.8.
+- [Plan de respuesta y ejercicios](../engineering/incident-response-plan.md): ciclo de respuesta, severidades, responsables y ejercicios antes de producción; entregable de subfase 0.8.
 
 ## ADR de seguridad aceptados
 
