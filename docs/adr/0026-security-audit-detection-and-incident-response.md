@@ -1,16 +1,16 @@
 # ADR-0026: Auditoría de seguridad, detección y respuesta a incidentes
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: eventos de seguridad, auditoría de acciones sensibles, detección, alertas, investigación, contención y recuperación.
 - Complementa: ADR-0003, ADR-0004, ADR-0014, ADR-0015, ADR-0018 y ADR-0020 a ADR-0025.
-- Aprobación: pendiente de aprobación explícita.
+- Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
 
 Prevenir todos los ataques es imposible. Se necesita detectar actividad sospechosa, conservar evidencia, contener incidentes, recuperar servicios y comunicar lo que corresponda. Logs operativos y trazas no sustituyen auditoría. Tampoco se debe crear una tabla central que rompa ownership por módulo.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Separar logs, telemetría y auditoría
 
@@ -89,4 +89,4 @@ Definir catálogo de eventos/owners; esquema y redacción; severidades y escalam
 
 ## Estado de implementación
 
-Proposed. No implementa auditoría, SIEM, detección, alertas, runbooks ni equipo de respuesta.
+Accepted. La decisión está aprobada; no implementa auditoría, SIEM, detección, alertas, runbooks ni equipo de respuesta.
