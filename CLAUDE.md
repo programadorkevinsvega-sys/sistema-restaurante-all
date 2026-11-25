@@ -13,3 +13,14 @@ Antes de trabajar en este repositorio, leer:
 La precedencia es obligatoria: el estándar general es la base; Restaurant OS puede especializarlo o endurecerlo, nunca debilitarlo; implementación está subordinada. Las contradicciones se documentan como ADR propuesto y requieren aprobación explícita del propietario del producto.
 
 Claude puede proponer y justificar; no puede aprobar decisiones de producto, aceptar ADRs, fusionar PRs, desplegar ni ejecutar acciones irreversibles sin autorización explícita. No presentar documentación como evidencia de implementación. Los cambios de documentación arquitectónica se integran mediante PR a main. CODEOWNERS identifica responsables, pero la revisión de code owners solo es obligatoria si un Ruleset o branch protection de GitHub activa expresamente ese requisito. Consultar [Configuración de protección de main](docs/engineering/github-protection-setup.md); no afirmar que está activa sin verificarla.
+
+## Flujo de trabajo obligatorio por subfase
+
+1. **Crear la rama en GitHub primero** — nunca crear una rama solo en local. Crear la rama desde el repositorio remoto y traerla a local: `git checkout -b <rama> origin/main && git push -u origin <rama>`.
+2. **Implementar en local sobre esa rama** — hacer todos los cambios de código y documentación de la subfase completa.
+3. **Documentación y código van juntos** — nunca cerrar una subfase y actualizar la documentación después. Todo `.md`, checklist, índice y referencia cruzada afectado se actualiza en el mismo commit o PR.
+4. **Push y PR** — subir los cambios y abrir el PR hacia `main`.
+5. **CI verde antes de fusionar** — esperar que todos los checks pasen en verde. Si el CI falla, corregir en la misma rama antes de cualquier otra acción.
+6. **Fusionar a main** — una vez CI verde, mergear el PR.
+7. **Sincronizar local** — después del merge, actualizar local: `git checkout main && git pull origin main`.
+8. **Solo entonces continuar** — no iniciar la siguiente subfase hasta que local esté sincronizado con `main` del repositorio.
