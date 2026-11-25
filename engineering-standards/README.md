@@ -1,75 +1,75 @@
 # Engineering Standards Library
 
-**Versión:** 0.1.0  
-**Estado:** Borrador inicial para revisión  
+**Versión:** 0.2.0  
+**Estado:** Borrador ampliado para revisión  
 **Idioma principal:** español  
-**Propósito:** biblioteca tecnológica y metodológica reutilizable entre proyectos.
+**Propósito:** marco de estándares de ingeniería reutilizable entre proyectos.
 
-## Propósito
+## Propósito y regla de uso
 
-Esta biblioteca reúne estándares de ingeniería de software independientes de un producto concreto. Define principios, requisitos, controles, alternativas, antipatrones y pruebas de conformidad para diseñar, construir, operar y evolucionar sistemas de software profesionales.
+Esta biblioteca reúne estándares independientes de un producto concreto para diseñar, construir, probar, desplegar, operar y evolucionar sistemas de software. No es una arquitectura única ni una receta tecnológica universal.
 
-No es una arquitectura de referencia única ni una receta tecnológica universal. Cada proyecto debe evaluar su contexto, criticidad, escala, obligaciones regulatorias, equipo, presupuesto y modelo operativo antes de adoptar los estándares.
+**Antes de iniciar cualquier diseño comprometido o implementación, todo agente DEBE ejecutar el [Protocolo obligatorio de consulta y adopción](./AGENT-STANDARDS-ADOPTION-PROTOCOL.md), recorrer el [Catálogo maestro](./MASTER-STANDARDS-CATALOG.md) completo y crear el [Registro de adopción del proyecto](./PROJECT-STANDARDS-ADOPTION-REGISTER.md).** No se permite omitir estándares sin registrar estado y justificación.
 
-## Principios de uso
+## Principios
 
-1. Los estándares describen requisitos y resultados; no fuerzan una tecnología salvo que el documento se identifique expresamente como estándar tecnológico.
-2. La aplicabilidad se determina por riesgo y contexto, no por moda ni por tamaño aislado.
-3. Los requisitos obligatorios de un estándar adoptado deben convertirse en controles, tareas y evidencias verificables.
-4. Una excepción debe ser explícita, limitada, aprobada, mitigada y revisable.
-5. Adoptar un estándar no demuestra que esté implementado ni que el sistema sea conforme.
-6. Los ADR de cada proyecto registran las decisiones concretas y no deben copiarse mecánicamente desde esta biblioteca.
-7. Los estándares se mantienen independientes de cualquier repositorio consumidor y no contienen nombres, dominios, módulos, topologías o reglas exclusivas de un producto.
+1. No imponer tecnologías sin contexto ni evaluación de alternativas.
+2. Determinar aplicabilidad por alcance, amenaza, criticidad, regulación y capacidad operativa.
+3. Convertir requisitos adoptados en controles, tareas, pruebas y evidencias.
+4. Registrar explícitamente adopciones, adaptaciones, aplazamientos, no aplicabilidad, rechazos, pendientes y brechas.
+5. Una excepción debe tener dueño, justificación, mitigación, aprobación y vencimiento.
+6. Adoptar un estándar no demuestra implementación ni conformidad.
+7. No alterar decisiones ya aprobadas de un proyecto consumidor sin su proceso formal.
+8. Mantener esta biblioteca neutral e independiente de los repositorios que la utilicen.
 
-## Estructura
+## Áreas
 
 | Área | Contenido |
 |---|---|
-| 00-governance | Gobierno, ADR, ciclo de vida y excepciones. |
-| 01-software-architecture | Modularidad, dominios y límites de servicios. |
+| 00-governance | Gobernanza, ADR, ciclo de vida y excepciones. |
+| 01-software-architecture | Modularidad, dominios y descomposición. |
 | 02-data-management | Ownership, persistencia, migraciones, identificadores y multi-tenancy. |
-| 03-distributed-systems | Outbox, Inbox, Sagas, mensajería, idempotencia y trabajos. |
+| 03-distributed-systems | Outbox, Inbox, Sagas, mensajería, idempotencia y jobs. |
 | 04-apis-and-contracts | Contratos, versionado y errores. |
-| 05-application-security | Seguridad, validación, identidad, secretos, archivos y abuso. |
-| 06-infrastructure-security | Redes, cifrado de transporte y contenedores. |
-| 07-resilience-and-recovery | Timeouts, reintentos, alta disponibilidad y recuperación. |
-| 08-performance-and-capacity | Caché, pools y capacidad. |
+| 05-application-security | Seguridad de aplicaciones, identidad, validación, archivos y abuso. |
+| 06-infrastructure-security | Redes, cifrado, claves y contenedores. |
+| 07-resilience-and-recovery | Timeouts, reintentos, HA, backups y recuperación. |
+| 08-performance-and-capacity | Caché, pools, capacidad y carga. |
 | 09-observability | Logs, métricas, trazas y alertas. |
 | 10-privacy-and-data-protection | Privacidad y ciclo de vida de datos. |
-| 11-testing-and-quality | Estrategia de pruebas y calidad. |
+| 11-testing-and-quality | Estrategia de pruebas y puertas de calidad. |
 | 12-devsecops | SDLC, CI/CD y cadena de suministro. |
-| 13-project-adaptation | Perfil de proyecto y evaluación de conformidad. |
+| 13-project-adaptation | Perfil, adopción y conformidad. |
+| 14-specialized-engineering | Frontend, móvil, accesibilidad, IA/ML, IoT, cloud, SRE, FinOps y especialidades. |
 
-## Cómo empezar con un proyecto
+La taxonomía completa, incluidos temas todavía no cubiertos por un documento especializado, está en el [Catálogo maestro](./MASTER-STANDARDS-CATALOG.md). Una brecha debe declararse; no se presume cobertura.
 
-1. Completar la ficha de perfil del proyecto.
-2. Clasificar cada estándar como obligatorio, condicional o no aplicable, justificando la decisión.
-3. Identificar requisitos aplicables y asignar responsables.
-4. Registrar en ADR las elecciones tecnológicas y arquitectónicas concretas.
-5. Crear una matriz de trazabilidad requisito-control-prueba-evidencia.
-6. Revisar conformidad antes de hitos de lanzamiento y periódicamente durante la operación.
+## Inicio obligatorio de un proyecto
 
-## Lenguaje normativo
+1. Leer catálogo y protocolo.
+2. Completar el [perfil de proyecto](./13-project-adaptation/project-profile-template.md).
+3. Recorrer cada familia y estándar, sin saltos.
+4. Crear el [registro de adopción](./PROJECT-STANDARDS-ADOPTION-REGISTER.md).
+5. Formalizar decisiones materiales mediante ADR.
+6. Vincular requisitos con controles, pruebas y evidencias mediante la [matriz de conformidad](./13-project-adaptation/conformance-matrix-template.md).
+7. Revalidar al cambiar alcance, riesgos, regulación, tecnología o modelo operativo.
 
-Los términos **DEBE**, **NO DEBE**, **OBLIGATORIO**, **DEBERÍA**, **NO DEBERÍA** y **PUEDE** se interpretan conforme a la sección de lenguaje normativo de [GOVERNANCE.md](./GOVERNANCE.md). Un requisito solo es exigible cuando el estándar ha sido adoptado por el proyecto y resulta aplicable.
+## Navegación principal
 
-## Estado y límites
-
-La versión 0.1.0 es una primera biblioteca estructurada y redactada para revisión. No es una certificación, norma legal, auditoría externa ni garantía de seguridad. Las referencias a tecnologías son ejemplos sujetos a validación de versiones, soporte, licencias y amenazas actuales.
-
-## Navegación
-
-- [Matriz de trazabilidad de procedencia](./SOURCE-TRACEABILITY.md)
-
+- [Catálogo maestro de estándares](./MASTER-STANDARDS-CATALOG.md)
+- [Protocolo obligatorio para agentes](./AGENT-STANDARDS-ADOPTION-PROTOCOL.md)
+- [Registro de adopción por proyecto](./PROJECT-STANDARDS-ADOPTION-REGISTER.md)
 - [Gobernanza](./GOVERNANCE.md)
 - [Versionado](./VERSIONING.md)
-- [Registro de cambios](./CHANGELOG.md)
-- [Proceso de adopción](./13-project-adaptation/project-adoption-and-conformance.md)
-- [Plantilla de perfil de proyecto](./13-project-adaptation/project-profile-template.md)
-- [Plantilla de ADR](./00-governance/architecture-decision-record-standard.md)
-- [Plantilla de excepción](./00-governance/standard-exception-and-waiver-process.md)
-- [Matriz de conformidad](./13-project-adaptation/conformance-matrix-template.md)
+- [Changelog](./CHANGELOG.md)
+- [Trazabilidad de procedencia](./SOURCE-TRACEABILITY.md)
+- [Proceso de adopción y conformidad](./13-project-adaptation/project-adoption-and-conformance.md)
+- [Perfil de proyecto](./13-project-adaptation/project-profile-template.md)
+- [Plantilla ADR](./00-governance/architecture-decision-record-standard.md)
+- [Proceso de excepciones](./00-governance/standard-exception-and-waiver-process.md)
 
-## Procedencia
+## Lenguaje normativo y límites
 
-Esta biblioteca se elaboró a partir de patrones, riesgos y decisiones técnicas documentados en ADR y especificaciones de arquitectura de proyectos previos. Las referencias de procedencia son históricas: **no crean dependencias normativas** y ningún proyecto consumidor necesita incorporar esos documentos originales. Los estándares se han generalizado deliberadamente y deben revisarse de forma independiente.
+Los términos DEBE, NO DEBE, DEBERÍA, NO DEBERÍA y PUEDE se interpretan conforme a [GOVERNANCE.md](./GOVERNANCE.md). Un requisito es exigible cuando el estándar ha sido adoptado y resulta aplicable, sin perjuicio de obligaciones legales o contractuales no dispensables.
+
+Esta biblioteca no es certificación, norma legal ni garantía de seguridad. Las versiones, recomendaciones y referencias técnicas deben verificarse al adoptarlas. Los ADR de procedencia son referencias históricas y no dependencias normativas.
