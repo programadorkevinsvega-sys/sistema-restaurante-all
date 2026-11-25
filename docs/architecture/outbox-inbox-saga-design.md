@@ -151,7 +151,7 @@ CREATE TABLE <schema>.sagas (
 
 ## 6. Flujo de referencia completo
 
-```
+```text
 1. Módulo coordinador recibe solicitud
    └── Valida invariantes propios
    └── Crea Saga en estado `pending`

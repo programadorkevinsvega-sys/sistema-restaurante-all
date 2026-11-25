@@ -36,7 +36,7 @@ no inventa números universales.
 
 ## 3. Capas del presupuesto
 
-```
+```text
 max_connections (servidor)
 ├── Replicación física           (standby síncrono + asíncronos + wal_sender slots)
 ├── Backup y archivado           (backup_reader; solo durante ventanas de backup)
