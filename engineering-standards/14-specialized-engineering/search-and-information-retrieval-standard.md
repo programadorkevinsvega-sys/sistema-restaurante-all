@@ -43,3 +43,20 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Amenazas y escenarios de fallo específicos
+
+Evaluar filtración cross-tenant, documentos eliminados que permanecen indexados, index poisoning, consultas de extracción masiva, regex/query denial of service, ranking manipulable, fuga por snippets/autocomplete, exposición de datos sensibles en logs y divergencia entre ACL de origen e índice.
+
+## 9. Pruebas de aceptación mínimas
+
+- Verificar aislamiento por usuario/tenant en búsqueda, sugerencias, facetas, conteos y snippets.
+- Eliminar o revocar un registro y medir/validar propagación al índice y réplicas.
+- Ejecutar corpus de relevancia etiquetado y medir métricas adecuadas (p. ej. precision/recall/NDCG según caso).
+- Probar consultas adversariales, comodines, filtros extremos, payloads grandes y límites de paginación.
+- Reindexar con mapping/analyzer nuevo y comprobar consistencia, rollback y ausencia de downtime no aceptado.
+- Verificar minimización y retención de consultas, datos personales y snapshots.
+
+## 10. Operación y evidencias
+
+Conservar corpus de evaluación versionado, métricas de relevancia/frescura/lag, pruebas de autorización y borrado, mappings versionados, runbook de reindexación y alertas de consultas abusivas.
