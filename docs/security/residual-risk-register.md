@@ -3,7 +3,7 @@
 **Estado:** vigente
 **Versión:** 1.3
 **Fecha:** 2026-11-25
-**Fase:** 0.3
+**Fase:** 0.3/0.4
 **Fuente:** [Modelo de amenazas](./threat-model.md) y [Matriz de control](./threat-control-matrix.md)
 
 ---
