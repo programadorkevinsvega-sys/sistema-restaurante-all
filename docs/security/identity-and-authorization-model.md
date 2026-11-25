@@ -4,7 +4,7 @@
 **Versión:** 1.1
 **Fecha:** 2026-11-25
 **Fase:** 0.4
-**Autoridad:** ADR-0008, ADR-0011, ADR-0020, ADR-0021
+**Autoridad:** ADR-0008, ADR-0011, ADR-0020, ADR-0021, ADR-0023
 **Documentos relacionados:**
 
 - [Contrato de contexto autenticado](./authenticated-context-contract.md)
