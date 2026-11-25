@@ -2,6 +2,10 @@
 
 **Versión:** 0.1.0 | **Estado:** Draft
 
+## Objetivo
+
+Reducir la superficie de ataque del sistema operativo, las imágenes, los contenedores y los procesos en ejecución.
+
 ## Requisitos
 
 - Ejecutar procesos con usuario no privilegiado y filesystem de solo lectura cuando sea viable.
