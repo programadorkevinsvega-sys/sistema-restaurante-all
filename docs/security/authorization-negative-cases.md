@@ -10,6 +10,7 @@
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Matriz rol/atributo/acción/ámbito](./rbac-abac-matrix.md)
 - [Modelo de amenazas](./threat-model.md) — amenazas D-01, D-02, E-01, E-02, E-03, E-04
+- [Acceso privilegiado y soporte excepcional](./privileged-access-and-exceptional-support.md)
 
 ---
 
@@ -157,7 +158,30 @@ autorización del módulo propietario ni autenticación mTLS.
 
 ---
 
-## 12. Estado de implementación
+## 12. Casos de acceso privilegiado y soporte excepcional
+
+| ID | Escenario | Resultado esperado |
+|---|---|---|
+| NEG-SUP-01 | Operador intenta acceder sin concesión | Denegación; sin datos ni efecto |
+| NEG-SUP-02 | Solicitante intenta aprobar su propia solicitud | Denegación; concesión no activa |
+| NEG-SUP-03 | Concesión apunta al tenant A y recurso pertenece al tenant B | Denegación por módulo propietario |
+| NEG-SUP-04 | Operación no incluida en las acciones concedidas | Denegación; sin efecto |
+| NEG-SUP-05 | Recurso o módulo fuera del alcance aprobado | Denegación; sin datos |
+| NEG-SUP-06 | Concesión expirada o aún no activa | Denegación |
+| NEG-SUP-07 | Concesión revocada, aunque la sesión siga vigente | Denegación |
+| NEG-SUP-08 | `platform_support` intenta escribir o exportar masivamente | Denegación |
+| NEG-SUP-09 | Aserción PLATFORM válida sin concesión activa | Denegación |
+| NEG-SUP-10 | Estado de concesión no verificable | Fallo cerrado; sin efecto |
+| NEG-SUP-11 | Se amplía el alcance sin nueva aprobación | Denegación |
+| NEG-SUP-12 | Worker intenta reutilizar la concesión de un operador | Denegación; identidades no intercambiables |
+| NEG-SUP-13 | Concesión permanece utilizable después del límite de propagación de revocación | La prueba debe fallar; no se permite uso posterior al SLA aprobado |
+| NEG-SUP-14 | No puede confirmarse la auditoría obligatoria de una acción | No ejecutar la acción cuando el contrato exige auditoría confirmada |
+
+La definición completa de condiciones, estados y validaciones está en [Acceso privilegiado y soporte excepcional](./privileged-access-and-exceptional-support.md).
+
+---
+
+## 13. Estado de implementación
 
 Diseño aprobado. Los escenarios están especificados, pero las pruebas automatizadas no están escritas ni ejecutadas. Se implementan en paralelo
 con la subfase de cada módulo correspondiente, comenzando por IDENTITY (1.3) y
