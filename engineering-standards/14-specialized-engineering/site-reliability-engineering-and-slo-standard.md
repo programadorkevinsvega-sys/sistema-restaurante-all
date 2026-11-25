@@ -43,3 +43,20 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Amenazas y escenarios de fallo específicos
+
+Evaluar alertas sin acción, saturación de guardias, error budgets mal definidos, dependencia común, cascadas, degradación silenciosa, métricas sesgadas, falta de capacidad, runbooks obsoletos y objetivos imposibles de cumplir.
+
+## 9. Pruebas de aceptación mínimas
+
+- Validar que cada SLI tenga consulta reproducible, fuente, población y exclusiones explícitas.
+- Simular burn rate y verificar alertas/escalamiento en ventanas acordadas.
+- Ejecutar ejercicios de failover, restauración y respuesta a incidentes con medición de RTO/RPO.
+- Comprobar que el error budget desencadena la política documentada y que excepciones quedan auditadas.
+- Revisar alertas con on-call para comprobar accionabilidad, severidad y runbook.
+- Comparar SLO end-to-end con dependencias y medir impacto de degradación parcial.
+
+## 10. Operación y evidencias
+
+Conservar catálogo de servicios/owners, SLI/SLO versionados, error budget, resultados de ejercicios, postmortems, calendario de guardias, runbooks probados y acciones de reducción de toil.
