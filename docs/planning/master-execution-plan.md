@@ -348,6 +348,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 #### Tareas
 
 - Definir identificadores generados en dispositivo y persistencia local durable.
+- Definir el conjunto mínimo de datos locales: catálogo disponible, precios vigentes, variantes/excepciones de sucursal, inventario conocido, métodos de pago permitidos, configuración fiscal y rangos de numeración autorizados.
 - Definir cola de operaciones, orden, reintentos, sincronización e idempotencia.
 - Definir estados de sincronización y recuperación tras reinicio.
 - Definir resolución de conflictos con reglas explícitas y revisión humana donde no haya resolución determinista.
@@ -583,6 +584,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Reintentar con idempotencia tras reconexión y reinicio.
 - Limitar métodos de pago y operaciones fiscales offline a los autorizados.
 - Bloquear emisión fiscal si el dispositivo carece de rango vigente asignado.
+- Permitir abrir y cerrar caja offline conforme a las reglas locales y permisos vigentes disponibles.
 - Permitir crear clientes básicos offline cuando la política de operación lo autorice.
 - Permitir devoluciones offline únicamente bajo reglas, permisos y datos locales disponibles; dejar constancia de su estado pendiente cuando requiera conciliación.
 - Permitir impresión local de comprobantes no fiscales y documentos fiscales solo cuando exista numeración válida y vigente asignada.
