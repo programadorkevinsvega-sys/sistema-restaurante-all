@@ -43,3 +43,17 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## Amenazas y escenarios de fallo específicos
+Evaluar clonación de identidad, extracción de claves, firmware downgrade, cadena de suministro comprometida, dispositivo perdido, comandos remotos abusivos, reloj manipulado, conectividad intermitente y actualización masiva fallida.
+
+## Pruebas de aceptación mínimas
+- Probar provisión, rotación y revocación individual de identidad de dispositivo.
+- Rechazar firmware sin firma, alterado, downgrade no autorizado y versiones fuera de política.
+- Simular pérdida de conectividad durante actualización y recuperación segura.
+- Verificar aislamiento de telemetría/comandos por dispositivo y límites de frecuencia.
+- Ensayar inventario, cuarentena, revocación y respuesta a dispositivo robado/comprometido.
+- Medir comportamiento ante flota parcial, relojes incorrectos y almacenamiento agotado.
+
+## Operación y evidencias
+Conservar inventario de dispositivos/firmware, cadena de firma, historial de provisión/revocación, estado de parches, métricas de flota y runbooks de cuarentena/recuperación.
