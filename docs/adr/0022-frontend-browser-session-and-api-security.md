@@ -1,16 +1,16 @@
 # ADR-0022: Seguridad del frontend, navegador, sesiones y APIs de borde
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: aplicaciones web, navegador, recursos estáticos, cookies, sesiones web, BFF y exposición HTTP.
 - Complementa: ADR-0002, ADR-0007, ADR-0008, ADR-0011, ADR-0018, ADR-0019 (si se acepta), ADR-0020, ADR-0021 y ADR-0025.
-- Aprobación: pendiente de aprobación explícita.
+- Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
 
 El navegador está bajo control del usuario: puede modificar formularios, rutas, encabezados, almacenamiento y peticiones. XSS, CSRF, robo de sesión, scripts de terceros, CORS permisivo y contenido activo pueden comprometer cuentas/datos. Los BFF son procesos separados y no propietarios de datos; la autorización de dominio permanece en módulos propietarios.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Modelo de confianza
 
@@ -19,6 +19,7 @@ Todo dato del navegador es no confiable. La validación frontend mejora UX; el b
 ### 2. Sesiones y cookies
 
 Cuando la autenticación web utilice cookies:
+
 - usar Secure, HttpOnly y SameSite apropiado;
 - limitar Domain y Path; no compartir cookies entre subdominios sin necesidad;
 - rotar identificador de sesión tras autenticación y elevación de privilegios;
