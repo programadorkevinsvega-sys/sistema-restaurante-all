@@ -4,7 +4,7 @@
 **Versión:** 2.0
 **Fecha:** 2026-11-25
 **Fase:** 0.4
-**Autoridad:** ADR-0004, ADR-0007, ADR-0008, ADR-0021, ADR-0028
+**Autoridad:** ADR-0004, ADR-0007, ADR-0008, ADR-0021, ADR-0023
 **Documentos relacionados:**
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Diseño de aislamiento por módulo y proceso](./isolation-design.md)
