@@ -9,27 +9,41 @@ Aplica a infraestructura provisionada o configurada mediante código y pipelines
 ## 2. Principios
 
 - Definir requisitos por resultados, riesgo y contexto; no por preferencia tecnológica.
+
 - Mantener responsabilidades, límites de confianza y propiedad explícitos.
+
 - Aplicar mínimo privilegio, privacidad, accesibilidad y seguridad desde el diseño cuando correspondan.
+
 - Documentar decisiones, supuestos, dependencias y riesgos residuales.
 
 ## 3. Requisitos
 
 - Mantener infraestructura declarativa versionada, revisada y reproducible; evitar cambios manuales no registrados.
+
 - Separar módulos reutilizables, configuración por entorno y secretos; no incluir credenciales en state ni repositorios.
+
 - Proteger state, locking, cifrado, control de acceso, versionado y recuperación.
+
 - Revisar planes/diffs antes de aplicar; exigir aprobación para producción y recursos críticos.
+
 - Aplicar policy as code, validación, lint, pruebas y escaneo de configuración insegura.
+
 - Definir importación y reconciliación de recursos existentes; evitar drift silencioso.
+
 - Usar despliegues idempotentes y cambios pequeños con rollback/forward plan.
+
 - Probar módulos, entornos efímeros, destrucción segura y recuperación del control plane.
 
 ## 4. Antipatrones
 
 - Adoptar herramientas sin requisitos ni evaluación de operación.
+
 - Confiar en controles exclusivamente del cliente cuando el servidor debe hacer cumplir la regla.
+
 - Registrar datos sensibles innecesarios o exponerlos en logs/telemetría.
+
 - Ignorar fallos parciales, cambios de versión, límites de capacidad o dependencias externas.
+
 - Considerar la existencia de documentación como prueba de implementación.
 
 ## 5. Verificación y evidencia
@@ -45,14 +59,21 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
 
 ## Amenazas y escenarios de fallo específicos
+
 Evaluar compromiso del pipeline, state expuesto, drift no detectado, destrucción accidental, permisos excesivos, módulo malicioso, plan alterado entre aprobación y aplicación, y credenciales persistentes.
 
 ## Pruebas de aceptación mínimas
+
 - Verificar control de acceso, cifrado, locking, versionado y restauración del state.
+
 - Confirmar que el plan revisado es el mismo artefacto/digest aplicado y que la aprobación queda auditada.
+
 - Probar policy-as-code ante exposición pública, cifrado ausente, IAM excesivo y recursos prohibidos.
+
 - Ejecutar pruebas de módulos, drift detection, importación, idempotencia y destrucción de entornos efímeros.
+
 - Simular fallo parcial y rollback/forward recovery sin destruir recursos compartidos.
 
 ## Operación y evidencias
+
 Conservar repositorio y módulos versionados, planes/aplicaciones, approvals, logs de pipeline, inventario de state, detección de drift, políticas y reportes de escaneo.
