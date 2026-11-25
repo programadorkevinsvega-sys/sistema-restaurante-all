@@ -51,20 +51,24 @@ Antes de crear o modificar README, documentación técnica, ejemplos, enlaces o 
 
 ### 2.2 ADRs — siempre
 
-Lee el índice y el contenido de todos los ADR aceptados aplicables. Como mínimo, revisa los nueve ADRs existentes:
+Lee el índice `docs/adr/README.md` y el contenido completo de todos los ADR con estado **Accepted** aplicables a la tarea. A fecha de esta actualización existen ADR-0001 a ADR-0017; el índice es la fuente de verdad del inventario y debe consultarse en cada tarea para detectar nuevos ADR, cambios de estado o sustituciones parciales. No uses una cantidad fija como límite de lectura.
 
-- [ADR-0001 — PostgreSQL, ownership y migraciones](docs/adr/0001-postgres-module-ownership-and-migrations.md).
-- [ADR-0002 — OpenAPI, Protobuf y clientes generados](docs/adr/0002-openapi-protobuf-generated-clients.md).
-- [ADR-0003 — Stateless, Outbox/Inbox y jobs](docs/adr/0003-stateless-outbox-inbox-and-jobs.md).
-- [ADR-0004 — W3C Trace Context](docs/adr/0004-w3c-trace-context.md).
-- [ADR-0005 — Contratos gRPC desde el inicio](docs/adr/0005-grpc-contracts-from-day-one.md), teniendo en cuenta las sustituciones parciales posteriores.
-- [ADR-0006 — AI transversal sin schema propio](docs/adr/0006-ai-cross-cutting-capability-no-owned-schema.md).
-- [ADR-0007 — Cuatro backends y comunicación](docs/adr/0007-four-independent-backends-and-communication.md).
-- [ADR-0008 — Propiedad de módulos entre procesos](docs/adr/0008-module-ownership-across-four-processes.md).
-- [ADR-0009 — Límites de crates y dependencias](docs/adr/0009-crate-boundaries-and-dependencies.md).
+Como mínimo, comprueba los siguientes ámbitos y sus ADR vigentes:
 
-Comprueba el estado actual de cada ADR en su archivo y en el índice. Un ADR Accepted es vinculante. Si un ADR posterior complementa o sustituye parcialmente a uno anterior, aplica el alcance explícito de esa sustitución; no descartes el resto del ADR anterior. Revisa también los ADR Proposed aplicables a la tarea como propuestas, sin tratarlos como decisiones aceptadas. Para autenticación, credenciales, MFA, sesiones o recuperación, revisa [ADR-0011](docs/adr/0011-password-hashing-and-authentication-security.md) y su [especificación técnica](docs/security/password-and-authentication.md); no implementes ni cambies SQL por el solo hecho de que esos documentos existan.
+- ADR-0001 a ADR-0006: ownership PostgreSQL y migraciones, contratos HTTP/gRPC, Outbox/Inbox y jobs, W3C Trace Context, contratos Protobuf y capacidad transversal AI.
+- ADR-0007 y ADR-0008: cuatro procesos independientes, comunicación y distribución de módulos.
+- ADR-0009: límites de crates, contratos públicos y dependencias.
+- ADR-0010: pooling PostgreSQL y presupuesto de conexiones, incluidos pools separados de lectura/escritura definidos por su actualización vigente.
+- ADR-0011: protección de contraseñas y controles de autenticación.
+- ADR-0012: UUIDv7 global y PostgreSQL HA con réplicas de lectura.
+- ADR-0013: consistencia distribuida, Outbox/Inbox y Sagas.
+- ADR-0014: baja de tenants y conservación de datos de clientes.
+- ADR-0015: observabilidad integral.
+- ADR-0016: Redis Cluster, TLS y caché distribuida.
+- ADR-0017: NATS Core y JetStream en clúster de alta disponibilidad.
 
+Comprueba el estado actual de cada ADR en su archivo y en el índice. Un ADR Accepted es vinculante. Si un ADR posterior complementa o sustituye parcialmente a uno anterior, aplica únicamente el alcance explícito de esa sustitución; no descartes el resto del ADR anterior. Los ADR Proposed requieren aprobación explícita y no se tratan como decisiones aceptadas. Para autenticación, credenciales, MFA, sesiones o recuperación, revisa también [la especificación técnica de seguridad](docs/security/password-and-authentication.md). La aceptación documental no demuestra que la implementación, infraestructura, configuración o migraciones existan.
+ 
 ### 2.3 Requisitos y documentación específica de la tarea
 
 Después de la lectura general:
