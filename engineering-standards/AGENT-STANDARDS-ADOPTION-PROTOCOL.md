@@ -1,148 +1,84 @@
 # Protocolo obligatorio de consulta y adopción de estándares para agentes
 
-**Versión:** 0.2.0 | **Estado:** Draft | **Audiencia:** agentes de IA, asistentes de ingeniería y automatizaciones
+**Versión:** 0.3.0 | **Estado:** Draft | **Audiencia:** agentes de IA, asistentes de ingeniería y automatizaciones
 
 ## 1. Propósito
+Impedir que un agente comience a diseñar o implementar un sistema sin descubrir, presentar y registrar los estándares relevantes de la biblioteca. El agente facilita decisiones; no es propietario silencioso de las decisiones del producto.
 
-Impedir que un agente comience a diseñar o implementar un sistema sin descubrir, presentar y registrar los estándares relevantes de la biblioteca. El agente debe actuar como facilitador de decisiones, no como propietario silencioso de las decisiones del producto.
-
-## 2. Regla de entrada obligatoria
+## 2. Puerta de entrada obligatoria
 
 Antes de proponer arquitectura definitiva, crear código funcional, generar infraestructura, modificar esquemas o iniciar implementación, el agente DEBE:
+1. Identificar versión, tag/commit y fecha de la biblioteca.
+2. Leer README, catálogo, este protocolo, gobernanza e [inventario exhaustivo](./STANDARDS-COVERAGE-AND-TOPIC-REGISTER.md).
+3. Recorrer todos los documentos normativos y temas de descubrimiento enumerados en el inventario fijado. La versión 0.3.0 contiene 66 documentos normativos y 92 temas (158 elementos); otras versiones deben usar el conteo real.
+4. Leer completos los documentos aplicables y relacionados con el perfil, no limitarse a títulos o resúmenes.
+5. Revisar perfil del proyecto, decisiones aceptadas, requisitos, restricciones y riesgos ya documentados.
+6. Crear una fila por cada ID STD-* y TOP-*, sin omisiones ni duplicados.
+7. Separar aplicabilidad de estado de adopción y presentar al propietario las decisiones materiales.
+8. Registrar respuesta, responsable, razón, evidencia, fecha y ADR/acción relacionada.
+9. Identificar brechas documentales y proponer investigación o nuevos estándares.
+10. Confirmar qué decisiones bloquean diseño o implementación.
 
-1. Identificar la versión de biblioteca disponible.
-2. Leer el catálogo maestro y el protocolo.
-3. Recorrer todos los índices de áreas y sus estándares.
-4. Revisar el perfil del proyecto y las decisiones ya tomadas.
-5. Construir una lista de temas aplicables, condicionales y brechas.
-6. Presentar al propietario las decisiones necesarias.
-7. Registrar el resultado en el registro de adopción.
-8. Confirmar qué estándares se adoptan y cuáles requieren investigación o ADR.
-
-La consulta no debe convertirse en un interrogatorio interminable: agrupar temas relacionados, explicar consecuencias y preguntar por bloques comprensibles. Sin embargo, no se permite omitir una familia del catálogo por conveniencia.
+La consulta puede agrupar preguntas, pero no puede agrupar ni borrar filas del registro. No se permite muestreo de familias.
 
 ## 3. No asumir ni inventar decisiones
 
-El agente NO DEBE:
-- asumir que una tecnología se adopta porque aparece en un ejemplo;
-- convertir una recomendación en requisito obligatorio sin aprobación;
-- declarar no aplicable un estándar sin fundamento;
-- interpretar silencio como consentimiento;
-- inventar restricciones, presupuesto, escala, jurisdicción o SLO;
-- cambiar decisiones previas aceptadas sin proceso formal;
-- empezar implementación de una decisión arquitectónica material que siga pendiente;
-- confundir un ADR aprobado con una capacidad ya implementada;
-- presentar una brecha documental como si estuviera cubierta.
+El agente NO DEBE asumir tecnologías por ejemplos, convertir recomendaciones en requisitos sin aprobación, declarar no aplicabilidad sin fundamento, interpretar silencio como consentimiento, inventar restricciones, cambiar decisiones aceptadas sin proceso, iniciar implementación material pendiente, confundir ADR aprobado con capacidad implementada, presentar brechas como cubiertas ni declarar conformidad por existir documentación/código/configuración.
 
-El agente DEBE identificar conflictos entre decisiones existentes, estándares y requisitos; explicar precedencia documental y solicitar resolución cuando no exista regla suficiente.
+El agente DEBE identificar conflictos entre decisiones, estándares y requisitos; explicar precedencia y solicitar resolución.
 
 ## 4. Descubrimiento del proyecto
 
-Como mínimo, recopilar o confirmar:
-- propósito, usuarios, actores y procesos críticos;
-- tipo de producto y dominios funcionales;
-- interfaces: web, móvil, API, escritorio, dispositivos o integraciones;
-- modelo de despliegue y operación;
-- exposición pública, límites de confianza y dependencias externas;
-- clases de datos, sensibilidad, propiedad, residencia y retención;
-- países, jurisdicciones y obligaciones aplicables;
-- criticidad, impacto de indisponibilidad y pérdida/corrupción de datos;
-- concurrencia, volumen, crecimiento, latencia y disponibilidad esperados;
-- conectividad, offline, tiempo real y requisitos de sincronización;
-- tecnologías existentes, experiencia del equipo y restricciones de plataforma;
-- presupuesto, plazo, equipo operativo y tolerancia a complejidad;
-- objetivos de recuperación, soporte y ciclo de vida.
+Confirmar propósito, usuarios, dominios, interfaces, despliegue, exposición, límites de confianza, dependencias, clases de datos, sensibilidad, propiedad, residencia, retención, jurisdicciones, criticidad, impactos, concurrencia, volumen, latencia, disponibilidad, conectividad, offline, tiempo real, tecnologías, capacidades del equipo, presupuesto, plazo, RTO/RPO, soporte y ciclo de vida.
 
-Si un dato no se conoce, registrarlo como desconocido y explicar qué decisión depende de él.
+Si un dato se desconoce, registrarlo como desconocido y explicar qué decisiones dependen de él. La falta de información no equivale a No aplica.
 
-## 5. Recorrido de catálogo
+## 5. Recorrido e inventario
 
-El agente debe presentar las familias del [catálogo maestro](./MASTER-STANDARDS-CATALOG.md) en su totalidad. Para cada estándar:
-- explicar en lenguaje claro qué riesgo o necesidad cubre;
-- indicar escenarios en los que aplica;
-- señalar costo, complejidad y dependencias;
-- mostrar alternativas cuando existan;
-- proponer una clasificación preliminar razonada;
-- pedir confirmación cuando implique una decisión de producto, costo, riesgo, privacidad o arquitectura.
+Presentar todas las familias A–J y todas las filas del inventario. Por cada estándar y tema:
+- explicar riesgo/necesidad, alcance y disparadores;
+- indicar requisitos y escenarios de aplicación;
+- señalar costos, complejidad, dependencias y alternativas;
+- verificar si existe cobertura dedicada o solo transversal/parcial;
+- proponer clasificación preliminar con fundamento;
+- pedir confirmación en decisiones materiales de producto, costo, riesgo, privacidad o arquitectura.
 
-Para catálogos extensos se puede realizar el recorrido por etapas, pero el registro debe mostrar todas las filas y estados. La interfaz conversacional puede agrupar preguntas, no borrar elementos.
+El inventario es la lista de control canónica. Cada ID debe tener fila individual aunque el propietario responda por bloques.
 
-## 6. Clasificación de cada estándar
+## 6. Clasificación en dos dimensiones
 
-Usar solo los estados definidos en el catálogo:
-- Adoptado.
-- Adoptado con adaptación.
-- Aplazado.
-- No aplicable.
-- Rechazado.
-- Pendiente de decisión.
-- Brecha de biblioteca.
+**Aplicabilidad:** Aplica, Condicional o No aplica. Condicional exige disparador y evidencia. No aplica exige justificación y disparador de reevaluación.
 
-Toda clasificación debe incluir motivo, responsable, versión, fecha, evidencia o acción requerida. Aplazado exige fecha objetivo, mitigación y riesgo temporal. No aplicable exige condición de reevaluación. Rechazado exige decisión explícita y análisis de consecuencias.
+**Estado de adopción:** Adoptado, Adoptado con adaptación, Aplazado, No aplicable, Rechazado, Pendiente de decisión o Brecha de biblioteca.
+
+No aplicable como estado solo es válido cuando aplicabilidad = No aplica. Rechazado se usa cuando aplica y el propietario decide no adoptarlo. Aplazado requiere fecha objetivo, responsable, riesgo temporal y controles compensatorios. Brecha requiere acción de investigación/documentación.
+
+Cada fila incluye ID, versión, aplicabilidad, estado, justificación, responsable, fecha, evidencia/ADR y revisión siguiente. No se aceptan vacíos, omitidos ni valores por defecto.
 
 ## 7. Preguntas al propietario
 
-El agente debe preguntar, según el contexto:
-- ¿Este control o capacidad es necesario para el alcance y nivel de riesgo?
-- ¿Qué nivel de protección/disponibilidad/consistencia se necesita?
-- ¿Qué alternativa prefiere el propietario, considerando costos y operación?
-- ¿Qué restricciones o proveedores ya están comprometidos?
-- ¿Se acepta el riesgo residual de aplazar o rechazar el estándar?
+Preguntar según contexto sobre necesidad y riesgo, nivel de protección/disponibilidad/consistencia, alternativas y costos, restricciones/proveedores y aceptación de riesgo residual. Mostrar decisiones previas; no repetir salvo cambio o contradicción. El silencio nunca es aprobación.
 
-No preguntar repetidamente decisiones ya registradas. Mostrar la decisión previa y pedir confirmación solo si cambió el contexto o hay contradicción.
+## 8. Artefactos requeridos
 
-## 8. Decisiones y artefactos
-
-Después de la selección, el agente debe producir:
-- perfil del proyecto;
-- registro de adopción completo;
-- matriz de conformidad;
-- lista de brechas de biblioteca;
-- ADR para decisiones técnicas materiales;
-- mapa de requisitos, responsables, tareas, pruebas y evidencias;
-- lista de decisiones bloqueantes y supuestos explícitos.
-
-El agente no debe crear un ADR para cada requisito trivial. Los ADR registran decisiones con alternativas y consecuencias; los requisitos se gestionan en especificaciones y matrices.
+Producir perfil, registro completo con todos los IDs, matriz de conformidad requisito-control-prueba-evidencia, lista de brechas con owner y fecha, ADR para decisiones materiales, mapa de requisitos/responsables/tareas/pruebas/evidencias y lista de decisiones bloqueantes/supuestos/riesgos. No crear ADR para cada requisito trivial.
 
 ## 9. Puertas antes de implementación
 
-No comenzar la implementación de una capacidad cuando:
-- su requisito de seguridad o privacidad crítico está sin resolver;
-- existe contradicción arquitectónica sin decisión;
-- la tecnología elegida no está aprobada;
-- faltan criterios de aceptación verificables;
-- se desconoce un requisito legal material para el tratamiento previsto;
-- hay un riesgo crítico sin dueño ni mitigación.
+No iniciar implementación de una capacidad cuando su requisito crítico de seguridad/privacidad no esté resuelto, exista contradicción arquitectónica sin decisión, tecnología material no aprobada, falten criterios verificables, se desconozca requisito legal material o exista riesgo crítico sin dueño/mitigación. Se permite investigación o prototipos aislados si se delimitan y no simulan aprobación.
 
-El agente puede avanzar en investigación, prototipos aislados o documentación no comprometida si delimita claramente el alcance y no simula una aprobación.
+## 10. Durante construcción y operación
 
-## 10. Durante la construcción
-
-Para cada estándar adoptado:
-- vincular requisitos a componentes y tareas;
-- añadir pruebas automatizadas o controles manuales apropiados;
-- conservar evidencia y resultados;
-- revisar desviaciones y excepciones;
-- actualizar el registro cuando cambie el alcance;
-- no marcar como conforme solo porque existe código o documentación.
+Vincular cada requisito adoptado a componente/tarea, control, prueba y evidencia. Conservar resultados reproducibles; revisar excepciones, expiraciones y desviaciones; actualizar registro ante cambios. Verificar en diseño, CI, preproducción, producción y operación según riesgo. No marcar conforme solo por intención.
 
 ## 11. Reevaluación obligatoria
 
-Reabrir el análisis cuando cambien dominios, datos, jurisdicción, exposición, arquitectura, proveedor, volumen, criticidad, conectividad, amenazas, regulación o modelo de operación; también después de incidentes relevantes.
+Reabrir análisis ante cambios de dominio, datos, jurisdicción, exposición, arquitectura, proveedor, volumen, criticidad, conectividad, amenazas, regulación, equipo, operación o incidentes. Comparar versiones del inventario y procesar cada ID nuevo, modificado o retirado.
 
-## 12. Salida mínima del agente
+## 12. Salida mínima antes de implementar
 
-Antes de implementar, presentar un resumen que incluya:
-1. alcance y perfil;
-2. estándares adoptados;
-3. estándares adaptados;
-4. aplazados y riesgos temporales;
-5. no aplicables/rechazados y razones;
-6. pendientes que bloquean;
-7. brechas de biblioteca;
-8. ADR requeridos;
-9. pruebas y evidencias esperadas.
+Presentar alcance/perfil; inventario y cobertura revisados; adoptados; adaptados; aplazados y riesgos; no aplicables/rechazados con razones; pendientes bloqueantes; brechas; ADR; controles, pruebas y evidencias.
 
 ## 13. Regla final
 
-**Ningún estándar puede desaparecer del análisis sin un estado y una razón.** La decisión final corresponde al propietario del proyecto, dentro de las obligaciones legales, contractuales y de seguridad que no puedan ser dispensadas por preferencia.
+**Ningún estándar ni tema puede desaparecer del análisis sin ID, aplicabilidad, estado y razón.** La decisión corresponde al propietario dentro de obligaciones legales, contractuales y de seguridad no dispensables.
