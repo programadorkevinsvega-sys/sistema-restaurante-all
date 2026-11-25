@@ -1,16 +1,16 @@
 # ADR-0021: Autorización, RBAC/ABAC y aislamiento multi-tenant
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: autorización de usuarios y servicios sobre operaciones y recursos de plataforma y negocio.
 - Complementa: ADR-0007, ADR-0008, ADR-0009, ADR-0011, ADR-0014, ADR-0015, ADR-0016 y ADR-0020.
-- Aprobación: pendiente de aprobación explícita.
+- Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
 
 Autenticación identifica al actor; autorización decide qué puede hacer. Un usuario legítimo puede intentar acceder a recursos ajenos, operar fuera de su sucursal, elevar privilegios o reutilizar permisos revocados. Conocer un UUID o URL no concede acceso. Los controles deben cubrir HTTP, gRPC, workers, exportaciones, descargas, WebSockets e integraciones.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Autorizar en el backend propietario
 
@@ -81,4 +81,4 @@ Inventariar acciones/recursos; definir contratos de contexto; modelar roles y at
 
 ## Estado de implementación
 
-Proposed. No implementa RBAC/ABAC, middleware, políticas, permisos, tablas, pruebas ni infraestructura.
+Accepted. La decisión está aprobada; no implementa RBAC/ABAC, middleware, políticas, permisos, tablas, pruebas ni infraestructura.
