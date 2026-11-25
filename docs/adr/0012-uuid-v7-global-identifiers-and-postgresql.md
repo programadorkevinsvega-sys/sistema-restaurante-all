@@ -4,7 +4,7 @@
 - Historial: Proposed → Accepted
 - Propuesto: 2026-11-24
 - Aceptado: 2026-11-24
-- Aprobación: propietario del producto, confirmada explícitamente al aprobar y solicitar la fusión del PR #11.
+- Aprobación: decisión original aprobada por el propietario del producto; ampliación de PostgreSQL HA, clúster y réplicas de lectura solicitada y aprobada explícitamente el 2026-11-24.
 - Complementa: ADR-0001, ADR-0007, ADR-0008 y ADR-0009.
 - Ámbito: todos los módulos y procesos de Restaurant OS.
 
