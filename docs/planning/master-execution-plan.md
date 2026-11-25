@@ -4,9 +4,9 @@
 **Versión:** 1.0  
 **Fecha:** 2026-11-25  
 **Ámbito:** fases funcionales 0–10 y fase final de privacidad, cumplimiento legal y lanzamiento  
-**Fuente funcional:** [ROADMAP.md](../ROADMAP.md)  
-**Propiedad de dominios:** [requisitos.md](../requisitos.md)  
-**Orden de lotes funcionales:** [promt.md](../promt.md)
+**Fuente funcional:** [ROADMAP.md](../../ROADMAP.md)  
+**Propiedad de dominios:** [requisitos.md](../../requisitos.md)  
+**Orden de lotes funcionales:** [promt.md](../../promt.md)
 
 ---
 
@@ -24,9 +24,9 @@ Las tres vistas se relacionan, pero no son numeraciones intercambiables. Los lot
 
 ### 1.1 Jerarquía documental obligatoria
 
-- [requisitos.md](../requisitos.md) es la fuente de verdad de requisitos, ownership y ubicación física de módulos.
-- [ROADMAP.md](../ROADMAP.md) conserva la visión, fases funcionales, lotes y plan maestro.
-- [promt.md](../promt.md) define el orden de trabajo por lotes.
+- [requisitos.md](../../requisitos.md) es la fuente de verdad de requisitos, ownership y ubicación física de módulos.
+- [ROADMAP.md](../../ROADMAP.md) conserva la visión, fases funcionales, lotes y plan maestro.
+- [promt.md](../../promt.md) define el orden de trabajo por lotes.
 - Los ADR Accepted son decisiones arquitectónicas obligatorias.
 - Las especificaciones técnicas desarrollan esas decisiones sin modificarlas.
 - Este plan ordena el trabajo y convierte las decisiones en entregables y pruebas; no puede cambiar ownership, contratos ni decisiones aceptadas.
@@ -232,7 +232,7 @@ No todas las subfases necesitan todos los tipos; cada una identifica expresament
 - Mantener autorización y validación de estado como controles separados.
 
 **Dependencias:** 0.1, 0.3 y 0.4.  
-**Documentos/ADR:** ADR-0019 Accepted; ADR-0002, 0009, 0011, 0012, 0015, 0018, 0020, 0021, 0022, 0025 y 0027; input-validation-and-data-contracts.md.  
+**Documentos/ADR:** ADR-0019 Accepted; ADR-0002, 0009, 0011, 0012, 0015, 0018, 0020, 0021, 0022, 0025 y 0027; ../architecture/input-validation-and-data-contracts.md.  
 **Entregables**
 - Catálogo de reglas y formatos.
 - Plantilla de contrato de entrada por operación.
@@ -1474,24 +1474,24 @@ Las estimaciones temporales del ROADMAP.md son orientativas y deben recalcularse
 
 ## 20. Documentos de referencia
 
-- [ROADMAP.md](../ROADMAP.md)
-- [requisitos.md](../requisitos.md)
-- [promt.md](../promt.md)
-- [Índice de ADR](../docs/adr/README.md)
-- [Índice de arquitectura](../docs/architecture/README.md)
-- [Estándar general de ingeniería](../docs/architecture/engineering-standard.md)
-- [Arquitectura de Restaurant OS](../docs/architecture/restaurant-os-architecture.md)
-- [Diseño de crates y dependencias](../docs/architecture/crate-architecture.md)
-- [Reglas de implementación](../docs/engineering/implementation-rules.md)
-- [Calidad y seguridad documental](../docs/engineering/documentation-quality-and-security-standard.md)
-- [Validación de entradas y contratos de datos](../docs/architecture/input-validation-and-data-contracts.md)
-- [Operación Outbox/Inbox](../docs/architecture/transactional-outbox-inbox-operations.md)
-- [Consistencia distribuida y Sagas](../docs/architecture/distributed-transaction-consistency.md)
-- [PostgreSQL HA y réplicas](../docs/architecture/postgresql-ha-and-read-replicas.md)
-- [Estrategia UUIDv7](../docs/architecture/identifier-strategy.md)
-- [Observabilidad](../docs/architecture/observability-strategy.md)
-- [Redis Cluster y caché](../docs/architecture/redis-cache-operations.md)
-- [NATS Core y JetStream](../docs/architecture/nats-core-jetstream-cluster.md)
+- [ROADMAP.md](../../ROADMAP.md)
+- [requisitos.md](../../requisitos.md)
+- [promt.md](../../promt.md)
+- [Índice de ADR](../adr/README.md)
+- [Índice de arquitectura](../architecture/README.md)
+- [Estándar general de ingeniería](../architecture/engineering-standard.md)
+- [Arquitectura de Restaurant OS](../architecture/restaurant-os-architecture.md)
+- [Diseño de crates y dependencias](../architecture/crate-architecture.md)
+- [Reglas de implementación](../engineering/implementation-rules.md)
+- [Calidad y seguridad documental](../engineering/documentation-quality-and-security-standard.md)
+- [Validación de entradas y contratos de datos](../architecture/../architecture/input-validation-and-data-contracts.md)
+- [Operación Outbox/Inbox](../architecture/transactional-outbox-inbox-operations.md)
+- [Consistencia distribuida y Sagas](../architecture/distributed-transaction-consistency.md)
+- [PostgreSQL HA y réplicas](../architecture/postgresql-ha-and-read-replicas.md)
+- [Estrategia UUIDv7](../architecture/identifier-strategy.md)
+- [Observabilidad](../architecture/observability-strategy.md)
+- [Redis Cluster y caché](../architecture/redis-cache-operations.md)
+- [NATS Core y JetStream](../architecture/nats-core-jetstream-cluster.md)
 
 ---
 
