@@ -14,7 +14,7 @@ La versión de la biblioteca no reemplaza la versión individual de cada estánd
 
 ## 2. Inventario e identificadores
 
-El inventario exhaustivo asigna IDs estables STD-* a documentos normativos y TOP-* a temas de descubrimiento. Los IDs no dependen del título ni de la ruta y nunca se reutilizan. Renombrar o mover un documento no cambia su ID. Un estándar retirado conserva su ID y se marca como Retired; un tema retirado conserva trazabilidad.
+El inventario exhaustivo asigna IDs estables con prefijo STD para documentos normativos y TOP para temas de descubrimiento. Los IDs no dependen del título ni de la ruta y nunca se reutilizan. Renombrar o mover un documento no cambia su ID. Un estándar retirado conserva su ID y se marca como Retired; un tema retirado conserva trazabilidad.
 
 Cada proyecto registra versión de biblioteca, versión/commit del inventario y fecha de adopción. Al actualizar, compara IDs nuevos, modificados, sustituidos y retirados; no debe asumir que dos versiones son equivalentes.
 
