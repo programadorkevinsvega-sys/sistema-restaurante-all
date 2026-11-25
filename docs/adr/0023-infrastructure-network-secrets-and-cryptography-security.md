@@ -1,16 +1,16 @@
 # ADR-0023: Seguridad de infraestructura, redes, secretos y criptografía
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: redes, contenedores, ejecución, secretos, certificados, cifrado, PostgreSQL, Redis, NATS, backups y almacenamiento.
 - Complementa: ADR-0007, ADR-0010, ADR-0012, ADR-0015, ADR-0016, ADR-0017, ADR-0018 y ADR-0020.
-- Aprobación: pendiente de aprobación explícita.
+- Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
 
 La seguridad depende también del entorno de los cuatro procesos. Un servicio de datos expuesto, contenedor privilegiado, secreto reutilizado, clave sin rotación o backup accesible puede anular controles de aplicación. Los ADR existentes definen topologías y garantías específicas; este ADR establece postura transversal sin reemplazarlas.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Redes y exposición
 
