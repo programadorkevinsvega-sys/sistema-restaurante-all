@@ -43,3 +43,20 @@ Las tecnologías, versiones, topologías, proveedores, umbrales y SLO se selecci
 ## 7. Revisión
 
 Revisar ante cambios de alcance, amenazas, plataforma, proveedor, regulación, incidentes o evolución significativa del estándar.
+
+## 8. Riesgos específicos y controles de distribución
+
+Evaluar obligaciones copyleft, atribución, redistribución de binarios, modificaciones, linking, SaaS/network use, patentes, marcas, fuentes de datos, derechos de imagen, modelos y restricciones territoriales. No resolver interpretaciones legales complejas mediante inferencia del agente.
+
+## 9. Pruebas de aceptación mínimas
+
+- Generar inventario/SBOM por artefacto distribuible y reconciliarlo con lockfiles.
+- Bloquear releases con componentes sin licencia identificada o política de aprobación incumplida.
+- Verificar avisos, NOTICE, atribuciones, fuentes y ofertas de código cuando la licencia lo exija.
+- Probar detección de dependencia nueva/transitiva y cambio de licencia o versión.
+- Verificar procedencia y términos de datasets, modelos, fuentes, imágenes, SDK y contenido incorporado.
+- Registrar revisión legal para licencias incompatibles, ambiguas o de alto impacto.
+
+## 10. Operación y evidencias
+
+Conservar SBOM por release, reportes de escaneo, decisiones de aprobación, notices publicados, excepciones, procedencia de componentes y revisión legal documentada.
