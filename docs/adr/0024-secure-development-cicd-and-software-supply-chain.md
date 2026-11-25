@@ -1,16 +1,16 @@
 # ADR-0024: Desarrollo seguro, CI/CD y cadena de suministro de software
 
-- Estado: **Proposed**
+- Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: repositorios, revisión, dependencias, workflows, construcción, artefactos, publicación y despliegue.
 - Complementa: ADR-0009, ADR-0015, ADR-0020 y ADR-0023.
-- Aprobación: pendiente de aprobación explícita.
+- Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
 
 Dependencias transitivas, acciones de CI, imágenes base, herramientas, credenciales de pipeline y artefactos pueden introducir vulnerabilidades o código malicioso. Un workflow con permisos excesivos puede convertir una contribución no confiable en acceso a secretos o producción. Se requiere trazabilidad desde commit hasta despliegue.
 
-## Decisión propuesta
+## Decisión
 
 ### 1. Repositorios y ramas
 
