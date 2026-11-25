@@ -1,7 +1,7 @@
 # Registro de revisión de escenarios de amenazas (tabletop)
 
 **Fase:** 0.3 — Modelo de amenazas y requisitos de seguridad  
-**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03, TT-04, TT-05, TT-06 y TT-07 revisados y aprobados  
+**Estado:** walkthrough documental en curso; TT-01, TT-02, TT-03, TT-04, TT-05, TT-06, TT-07 y TT-08 revisados y aprobados  
 **Versión:** 1.0  
 **Fecha:** 2026-11-25  
 **Alcance:** ejercicio de escritorio basado en arquitectura y ADR. No es una prueba de penetración, simulación sobre infraestructura, auditoría independiente ni evidencia de controles desplegados.  
@@ -116,7 +116,7 @@ Para cada escenario, el revisor debe responder y registrar:
 7. ¿Qué condición bloquea la reanudación?
 8. ¿Qué riesgo residual y tarea del plan se actualizan?
 
-**Resultado actual:** TT-01, TT-02, TT-03, TT-04, TT-05, TT-06 y TT-07 cuentan con decisiones operativas revisadas y aprobadas por el propietario. TT-08 sigue pendiente de walkthrough. No se declara tabletop completo ni prueba técnica superada.
+**Resultado actual:** TT-01, TT-02, TT-03, TT-04, TT-05, TT-06, TT-07 y TT-08 cuentan con decisiones operativas revisadas y aprobadas por el propietario. Los ocho walkthroughs están completos. No se declara tabletop completo ni prueba técnica superada.
 
 ### Registro de ejecución
 
@@ -190,11 +190,22 @@ Para cada escenario, el revisor debe responder y registrar:
 - **Resultado:** respuesta operativa aprobada para el escenario. La política de IA, el catálogo y permisos de herramientas, las confirmaciones, la minimización de contexto y las pruebas deben definirse e implementarse antes de integrar IA.
 - **Acciones relacionadas:** TA-06 permanece pendiente hasta definir política de proveedores IA; TA-07 permanece pendiente para incorporar pruebas negativas y validaciones automatizadas a CI.
 
+
+#### TT-08 — Abuso de API y saturación de sincronización
+
+- **Estado del walkthrough:** revisado y diez medidas aprobadas por el propietario.
+- **Fecha de revisión:** 2026-11-25.
+- **Decisiones aprobadas:** aplicar rate limiting por usuario, tenant, dispositivo, IP y endpoint según el riesgo; establecer cuotas de consumo por tenant; limitar tamaño de payloads, elementos por lote, profundidad de estructuras y parámetros de consulta; proteger PostgreSQL con pools y límites de conexiones, timeouts, consultas optimizadas y concurrencia controlada; proteger Redis con límites de conexiones, memoria y operaciones costosas, y controlar el tamaño de claves; aplicar backpressure para ralentizar o rechazar temporalmente operaciones no críticas sin perder las ya aceptadas de forma durable; usar circuit breakers y degradación controlada para aislar dependencias lentas o caídas y preservar funciones esenciales del POS; limitar lotes y concurrencia de sincronización, aplicar idempotencia y reintentos con backoff y jitter; monitorear latencia, errores, conexiones, consumo, profundidad de colas, rechazos y cuotas por tenant sin exponer datos sensibles en etiquetas; y ejecutar pruebas de carga, estrés, ráfagas, agotamiento de recursos, aislamiento entre tenants y recuperación.
+- **Casos aprobados para validar:** tenant con miles de solicitudes por segundo; dispositivo que envía lote enorme; consulta pesada que agota conexiones PostgreSQL; operaciones costosas en Redis; dependencia externa que deja de responder; tormenta de reintentos de sincronización; evasión de límites mediante múltiples IP; cola de eventos a capacidad máxima; consumo desproporcionado de recursos por un tenant; y recuperación tras saturación con operaciones pendientes o duplicadas.
+- **Limitación aceptada:** rate limiting por IP no es suficiente para un SaaS multiempresa; Redis no debe ser un punto único de fallo para límites críticos; el rechazo de solicitudes no debe perder operaciones ya aceptadas; las operaciones financieras conservan idempotencia y trazabilidad; y la degradación nunca omite autorización ni controles de seguridad. Las medidas son requisitos de diseño, no evidencia de infraestructura protegida o pruebas ejecutadas.
+- **Resultado:** respuesta operativa aprobada para el escenario. Los límites, cuotas, backpressure, aislamiento de recursos, resiliencia de sincronización, observabilidad y pruebas deben implementarse y verificarse en las fases correspondientes.
+- **Acciones relacionadas:** TA-07 permanece pendiente para incorporar pruebas negativas y validaciones automatizadas del catálogo de amenazas a CI por etapa. Las pruebas de carga y resiliencia se planificarán en las fases de infraestructura y operación correspondientes.
+
 ## 4. Registro de acciones del ejercicio
 
 | ID | Acción pendiente | Responsable | Fase | Estado |
 |---|---|---|---|---|
-| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | En curso (7/8) |
+| TA-01 | Ejecutar walkthrough de los ocho escenarios y registrar decisiones/fechas | Propietario del producto | 0.3 | Completado (8/8) |
 | TA-02 | Implementar enrolamiento, revocación y protección local de POS | Propietario del producto | 0.4 / 0.10 | Pendiente |
 | TA-03 | Diseñar y probar sync idempotente, integridad, conflictos y reconciliación | Propietario del producto | 0.10 | Pendiente |
 | TA-04 | Implementar gestión de secretos, aislamiento de backups y restauración | Propietario del producto | 0.6 / 0.7 | Pendiente |
