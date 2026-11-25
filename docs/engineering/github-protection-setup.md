@@ -1,6 +1,6 @@
 # Protección efectiva de `main` y configuración de GitHub
 
-**Estado observado:** 2026-11-25 — Ruleset `protect-main` configurado y verificado. PR de prueba #33 ejecutado con CI pasando y mergeado a `main`. Aprobación independiente pendiente de segundo colaborador (repositorio de un solo propietario en esta etapa).
+**Estado observado:** 2026-11-25 — Ruleset `protect-main` activo y verificado. La configuración actual requiere 0 aprobaciones y tiene activada la revisión de Code Owners; la cuenta propietaria es el único colaborador listado. No hay un revisor independiente disponible.
 **Objetivo:** aplicar la política de [gobernanza y contribución segura](./repository-governance-and-secure-contribution.md) mediante controles reales de GitHub.
 
 ## 1. Estado comprobado
@@ -10,7 +10,7 @@
 | Rulesets de ramas | ✅ Configurado | Ruleset `protect-main` activo; target `main` |
 | Protección clásica de `main` | ✅ Activa vía Ruleset | Ruleset con enforcement `Active` aplicado a `main` |
 | Pull Request obligatorio | ✅ Activo | Verificado en PR #33: merge bloqueado sin PR |
-| Revisión de Code Owners obligatoria | ⚠️ Configurada; pendiente segundo colaborador | CODEOWNERS presente; regla activa en Ruleset; repositorio tiene un solo propietario activo — se requiere segundo colaborador humano para enforcement efectivo |
+| Revisión de Code Owners | ⚠️ Regla activada; sin revisor independiente | API del Ruleset: `require_code_owner_review: true`; hay un solo colaborador listado |
 | Checks obligatorios | ✅ Activo | `Markdown and secret validation` requerido y verificado en PR #33 |
 | CODEOWNERS | ✅ Presente en raíz | Archivo `/CODEOWNERS`; rutas sensibles cubiertas |
 | Workflow documental | ✅ Presente y funcionando | `.github/workflows/documentation-security.yml`; CI pasó en PR #33 |
@@ -19,7 +19,7 @@
 
 PR de prueba utilizado para verificación: [#33](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/33) — mergeado a `main` el 2026-11-25. El check `Markdown and secret validation` detectó y bloqueó correctamente una línea en blanco extra (MD047), confirmando que el fallo bloquea el merge. Corregido y mergeado tras pasar CI.
 
-**Riesgo residual:** la aprobación independiente de Code Owner no puede satisfacerse con un único colaborador. Acción pendiente: incorporar un segundo responsable humano autorizado y reactivar `Required approvals: 1` y `Require review from Code Owners` en el Ruleset. Responsable: `@programadorkevinsvega-sys`. Sin fecha límite fija en esta etapa; debe resolverse antes de incorporar colaboradores con escritura.
+**Riesgo residual:** el Ruleset tiene `required_approving_review_count: 0` y la revisión de Code Owners activada; solo hay un colaborador listado, por lo que no existe un revisor independiente disponible. Antes de exigir aprobación independiente, incorporar un segundo responsable humano autorizado y configurar al menos una aprobación requerida. No se modificó la configuración de GitHub durante esta actualización documental.
 
 ## 2. Ruleset requerido para `main`
 
@@ -30,16 +30,16 @@ Crear en **Settings → Rules → Rulesets → New branch ruleset** un ruleset c
 - Target branches: incluir exactamente `main`.
 - Bypass list: vacía; no conceder bypass permanente a administradores, apps o equipos.
 - Require a pull request before merging: activado.
-- Required approvals: al menos **1 aprobación humana independiente**.
-- Require review from Code Owners: activado.
-- Dismiss stale pull request approvals when new commits are pushed: activado.
+- Required approvals: **1** cuando haya un segundo colaborador autorizado; la configuración observada actualmente es `0`.
+- Require review from Code Owners: activado en la configuración observada; mantenerlo al exigir aprobación independiente.
+- Dismiss stale pull request approvals when new commits are pushed: activado cuando aplique.
 - Require conversation resolution: activado.
 - Block force pushes: activado.
 - Restrict deletions: activado.
 - Require status checks to pass: activar únicamente checks existentes, estables y observados en PRs; no inventar nombres.
 - Require branches to be up to date: habilitar si el check requerido y el flujo de integración lo soportan de forma estable.
 
-La aprobación debe proceder de alguien distinto del autor. Si el autor es el único Code Owner o no existe otro revisor con permisos suficientes, el PR no puede satisfacer la regla; incorporar un segundo responsable humano autorizado antes de exigir una aprobación que nadie pueda emitir. No sustituir esa revisión por autoaprobación.
+**Cuando se incorpore un colaborador con escritura:** activar `Required approvals: 1` y `Require review from Code Owners` antes de que esa persona realice su primer PR.
 
 No activar reglas de firma de commits, linear history, merge queue u otras restricciones adicionales sin validar su compatibilidad con el flujo acordado y el estado real del repositorio.
 
@@ -87,11 +87,11 @@ Tras aplicar la configuración:
 - Registrar fecha, actor administrador, ID/nombre del Ruleset y ramas objetivo.
 - Guardar captura o exportación de sus reglas sin incluir secretos.
 - Consultar la configuración efectiva de `main` y confirmar que aparece protegida.
-- Abrir PR de prueba para verificar PR obligatorio, aprobación independiente, CODEOWNERS, checks, resolución de conversaciones y bloqueo de force-push/borrado.
+- Abrir PR de prueba para verificar PR obligatorio, checks, resolución de conversaciones y bloqueo de force-push/borrado.
 - Registrar resultados, links a PR y ejecuciones de Actions.
 - Verificar que no existe bypass permanente no autorizado.
 
-**Criterio de cierre:** Ruleset activo y aplicado a `main`; checks reales obligatorios probados con PR de prueba; permisos revisados; evidencia almacenada. ✅ Satisfecho con riesgo residual documentado (aprobación independiente pendiente de segundo colaborador). La subfase 0.2 se considera cerrada con ese riesgo registrado y con responsable asignado.
+**Criterio de cierre:** Ruleset activo y aplicado a `main`; checks reales obligatorios probados con PR de prueba; permisos revisados; evidencia almacenada. ✅ Satisfecho con riesgo residual documentado: revisión independiente pendiente de un segundo colaborador autorizado. La subfase 0.2 se considera cerrada con ese riesgo registrado.
 
 ## 7. Relación documental
 
