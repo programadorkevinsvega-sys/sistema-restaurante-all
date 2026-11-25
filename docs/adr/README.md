@@ -24,10 +24,7 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0016: Redis Cluster, TLS y caché distribuida de consultas](./0016-redis-cluster-tls-and-query-caching.md)
 - [ADR-0017: NATS Core y JetStream en clúster de alta disponibilidad](./0017-nats-core-jetstream-ha-cluster.md)
 - [ADR-0018: Privacidad, retención de datos, términos legales y consentimiento de cookies](./0018-privacy-data-retention-legal-terms-and-cookie-consent.md)
-
-## Decisiones propuestas
-
-- **ADR-0019:** Validación de entradas y contratos de datos. Su propuesta está en [PR #26](https://github.com/programadorkevinsvega-sys/sistema-restaurante-all/pull/26), que permanece abierto y sin fusionar; el archivo aún no forma parte de main.
+- [ADR-0019: Validación de entradas, contratos y protección de integridad de datos](./0019-input-validation-and-data-integrity.md)
 
 ## Decisiones de seguridad aceptadas
 
