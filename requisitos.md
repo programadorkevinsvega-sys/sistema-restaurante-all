@@ -2334,9 +2334,9 @@ El escenario principal sera un catálogo compartido con excepciones locales.
 3. Agrupaciones comerciales genericas y canales.
 4. Listas de precios e historial.
 5. Opciones y agrupaciones genericas de productos.
-7. Disponibilidad y horarios.
-8. Impuestos y reglas comerciales.
-9. Publicacion, excepciones y sincronizacion.
+6. Disponibilidad y horarios.
+7. Impuestos y reglas comerciales.
+8. Publicacion, excepciones y sincronizacion.
 
 Las recetas y sus versiones se definen en PRODUCTION; CATALOG conserva la
 referencia logica a la version efectiva que utiliza el producto. Las reglas de
@@ -5055,10 +5055,13 @@ restaurant-os/
 │   └── public-backend/
 │       └── modules/
 │
+├── contracts/
+│   └── protobuf/
+│       └── <backend>/<modulo>/v1/*.proto
+│
 ├── crates/
 │   ├── shared/
 │   ├── contracts/
-│   │   ├── proto/
 │   │   └── events/
 │   └── adapters/
 │       ├── grpc/
