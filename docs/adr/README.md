@@ -17,7 +17,7 @@ Cada ADR incluye contexto, decisión, alternativas, consecuencias, fechas y apro
 - [ADR-0009: Límites de crates y dirección de dependencias](./0009-crate-boundaries-and-dependencies.md)
 - [ADR-0010: PostgreSQL Connection Pooling y gestión de recursos](./0010-postgresql-connection-pooling-and-resource-management.md)
 - [ADR-0011: Protección de contraseñas y controles de autenticación](./0011-password-hashing-and-authentication-security.md)
-- [ADR-0012: UUIDv7 global, PostgreSQL estable, clúster HA y réplicas de lectura](./0012-uuid-v7-global-identifiers-and-postgresql.md)
+- [ADR-0012: UUIDv7 global y PostgreSQL como plataforma HA con réplicas de lectura](./0012-uuid-v7-global-identifiers-and-postgresql.md)
 - [ADR-0013: Consistencia distribuida y transacciones de negocio entre módulos](./0013-distributed-transactions-and-saga-consistency.md)
 - [ADR-0014: Baja de tenants y conservación de datos de clientes](./0014-tenant-deletion-and-customer-data-preservation.md)
 - [ADR-0015: Observabilidad integral de aplicaciones e infraestructura](./0015-integrated-observability-platform.md)
