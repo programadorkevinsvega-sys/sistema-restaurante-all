@@ -6,8 +6,11 @@
 ## 1. Versionado semántico
 
 La biblioteca utiliza MAJOR.MINOR.PATCH:
+
 - **MAJOR:** cambios incompatibles en requisitos normativos, jerarquía, estructura, identificadores o interpretación.
+
 - **MINOR:** nuevos estándares/temas, requisitos compatibles, controles adicionales o ampliaciones relevantes.
+
 - **PATCH:** correcciones editoriales, enlaces y aclaraciones que no cambian el significado normativo.
 
 La versión de la biblioteca no reemplaza la versión individual de cada estándar. Cada documento Accepted debe declarar su propia versión.
@@ -21,12 +24,19 @@ Cada proyecto registra versión de biblioteca, versión/commit del inventario y 
 ## 3. Compatibilidad y metadatos
 
 Cada estándar Accepted debe indicar:
+
 - ID, versión actual y estado.
+
 - Fecha de vigencia y próxima revisión.
+
 - Owner, reviewer y approver.
+
 - Versiones sustituidas, si aplica.
+
 - Periodo de transición.
+
 - Alcance y perfiles afectados.
+
 - Referencias técnicas/normativas y fecha de verificación.
 
 No se actualiza silenciosamente un requisito incompatible en una revisión menor.
