@@ -26,7 +26,7 @@ No es una arquitectura de referencia única ni una receta tecnológica universal
 | Área | Contenido |
 |---|---|
 | 00-governance | Gobierno, ADR, ciclo de vida y excepciones. |
-| 01-architecture | Modularidad, dominios y límites de servicios. |
+| 01-software-architecture | Modularidad, dominios y límites de servicios. |
 | 02-data-management | Ownership, persistencia, migraciones, identificadores y multi-tenancy. |
 | 03-distributed-systems | Outbox, Inbox, Sagas, mensajería, idempotencia y trabajos. |
 | 04-apis-and-contracts | Contratos, versionado y errores. |
