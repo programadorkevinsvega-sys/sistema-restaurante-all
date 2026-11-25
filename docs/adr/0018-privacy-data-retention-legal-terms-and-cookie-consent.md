@@ -1,7 +1,7 @@
 # ADR-0018: Privacidad, retención de datos, términos legales y consentimiento de cookies
 
-- Estado: **Proposed**
-- Propuesto: 2026-11-24
+- Estado: **Accepted**
+- Aprobado: 2026-11-24
 - Ámbito: tratamiento de datos personales y empresariales, documentación legal del servicio, retención y eliminación, tecnologías de seguimiento y preparación legal para el lanzamiento de Restaurant OS.
 - Complementa: ADR-0001, ADR-0003, ADR-0008, ADR-0011, ADR-0014 y ADR-0015.
 - Fase de ejecución: fase final de preparación para producción y lanzamiento, sin aplazar los controles técnicos y de privacidad que deben existir desde el diseño.
@@ -228,4 +228,4 @@ Esos elementos se concretarán con el inventario real del producto, los mercados
 
 ## Estado de implementación
 
-**ADR propuesto; no implementado.** Este documento establece una decisión arquitectónica y una condición futura de lanzamiento. No se han redactado ni aprobado textos legales definitivos, no se ha contratado asesoría jurídica, no se han configurado banners o gestores de consentimiento, no se han creado tablas, schemas, contratos, endpoints ni código, y no se han modificado archivos SQL o migraciones.
+**ADR aceptado; no implementado.** Este documento establece una decisión arquitectónica y una condición futura de lanzamiento. No se han redactado ni aprobado textos legales definitivos, no se ha contratado asesoría jurídica, no se han configurado banners o gestores de consentimiento, no se han creado tablas, schemas, contratos, endpoints ni código, y no se han modificado archivos SQL o migraciones.
