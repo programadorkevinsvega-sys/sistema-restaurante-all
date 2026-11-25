@@ -3,7 +3,7 @@
 - Estado: **Accepted**
 - Fecha: 2026-11-25
 - Ámbito: redes, contenedores, ejecución, secretos, certificados, cifrado, PostgreSQL, Redis, NATS, backups y almacenamiento.
-- Complementa: ADR-0007, ADR-0010, ADR-0012, ADR-0015, ADR-0016, ADR-0017, ADR-0018 y ADR-0020.
+- Complementa: ADR-0007, ADR-0008, ADR-0010, ADR-0012, ADR-0015, ADR-0016, ADR-0017, ADR-0018, ADR-0020 y ADR-0021.
 - Aprobación: aprobada explícitamente por el propietario del producto el 2026-11-25.
 
 ## Contexto
@@ -29,7 +29,10 @@ Ejecutar como no-root; evitar privileged; retirar capabilities innecesarias; fil
 
 ### 3. Secretos y credenciales
 
-- Usar gestor de secretos apropiado para producción; no seleccionar proveedor aquí.
+- AWS Secrets Manager administra los secretos operativos que no puedan sustituirse por identidad federada o credenciales temporales.
+- AWS IAM concede permisos mínimos y temporales a cada workload; no se guardan claves AWS estáticas en código, imágenes ni configuración versionada.
+- AWS KMS custodia las claves privadas asimétricas de firma, separadas por autoridad emisora, entorno y propósito. La clave privada no se exporta a los procesos.
+- No se instalará ni operará Vault autogestionado como requisito de esta arquitectura.
 - Separar credenciales por proceso, entorno, finalidad y privilegio.
 - Prohibido guardar secretos en Git, imágenes, logs, bundles, artefactos o tickets.
 - Preferir credenciales cortas y federación cuando esté disponible.
@@ -41,11 +44,11 @@ Ejecutar como no-root; evitar privileged; retirar capabilities innecesarias; fil
 
 ### 4. Certificados y cifrado en tránsito
 
-TLS obligatorio en fronteras sensibles conforme a ADR de PostgreSQL, Redis y NATS. Validar certificado y hostname; prohibido desactivar validación para resolver errores. TLS 1.2 mínimo y 1.3 preferido donde lo establecen los ADR específicos. Evaluar mTLS para servicio-a-servicio y administración con identidad y autorización por operación. Definir emisión, renovación, rotación, revocación y alertas de certificados. Red privada no sustituye autenticación/autorización.
+TLS obligatorio en fronteras sensibles conforme a ADR de PostgreSQL, Redis y NATS. Validar certificado y hostname; prohibido desactivar validación para resolver errores. TLS 1.2 mínimo y 1.3 preferido donde lo establecen los ADR específicos. mTLS es obligatorio entre los cuatro procesos, con identidad de workload y autorización por operación. Definir emisión, renovación, rotación, revocación y alertas de certificados. Red privada no sustituye autenticación/autorización.
 
 ### 5. Criptografía y claves
 
-Usar algoritmos/bibliotecas mantenidos; no diseñar criptografía propia. Separar claves de cifrado, firma, autenticación y otros propósitos. Clasificar datos y definir cifrado en reposo según sensibilidad/obligación. Evaluar KMS/HSM sin seleccionar proveedor aquí. Cada clave tiene propietario, propósito, alcance, ciclo de vida, rotación, respaldo y recuperación. Proteger backups/exportaciones. UUIDv7, identificadores opacos y URLs firmadas no sustituyen autorización.
+Usar algoritmos/bibliotecas mantenidos; no diseñar criptografía propia. Separar claves de cifrado, firma, autenticación y otros propósitos. Clasificar datos y definir cifrado en reposo según sensibilidad/obligación. AWS KMS custodia claves privadas de firma. Los receptores verifican localmente mediante claves públicas distribuidas desde una fuente confiable; no invocan KMS Verify por solicitud. La rotación asimétrica es controlada y versionada mediante `kid`, con convivencia temporal de claves públicas anterior y nueva. Cada clave tiene propietario, propósito, alcance, ciclo de vida, rotación, respaldo y recuperación. Proteger backups/exportaciones. UUIDv7, identificadores opacos y URLs firmadas no sustituyen autorización.
 
 ### 6. PostgreSQL y backups
 
@@ -81,7 +84,7 @@ Registrar cambios administrativos de red, permisos, secretos, certificados y con
 
 ## Alternativas consideradas
 
-Exponer datos públicamente con autenticación; compartir secretos; contenedores privilegiados; desactivar validación TLS; tratar réplicas como backups: todo rechazado. Seleccionar proveedor KMS/infraestructura ahora se aplaza por requerir evaluación.
+Exponer datos públicamente con autenticación; compartir secretos; contenedores privilegiados; desactivar validación TLS; tratar réplicas como backups: todo rechazado. La selección del runtime y de la CA concreta se aplaza a 0.7; la decisión de usar AWS KMS, Secrets Manager e IAM ya está aceptada.
 
 ## Consecuencias
 
