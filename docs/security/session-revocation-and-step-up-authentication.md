@@ -76,13 +76,14 @@ Una sesión solo es válida si la autoridad propietaria confirma que no está re
 ### 3.2 Rotación y detección de reutilización
 
 1. Cada refresh válido se consume una sola vez y produce un refresh token nuevo; el anterior queda inutilizable.
-2. La rotación y el cambio del estado persistido deben ser atómicos en la autoridad propietaria.
-3. Una reutilización de un refresh token ya consumido se trata como posible compromiso y provoca la revocación de la familia completa en IDENTITY. No se concede una ventana permisiva por defecto.
-4. Las solicitudes concurrentes de refresh deben serializarse en el cliente/BFF. Si una carrera presenta de nuevo el token consumido, se aplica la política de reutilización; no se emiten dos descendientes válidos.
-5. La respuesta al cliente no revela si el token era inexistente, expirado, revocado o reutilizado. La causa categorizada se conserva en auditoría.
-6. Si se necesita una tolerancia por reintentos de red, deberá diseñarse como excepción acotada, idempotente y segura, con análisis de replay y aprobación explícita; no se presupone en este diseño.
+2. El consumo del token anterior, la creación del sucesor y la actualización del estado de sesión/familia se realizan atómicamente mediante una operación condicional/transaccional en la autoridad propietaria (IDENTITY o PLATFORM). La operación debe comprobar que el token sigue vigente y no consumido dentro de la misma unidad atómica.
+3. La autoridad propietaria garantiza que como máximo una solicitud concurrente puede consumir el token y producir un sucesor válido. Una segunda solicitud que presente el token ya consumido se trata como reutilización, no como una rotación paralela.
+4. La serialización en cliente/BFF puede reducir carreras, pero es solo una optimización; no constituye el control de seguridad ni sustituye la exclusión atómica en IDENTITY/PLATFORM.
+5. En IDENTITY, una reutilización confirmada provoca la revocación de la familia identificada por el `token_family_id` existente. PLATFORM debe definir una respuesta equivalente compatible con su modelo existente, sin presuponer un campo `token_family_id` ni crear ahora estructuras SQL.
+6. La respuesta al cliente no revela si el token era inexistente, expirado, revocado o reutilizado. La causa categorizada se conserva en auditoría.
+7. Cualquier tolerancia a reintentos de red debe diseñarse como excepción acotada, idempotente, ligada a la misma operación y resistente a replay; no se presume ni habilita por defecto.
 
-La revocación de familia se apoya en el `token_family_id` ya presente en el diseño SQL de IDENTITY. No se presupone ese campo en `platform.admin_sessions`; la estrategia de reutilización para PLATFORM debe respetar su estructura y cerrarse antes de implementar.
+La revocación de familia en IDENTITY se apoya en el `token_family_id` ya presente en su diseño SQL. Para PLATFORM, la detección y respuesta a reutilización deben resolverse usando las estructuras existentes y un mecanismo compatible, sin atribuirle campos que no existen ni modificar SQL en esta subfase.
 
 ### 3.3 Expiración por inactividad y absoluta
 
@@ -172,34 +173,38 @@ La clasificación debe incluir, como mínimo, acciones de alto impacto ya señal
 
 ### 5.3 Flujo de elevación
 
-1. El módulo/BFF identifica que la operación requiere un nivel de autenticación superior; el BFF solo inicia o transporta el flujo.
+1. El módulo propietario de la operación determina autoritativamente si la acción exige MFA o reautenticación, conforme a su política de riesgo y a la matriz de autorización. El BFF puede iniciar la experiencia de usuario y transportar solicitudes/respuestas, pero no decide el requisito, no amplía claims ni concede privilegios.
 2. La autoridad propietaria de la sesión (IDENTITY o PLATFORM) inicia un challenge asociado a la sesión actual y al actor autenticado.
 3. El actor completa el factor permitido (por ejemplo, TOTP o WebAuthn) o reautenticación fuerte. No se aceptan códigos reutilizados, factores revocados ni respuestas fuera de ventana.
-4. La autoridad verifica el factor y emite una evidencia firmada de autenticación reforzada, ligada a la sesión y al actor originales.
-5. El backend/módulo propietario valida esa evidencia y vuelve a evaluar RBAC/ABAC, tenant, recurso, acción, estado y cualquier aprobación adicional.
+4. La autoridad verifica el factor, rota el identificador de sesión conforme a ADR-0022, invalida el identificador anterior y emite una nueva aserción de contexto vinculada al identificador nuevo. La evidencia step-up se vincula a ese mismo identificador nuevo.
+5. El backend/módulo propietario valida la evidencia firmada y vuelve a evaluar RBAC/ABAC, tenant, recurso, acción, estado y cualquier aprobación adicional.
 6. La evidencia solo sirve para el propósito, ámbito y ventana para los que fue emitida. No se convierte en una elevación permanente de la sesión.
-7. Al terminar la ventana, cambiar de sesión/tenant o revocar el factor/sesión, se exige una nueva elevación cuando la política lo requiera.
+7. Las solicitudes que presenten el identificador/contexto anterior después de completar el step-up se rechazan. Al terminar la ventana, cambiar de tenant/sesión o revocar el factor/sesión, se exige una nueva elevación cuando la política lo requiera.
 
 ### 5.4 Vinculación mínima de la evidencia
 
-El contrato versionado deberá poder verificar, como mínimo:
+La evidencia de step-up será una aserción independiente, firmada por IDENTITY o PLATFORM según la autoridad de la sesión, y transportada sin alteración por el BFF. No se considera demostrada por el valor `auth_level` del contexto principal. El receptor valida su firma y los siguientes campos mínimos:
 
-- autoridad emisora y audiencia;
-- actor y tipo de actor;
-- session_id;
-- tenant/scope exacto cuando aplique;
-- nivel de autenticación alcanzado y método/factor utilizado;
-- instante de autenticación reciente (`auth_time`);
-- operación o clase de acciones autorizadas para la evidencia;
-- identificador único anti-replay (`jti`/challenge id);
-- emisión, inicio y expiración;
+- `issuer` y `audience` exactos;
+- `actor_id` y `actor_type`;
+- `session_id` nuevo, posterior a la rotación;
+- `tenant_id` y scope exactos cuando apliquen;
+- nivel alcanzado (`mfa_verified` o `reauth_verified`) y método/factor utilizado;
+- instante de autenticación (`auth_time`);
+- operación/recurso o clase de acciones para la que se emitió;
+- `issued_at`, `not_before` y `expires_at`;
+- `jti` único y referencia al challenge consumido para anti-replay;
 - referencia de correlación/auditoría.
 
-La evidencia no debe incluir secretos MFA, códigos, credenciales ni datos biométricos. El nombre y la serialización exacta de los claims/campos se fijarán en Protobuf/contrato versionado; esta especificación no modifica aún el contrato generado.
+El receptor comprueba que la evidencia pertenece al mismo actor, autoridad, sesión nueva, tenant/scope, audiencia y operación de la solicitud. La autoridad emisora debe garantizar que el challenge y su `jti` no se consuman más de una vez para operaciones no repetibles; el receptor aplica el control anti-replay correspondiente. La revocación/expiración de la sesión invalida la evidencia aunque su firma y vencimiento sigan siendo válidos. `auth_level` en el contexto principal es solo un indicador de nivel declarado para esa aserción; nunca sustituye la evidencia firmada ni la comprobación de sesión.
+
+La evidencia no debe incluir secretos MFA, códigos, credenciales ni datos biométricos. El formato tipado y versionado de esta aserción independiente se definirá en el contrato Protobuf antes de implementar; este documento no modifica contratos generados.
 
 ### 5.5 Alcance, duración y replay
 
-- La elevación se limita al actor, sesión, tenant y clase de operación indicados.
+- La elevación se limita al actor, sesión nueva posterior a la rotación, tenant y clase de operación indicados.
+- Al completar step-up se rota el identificador de sesión conforme a ADR-0022; el identificador anterior queda invalidado y no puede autenticar ni autorizar solicitudes posteriores.
+- La nueva aserción de contexto y la evidencia step-up quedan vinculadas al nuevo `session_id`; cualquier evidencia asociada al identificador anterior se rechaza.
 - No se reutiliza entre sesiones, navegadores, actores, tenants ni autoridades.
 - La duración máxima se define por clase de riesgo y debe ser la mínima que permita completar la operación.
 - Para operaciones no repetibles o de alto impacto, la evidencia/challenge se consume una sola vez o se vincula a una operación idempotente concreta.
@@ -242,7 +247,7 @@ Los registros deben permitir correlacionar actor, session_id, tenant cuando apli
 |---|---|---|
 | NEG-SES-01 | Refresh token revocado, expirado o ya consumido | Rechazo; no se emite nueva sesión |
 | NEG-SES-02 | Reutilización de refresh token rotado | Revocar familia en IDENTITY; alertar/auditar |
-| NEG-SES-03 | Dos refresh concurrentes con el mismo token | Como máximo una rotación; la reutilización detectada aplica la política de familia |
+| NEG-SES-03 | Dos refresh concurrentes con el mismo token desde clientes, pestañas, dispositivos o réplicas BFF distintas | Consumo atómico en IDENTITY/PLATFORM; como máximo un sucesor válido; la segunda presentación se trata según política de reutilización |
 | NEG-SES-04 | Sesión revocada con access token aún no expirado | Nuevas operaciones rechazadas según comprobación de estado/versión |
 | NEG-SES-05 | Sesión supera timeout de inactividad o absoluto | Rechazo; requiere autenticación nueva |
 | NEG-SES-06 | Usuario cambia contraseña o recupera cuenta | Revocación del alcance de sesiones definido por política; tokens previos no reutilizables |
@@ -260,6 +265,8 @@ Los registros deben permitir correlacionar actor, session_id, tenant cuando apli
 | NEG-ELV-08 | BFF agrega claims o eleva el nivel de autenticación | Rechazo por integridad/autoridad |
 | NEG-ELV-09 | Worker reutiliza evidencia humana elevada | Rechazo; identidad de servicio independiente |
 | NEG-ELV-10 | No se puede comprobar vigencia o alcance de la evidencia | Fallo cerrado |
+| NEG-ELV-11 | Tras completar step-up se presenta el identificador de sesión o contexto anterior | Rechazo; el identificador anterior quedó invalidado por la rotación |
+| NEG-ELV-12 | Evidencia step-up con firma, issuer, audience, actor, sesión nueva, tenant/scope, operación, `auth_time` o `jti` no coincidentes | Rechazo y auditoría; no se infiere validez desde `auth_level` |
 
 Estos casos complementan los casos `NEG-C-*` y `NEG-SUP-*` existentes. Son criterios de diseño; no están automatizados ni ejecutados.
 
@@ -271,10 +278,11 @@ No se inventan valores para cerrar estas decisiones:
 2. Límites de inactividad y expiración absoluta de sesiones PLATFORM, y límites globales que acotan las políticas configurables de IDENTITY.
 3. Clases de riesgo y catálogo exacto de operaciones que requieren MFA, reautenticación, segunda aprobación o concesión excepcional.
 4. Ventana de frescura MFA/reautenticación y duración máxima de evidencia elevada por clase de riesgo.
-5. Política de refresh concurrente/reintento y comportamiento de clientes ante reutilización.
-6. Contrato técnico de consulta/versionado de sesión y autorización, invalidación de cachés y comportamiento degradado.
-7. Modelo de cookie/estado web del BFF compatible con ADR-0022 y con la autoridad de sesión.
-8. Política de revocación por cambio de contraseña, recuperación, cambio de MFA, rol, membresía y desactivación, diferenciando sesión actual, familia y todas las sesiones.
+5. Contrato de consumo atómico/condicional de refresh y política de reintento/reutilización específica para PLATFORM, compatible con su SQL existente.
+6. Contrato tipado de la aserción independiente step-up, su anti-replay, vinculación a operación y validación por receptores.
+7. Contrato técnico de consulta/versionado de sesión y autorización, invalidación de cachés y comportamiento degradado.
+8. Modelo de cookie/estado web del BFF compatible con ADR-0022 y con la rotación del identificador de sesión.
+9. Política de revocación por cambio de contraseña, recuperación, cambio de MFA, rol, membresía y desactivación, diferenciando sesión actual, familia y todas las sesiones.
 
 Cada decisión deberá tener propietario, justificación de riesgo, valor verificable, prueba y runbook cuando corresponda.
 
