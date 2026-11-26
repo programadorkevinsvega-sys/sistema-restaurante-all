@@ -13,6 +13,7 @@
 - [Casos negativos de autorización](./authorization-negative-cases.md)
 - [Seguridad de contraseñas y autenticación](./password-and-authentication.md)
 - [Acceso privilegiado y soporte excepcional](./privileged-access-and-exceptional-support.md)
+- [Sesiones, revocación y autenticación reforzada](./session-revocation-and-step-up-authentication.md)
 
 ---
 
@@ -153,7 +154,9 @@ No se duplican tablas de usuarios, sesiones ni permisos entre procesos.
 - Refresh tokens con rotación; almacenados solo como hash.
 - Detección de reutilización de refresh token: revocación de toda la familia de sesión.
 - Expiración absoluta y por inactividad según política del tenant.
-- Estado autoritativo de sesión en PostgreSQL (IDENTITY), no en memoria de réplica.
+- Estado autoritativo de sesión en PostgreSQL bajo la autoridad propietaria: IDENTITY para usuarios tenant y PLATFORM para operadores SaaS; nunca en memoria local de una réplica.
+- IDENTITY revoca la familia de refresh tokens cuando detecta reutilización; la estrategia de PLATFORM debe respetar su modelo SQL existente y no asumir campos de familia que no estén definidos.
+- La vigencia de una sesión, la validez de una aserción firmada y una evidencia de autenticación reforzada se comprueban por separado.
 
 ### Revocación
 
@@ -168,7 +171,9 @@ No se duplican tablas de usuarios, sesiones ni permisos entre procesos.
 El contexto autenticado se propaga en cada llamada gRPC como parte del contrato del mensaje.
 Nunca se transmite en NATS Core ni en eventos JetStream como credencial activa.
 La especificación de emisores, audiencia, firma, mTLS, claves y propagación está en
-[Contrato de contexto autenticado](./authenticated-context-contract.md) y ADR-0023.
+[Contrato de contexto autenticado](./authenticated-context-contract.md) y ADR-0023. El ciclo
+de vida, la revocación, la invalidación de aserciones y la autenticación reforzada se detallan
+en [Sesiones, revocación y autenticación reforzada](./session-revocation-and-step-up-authentication.md).
 
 ---
 
