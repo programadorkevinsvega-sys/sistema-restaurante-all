@@ -147,7 +147,6 @@ Si la autoridad no está disponible:
 - ningún receptor extiende indefinidamente una decisión cacheada;
 - las operaciones no críticas solo pueden usar una política de caché degradada si su máximo de antigüedad está explícitamente aprobado y probado.
 
-
 ## 5. Elevación de autenticación (*step-up*)
 
 ### 5.1 Diferencia entre autenticación y autorización
