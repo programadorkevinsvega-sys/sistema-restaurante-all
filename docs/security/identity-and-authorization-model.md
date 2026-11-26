@@ -12,6 +12,7 @@
 - [Diseño de aislamiento por módulo y proceso](./isolation-design.md)
 - [Casos negativos de autorización](./authorization-negative-cases.md)
 - [Seguridad de contraseñas y autenticación](./password-and-authentication.md)
+- [Acceso privilegiado y soporte excepcional](./privileged-access-and-exceptional-support.md)
 
 ---
 
@@ -66,8 +67,9 @@ Identidad de los empleados internos que administran la plataforma SaaS.
 - Admin BFF consume la autoridad de PLATFORM; no autentica estos operadores contra IDENTITY.
 - No comparte tablas, credenciales, sesiones ni tokens con usuarios de tenant.
 - La aserción de contexto de operador la emite PLATFORM con su propio issuer y clave KMS.
-- El acceso excepcional a datos operativos de tenant es temporal, justificado, limitado, auditable y revocable.
+- El acceso excepcional a datos operativos de tenant es temporal, justificado, limitado, auditable y revocable; una aserción firmada de PLATFORM no concede acceso por sí sola.
 - Public Backend solo acepta esa aserción para una operación de negocio cuando el módulo propietario valida la concesión excepcional; no existe acceso global automático.
+- El ciclo de vida, alcance, aprobación, expiración, revocación y auditoría de esas concesiones se especifica en [Acceso privilegiado y soporte excepcional](./privileged-access-and-exceptional-support.md).
 
 ---
 
