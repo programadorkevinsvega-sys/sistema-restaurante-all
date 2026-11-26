@@ -13,6 +13,7 @@
 - [Casos negativos de autorización](./authorization-negative-cases.md)
 - [Seguridad de contraseñas y autenticación](./password-and-authentication.md)
 - [Acceso privilegiado y soporte excepcional](./privileged-access-and-exceptional-support.md)
+- [Sesiones, revocación y autenticación reforzada](./session-revocation-and-step-up-authentication.md)
 
 ---
 
@@ -37,7 +38,7 @@ Representa a un usuario de tenant autenticado. Los operadores internos SaaS son 
 | `email` | Identificador de login; no es una clave de negocio |
 | `roles` | Conjunto de roles asignados en el ámbito de la sesión |
 | `permissions` | Conjunto derivado de roles + atributos ABAC evaluados |
-| `auth_level` | Normal / MFA\_verified / Reauth\_required |
+| `auth_level` | `normal` / `mfa_verified` / `reauth_verified`; indicador del contexto, no evidencia autónoma de step-up |
 | `session_id` | UUIDv7 de la sesión activa |
 | `issued_at` | Timestamp de emisión del access token |
 | `expires_at` | Timestamp de expiración del access token |
@@ -150,10 +151,14 @@ No se duplican tablas de usuarios, sesiones ni permisos entre procesos.
 ### Sesiones
 
 - Access tokens de corta duración (duración definida por política de tenant en IDENTITY).
-- Refresh tokens con rotación; almacenados solo como hash.
+- Refresh tokens con consumo/rotación atómicos en la autoridad propietaria; almacenados solo como hash.
+- La autoridad rota el identificador de sesión tras autenticación y step-up conforme a ADR-0022; invalida el identificador anterior y emite contexto nuevo.
+- La evidencia step-up es una aserción independiente firmada; `auth_level` no la sustituye. El módulo propietario determina si la operación la exige y la valida.
 - Detección de reutilización de refresh token: revocación de toda la familia de sesión.
 - Expiración absoluta y por inactividad según política del tenant.
-- Estado autoritativo de sesión en PostgreSQL (IDENTITY), no en memoria de réplica.
+- Estado autoritativo de sesión en PostgreSQL bajo la autoridad propietaria: IDENTITY para usuarios tenant y PLATFORM para operadores SaaS; nunca en memoria local de una réplica.
+- IDENTITY revoca la familia de refresh tokens cuando detecta reutilización; la estrategia de PLATFORM debe respetar su modelo SQL existente y no asumir campos de familia que no estén definidos.
+- La vigencia de una sesión, la validez de una aserción firmada y una evidencia de autenticación reforzada se comprueban por separado.
 
 ### Revocación
 
@@ -168,7 +173,9 @@ No se duplican tablas de usuarios, sesiones ni permisos entre procesos.
 El contexto autenticado se propaga en cada llamada gRPC como parte del contrato del mensaje.
 Nunca se transmite en NATS Core ni en eventos JetStream como credencial activa.
 La especificación de emisores, audiencia, firma, mTLS, claves y propagación está en
-[Contrato de contexto autenticado](./authenticated-context-contract.md) y ADR-0023.
+[Contrato de contexto autenticado](./authenticated-context-contract.md) y ADR-0023. El ciclo
+de vida, la revocación, la invalidación de aserciones y la autenticación reforzada se detallan
+en [Sesiones, revocación y autenticación reforzada](./session-revocation-and-step-up-authentication.md).
 
 ---
 
