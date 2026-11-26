@@ -71,7 +71,7 @@ Una sesión solo es válida si la autoridad propietaria confirma que no está re
 - Los refresh tokens son aleatorios, de alta entropía y se almacenan solo como hash.
 - Los tokens no aparecen en URLs, logs, trazas, eventos, mensajes de error ni almacenamiento web accesible a JavaScript.
 - Los tokens de refresh solo se aceptan en el endpoint y autoridad que los emitió.
-- El BFF no renueva ni inventa autoridad por cuenta propia: canaliza la operación con la autoridad propietaria y entrega al navegador únicamente el mecanismo de sesión web definido por ADR-0022.
+- El BFF no renueva ni inventa autoridad por cuenta propia: canaliza la operación con la autoridad propietaria y entrega al navegador únicamente el mecanismo de sesión web que se apruebe conforme a ADR-0022.
 
 ### 3.2 Rotación y detección de reutilización
 
