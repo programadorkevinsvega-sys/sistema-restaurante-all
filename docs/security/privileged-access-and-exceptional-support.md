@@ -8,6 +8,7 @@
 **Propietario de la autorización del recurso:** módulo de negocio correspondiente — Public Backend
 
 **Documentos relacionados:**
+
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Contrato de contexto autenticado](./authenticated-context-contract.md)
 - [Matriz rol/atributo/acción/ámbito](./rbac-abac-matrix.md)
@@ -163,6 +164,7 @@ de PLATFORM ante cierre del caso, sospecha de abuso, compromiso de cuenta, cambi
 necesidad operativa.
 
 La revocación debe:
+
 - impedir nuevas operaciones tan pronto como se alcance el límite de propagación definido;
 - invalidar cualquier caché o evidencia derivada dentro de ese mismo límite;
 - conservar el registro histórico de la concesión y su uso;
@@ -181,6 +183,7 @@ acción ejecutada o denegada, recurso/tenant objetivo, `grant_id`, actor, motivo
 correlación y resultado.
 
 AUDIT conserva los eventos según su ownership y política de retención. Los registros:
+
 - no contienen contraseñas, tokens, claves, secretos ni payloads completos de negocio;
 - no deben almacenar más datos personales que los necesarios para atribución e investigación;
 - distinguen el acceso de soporte del acceso ordinario de usuarios del tenant;
@@ -195,6 +198,7 @@ como un tipo de concesión separado, con justificación reforzada, expiración m
 notificación y revisión posterior; requiere aprobación explícita antes de implementarse.
 
 También deben decidirse antes de la implementación:
+
 - duración máxima por clasificación de riesgo;
 - catálogo de operaciones que requieren segunda aprobación;
 - si determinados casos requieren notificación o consentimiento del tenant;
