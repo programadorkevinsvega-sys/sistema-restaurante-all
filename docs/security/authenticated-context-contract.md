@@ -10,6 +10,7 @@
 - [Modelo de identidad y autorización](./identity-and-authorization-model.md)
 - [Diseño de aislamiento por módulo y proceso](./isolation-design.md)
 - [Casos negativos de autorización](./authorization-negative-cases.md)
+- [Sesiones, revocación y autenticación reforzada](./session-revocation-and-step-up-authentication.md)
 
 ---
 
@@ -180,13 +181,17 @@ ni privilegios ilimitados.
 5. `jti` y controles anti-replay para operaciones que no admiten repetición.
 6. Identidad mTLS del proceso llamante y autorización del método.
 7. Tipo de actor y campos coherentes; no mezclar actor humano con servicio.
-8. Vigencia de sesión, revocación y versión de roles/membresías según criticidad.
-9. Tenant y ámbitos coherentes con el recurso concreto.
-10. Autorización final en el módulo propietario, incluida cualquier concesión excepcional.
+8. Vigencia de sesión, revocación y versión de roles/membresías según criticidad; una firma válida no revive una sesión revocada.
+9. Cuando la operación lo exige, evidencia de autenticación reforzada vigente, vinculada al actor, sesión, tenant/ámbito, audiencia y operación; esa evidencia no concede permisos.
+10. Tenant y ámbitos coherentes con el recurso concreto.
+11. Autorización final en el módulo propietario, incluida cualquier concesión excepcional.
 
 Un contexto inválido, expirado, con emisor/audiencia incorrectos, firma inválida o identidad
 mTLS no autorizada se rechaza sin ejecutar efectos ni revelar detalles internos. Un fallo de
-verificación o distribución de claves nunca se convierte en aceptación permisiva.
+verificación o distribución de claves nunca se convierte en aceptación permisiva. La comprobación
+de sesión/revocación y la evidencia de step-up siguen el diseño específico de
+[Sesiones, revocación y autenticación reforzada](./session-revocation-and-step-up-authentication.md);
+no se infieren de la firma ni del campo `auth_level` por sí solos.
 
 ## 7. Formato de transporte
 
