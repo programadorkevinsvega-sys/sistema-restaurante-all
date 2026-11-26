@@ -141,10 +141,12 @@ El SLA máximo de propagación de revocación debe medirse de extremo a extremo:
 No se fija un número sin análisis de riesgo, latencia, topología y pruebas. Antes de producción se debe aprobar un límite cuantificado y demostrarlo bajo concurrencia, partición de red, caída de Redis, retraso/pérdida de eventos y reinicio de procesos.
 
 Si la autoridad no está disponible:
+
 - no se emiten ni renuevan sesiones;
 - las operaciones críticas que requieren estado vigente se deniegan;
 - ningún receptor extiende indefinidamente una decisión cacheada;
 - las operaciones no críticas solo pueden usar una política de caché degradada si su máximo de antigüedad está explícitamente aprobado y probado.
+
 
 ## 5. Elevación de autenticación (*step-up*)
 
@@ -160,6 +162,7 @@ La elevación de autenticación demuestra que el actor completó recientemente u
 ### 5.2 Cuándo exigirla
 
 La matriz de acciones de cada módulo clasificará las operaciones que requieren:
+
 - autenticación normal;
 - MFA reciente;
 - reautenticación reciente;
@@ -259,7 +262,7 @@ Los registros deben permitir correlacionar actor, session_id, tenant cuando apli
 | NEG-ELV-09 | Worker reutiliza evidencia humana elevada | Rechazo; identidad de servicio independiente |
 | NEG-ELV-10 | No se puede comprobar vigencia o alcance de la evidencia | Fallo cerrado |
 
-Estos casos complementan NEG-C-* y NEG-SUP-* existentes. Son criterios de diseño; no están automatizados ni ejecutados.
+Estos casos complementan los casos `NEG-C-*` y `NEG-SUP-*` existentes. Son criterios de diseño; no están automatizados ni ejecutados.
 
 ## 10. Decisiones pendientes antes de implementación
 
