@@ -55,7 +55,8 @@ además que exista una concesión excepcional, temporal, justificada, acotada y 
 | `actor_id` | UUIDv7 | Sí | Identificador del usuario propietario de IDENTITY |
 | `tenant_id` | UUIDv7 | Sí | Tenant activo validado por IDENTITY |
 | `session_id` | UUIDv7 | Sí | Sesión vigente en IDENTITY |
-| `auth_level` | enum | Sí | `normal`, `mfa_verified`, `reauth_verified` |
+| `auth_level` | enum | Sí | `normal`, `mfa_verified`, `reauth_verified`; indicador del contexto, no prueba autónoma de step-up |
+| `step_up_evidence` | aserción firmada independiente, transportada como campo tipado/referencia opaca | Condicional | Evidencia emitida por IDENTITY/PLATFORM cuando la operación lo exige; el receptor verifica firma, issuer, audience, actor, sesión, tenant/scope, operación, `auth_time`, vigencia y `jti` anti-replay |
 | `roles` | string[] | Sí | Roles vigentes asignados por IDENTITY |
 | `scope` | objeto/lista tipada | Sí | Ámbitos vigentes: grupo, empresa, marca, sucursal y recurso |
 | `issued_at` | timestamp UTC | Sí | Emisión |
@@ -192,6 +193,39 @@ verificación o distribución de claves nunca se convierte en aceptación permis
 de sesión/revocación y la evidencia de step-up siguen el diseño específico de
 [Sesiones, revocación y autenticación reforzada](./session-revocation-and-step-up-authentication.md);
 no se infieren de la firma ni del campo `auth_level` por sí solos.
+
+### 6.1 Rotación del identificador de sesión tras autenticación reforzada
+
+Conforme a ADR-0022, completar autenticación inicial y completar un flujo de step-up requieren
+rotar el identificador de sesión. La autoridad propietaria realiza la rotación, invalida el
+identificador anterior y emite un contexto firmado nuevo cuyo `session_id` contiene únicamente
+el identificador vigente. El contexto anterior deja de ser aceptable para solicitudes posteriores;
+no se permite una ventana en la que ambos identificadores conserven autoridad.
+
+La evidencia independiente de step-up se emite después de la rotación y se vincula al nuevo
+`session_id`. El receptor exige coincidencia exacta entre el `session_id` del contexto y el de la
+evidencia. La revocación de la sesión nueva invalida también la evidencia asociada. El BFF
+actualiza el estado/cookie de navegador conforme a ADR-0022 y no puede decidir ni revertir la
+rotación. El mecanismo de persistencia y transición debe implementarse en la autoridad propietaria
+sin asumir columnas SQL no existentes ni modificar los archivos SQL históricos en esta fase.
+
+### 6.2 Evidencia independiente de step-up
+
+`auth_level` describe el nivel declarado en el contexto firmado, pero no constituye por sí solo
+prueba suficiente de que el actor completó MFA o reautenticación reciente. Cuando la operación
+requiere step-up, la autoridad de sesión emite una aserción independiente y firmada. El BFF la
+transporta sin alteración; el módulo propietario de la operación verifica su firma, issuer,
+audience, actor, tipo de actor, `session_id`, tenant/scope, operación/recurso, método, `auth_time`,
+`issued_at`, `not_before`, `expires_at` y `jti`.
+
+El receptor aplica anti-replay y exige que la evidencia corresponda a la operación concreta o a
+la clase de acciones expresamente definida. El emisor y el receptor rechazan evidencia expirada,
+reutilizada, revocada o vinculada a otro contexto. La evidencia no amplía permisos ni reemplaza
+RBAC/ABAC, aprobación adicional o concesión excepcional.
+
+La decisión de exigir step-up pertenece exclusivamente al módulo propietario de la operación.
+Los BFF pueden iniciar la experiencia y transportar la evidencia, pero no determinan la política,
+no fabrican evidencia y no modifican `auth_level` ni otros claims.
 
 ## 7. Formato de transporte
 
